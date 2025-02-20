@@ -411,69 +411,15 @@ const Index = () => {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-brand-50/50 to-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <div className="flex justify-between items-center">
-              <div className="flex gap-8">
-                {stats.map((stat, index) => (
-                  <div key={stat.name} className={`animate-slideIn [animation-delay:${index * 100}ms]`}>
-                    <p className="text-sm text-gray-500">{stat.name}</p>
-                    <div className="flex items-center mt-1">
-                      <span className="text-2xl font-semibold text-gray-900">{stat.value}</span>
-                      <span
-                        className={`ml-2 flex items-center text-sm ${
-                          stat.trend === "up"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {stat.change}
-                        {stat.trend === "up" ? (
-                          <ArrowUp className="ml-1 h-4 w-4" />
-                        ) : (
-                          <ArrowDown className="ml-1 h-4 w-4" />
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex space-x-2">
-                <Button
-                  variant={period === "month" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPeriod("month")}
-                >
-                  Month
-                </Button>
-                <Button
-                  variant={period === "quarter" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPeriod("quarter")}
-                >
-                  Quarter
-                </Button>
-                <Button
-                  variant={period === "year" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPeriod("year")}
-                >
-                  Year
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <Card className="p-6">
+          <Card className="p-6 bg-gradient-to-br from-brand-50/30 to-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
+              <h2 className="text-lg font-semibold animate-slideIn">Product Quality Ranking</h2>
             </div>
             <div className="space-y-4">
               {productQualityRanking.map((product, index) => (
                 <div
                   key={product.product}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className={`flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors animate-slideIn [animation-delay:${index * 100}ms]`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
@@ -514,15 +460,15 @@ const Index = () => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 bg-gradient-to-br from-brand-50/30 to-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-semibold">Most Active Products</h2>
+              <h2 className="text-lg font-semibold animate-slideIn">Most Active Products</h2>
             </div>
             <div className="space-y-4">
               {activeProducts.map((product, index) => (
                 <div
                   key={product.product}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className={`flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors animate-slideIn [animation-delay:${index * 100}ms]`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
@@ -553,13 +499,13 @@ const Index = () => {
           </Card>
         </div>
 
-        <Card className="p-6 w-full">
-          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+        <Card className="p-6 w-full bg-gradient-to-br from-brand-50/20 to-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+          <h2 className="text-lg font-semibold mb-4 animate-slideIn">Recent Activity</h2>
           <div className="space-y-4">
-            {paginatedActivity.map((activity) => (
+            {paginatedActivity.map((activity, index) => (
               <div
                 key={activity.id}
-                className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                className={`flex items-start space-x-3 animate-slideIn [animation-delay:${index * 100}ms] p-3 rounded-lg hover:bg-gray-50 transition-colors`}
               >
                 <div
                   className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
