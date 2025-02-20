@@ -279,7 +279,7 @@ const Index = () => {
     <DashboardLayout>
       <div className="animate-fadeIn">
         <div className="grid grid-cols-1 gap-6 mb-8">
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]" ref={qualityCardRef}>
+          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900">Release Scorecard</h2>
               <div className="flex items-center gap-6">
@@ -391,7 +391,7 @@ const Index = () => {
             </div>
           </Card>
 
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]">
+          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
             <div className="flex justify-between items-center">
               <div className="flex gap-8">
                 {stats.map((stat) => (
@@ -445,7 +445,7 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]">
+          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
             </div>
@@ -494,7 +494,7 @@ const Index = () => {
             </div>
           </Card>
 
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]">
+          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Most Active Products</h2>
             </div>
@@ -533,7 +533,7 @@ const Index = () => {
           </Card>
         </div>
 
-        <Card className="p-6 w-full shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)]">
+        <Card className="p-6 w-full shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
           <div className="space-y-4">
             {paginatedActivity.map((activity) => (
