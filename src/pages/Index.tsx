@@ -362,7 +362,7 @@ const Index = () => {
   const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
 
   const handleCopyChart = async () => {
-    const chartSection = qualityCardRef.current?.querySelector('.h-[200px]') as HTMLDivElement | null;
+    const chartSection = qualityCardRef.current?.querySelector('.chart-container') as HTMLDivElement | null;
     if (!chartSection) {
       toast.error("Chart not found");
       return;
@@ -500,7 +500,7 @@ const Index = () => {
                     <span className="sr-only">Copy chart</span>
                   </Button>
                 </div>
-                <div className="h-[200px] w-full">
+                <div className="chart-container h-[200px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={monthlyQualityTrend}>
                       <XAxis 
