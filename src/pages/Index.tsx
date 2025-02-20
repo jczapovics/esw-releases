@@ -263,13 +263,38 @@ const Index = () => {
     if (qualityCardRef.current) {
       try {
         const dataUrl = await toPng(qualityCardRef.current, { quality: 1.0 });
-        const link = document.createElement('a');
-        link.download = 'release-quality.png';
-        link.href = dataUrl;
-        link.click();
-        toast.success("Quality report downloaded as image");
+        // Create a temporary img element
+        const img = document.createElement('img');
+        img.src = dataUrl;
+        
+        // Create a canvas to draw the image
+        const canvas = document.createElement('canvas');
+        canvas.width = qualityCardRef.current.offsetWidth;
+        canvas.height = qualityCardRef.current.offsetHeight;
+        
+        // Wait for the image to load
+        img.onload = async () => {
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0);
+          try {
+            // Copy to clipboard
+            canvas.toBlob(async (blob) => {
+              if (blob) {
+                await navigator.clipboard.write([
+                  new ClipboardItem({
+                    'image/png': blob
+                  })
+                ]);
+                toast.success("Quality report copied to clipboard");
+              }
+            }, 'image/png');
+          } catch (err) {
+            toast.error("Failed to copy to clipboard");
+            console.error(err);
+          }
+        };
       } catch (err) {
-        toast.error("Failed to download image");
+        toast.error("Failed to generate image");
         console.error(err);
       }
     }
@@ -358,7 +383,7 @@ const Index = () => {
                 className="flex items-center gap-2"
               >
                 <Copy className="h-4 w-4" />
-                Save as Image
+                Copy as Image
               </Button>
             </div>
             <div className="space-y-4">
