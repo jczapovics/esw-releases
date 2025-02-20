@@ -15,6 +15,14 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { format } from "date-fns";
 
 type Period = "month" | "quarter" | "year";
 
@@ -196,11 +204,55 @@ const getActiveProductsForPeriod = (period: Period): ActiveProduct[] => {
   }
 };
 
+// Add releases data
+const releases = [
+  {
+    id: 1,
+    businessUnit: "Financial Services",
+    product: "Payment Gateway",
+    releaseName: "v2.1",
+    releaseDate: "2024-03-15",
+    dri: "Jane Smith",
+    releaseNotes: "https://example.com/releases/payment-gateway-v2-1",
+    status: "Deployed",
+    quality: "Good",
+    description: "Major update to the payment processing system with improved security features.",
+    incidents: 0
+  },
+  {
+    id: 2,
+    businessUnit: "Security",
+    product: "User Authentication",
+    releaseName: "v1.5",
+    releaseDate: "2024-03-10",
+    dri: "John Doe",
+    releaseNotes: "https://example.com/releases/auth-service-v1-5",
+    status: "Deployed",
+    quality: "Bad",
+    description: "Enhanced two-factor authentication implementation.",
+    incidents: 2
+  },
+  {
+    id: 3,
+    businessUnit: "Data Intelligence",
+    product: "Analytics Dashboard",
+    releaseName: "v3.0",
+    releaseDate: "2024-03-05",
+    dri: "Alice Johnson",
+    releaseNotes: "https://example.com/releases/analytics-v3-0",
+    status: "Deployed",
+    quality: "Good",
+    description: "Complete redesign of the analytics dashboard with new metrics.",
+    incidents: 0
+  }
+];
+
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
   const stats = getStatsForPeriod(period);
   const qualityCardRef = useRef<HTMLDivElement>(null);
+  const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
 
   const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -224,6 +276,13 @@ const Index = () => {
 
   const productQualityRanking = getProductQualityForPeriod(period);
   const activeProducts = getActiveProductsForPeriod(period);
+
+  const handleReleaseClick = (releaseName: string) => {
+    const release = releases.find(r => `${r.product} ${r.releaseName}` === releaseName);
+    if (release) {
+      setSelectedRelease(release);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -461,9 +520,12 @@ const Index = () => {
                       </p>
                       <p className="text-xs text-gray-500">{activity.date}</p>
                     </div>
-                    <p className="text-xs text-brand-600 mt-1">
+                    <button
+                      onClick={() => handleReleaseClick(`${activity.product} ${activity.releaseName}`)}
+                      className="text-xs text-brand-600 mt-1 hover:text-brand-700"
+                    >
                       {activity.product} • {activity.releaseName}
-                    </p>
+                    </button>
                     <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
                   </div>
                 </div>
@@ -500,6 +562,55 @@ const Index = () => {
             </div>
           </Card>
         </div>
+              {/* Add Sheet component for release details */}
+              <Sheet open={!!selectedRelease} onOpenChange={() => setSelectedRelease(null)}>
+                <SheetContent className="sm:max-w-[600px] overflow-y-auto">
+                  {selectedRelease && (
+                    <>
+                      <SheetHeader>
+                        <SheetTitle>Release Details</SheetTitle>
+                        <SheetDescription>
+                          View release information
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="mt-6 space-y-4">
+                        <div>
+                          <label className="text-sm font-medium">Business Unit</label>
+                          <p className="text-sm">{selectedRelease.businessUnit}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Product</label>
+                          <p className="text-sm">{selectedRelease.product}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Release Name</label>
+                          <p className="text-sm">{selectedRelease.releaseName}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Release Date</label>
+                          <p className="text-sm">{format(new Date(selectedRelease.releaseDate), "MMM d, yyyy")}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">DRI</label>
+                          <p className="text-sm">{selectedRelease.dri}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Status</label>
+                          <p className="text-sm">{selectedRelease.status}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Quality</label>
+                          <p className="text-sm">{selectedRelease.quality}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Description</label>
+                          <p className="text-sm">{selectedRelease.description}</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </SheetContent>
+              </Sheet>
       </div>
     </DashboardLayout>
   );

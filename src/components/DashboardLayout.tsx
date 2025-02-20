@@ -1,4 +1,3 @@
-
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Box, LayoutDashboard, AlertCircle, FileText, User } from "lucide-react";
 
@@ -6,8 +5,6 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Releases", href: "/releases", icon: Box },
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
-  { name: "Activity", href: "/activity", icon: FileText },
-  { name: "Profile", href: "/profile", icon: User },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
