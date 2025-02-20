@@ -263,15 +263,19 @@ const Index = () => {
     if (qualityCardRef.current) {
       try {
         // Add a longer delay to ensure charts are fully rendered
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Get all the content height including the chart
+        const contentHeight = qualityCardRef.current.scrollHeight;
         
         const dataUrl = await toPng(qualityCardRef.current, { 
           quality: 1.0,
-          height: qualityCardRef.current.offsetHeight,
+          height: contentHeight,
           width: qualityCardRef.current.offsetWidth,
           style: {
             transform: 'scale(1)',
-            transformOrigin: 'top left'
+            transformOrigin: 'top left',
+            height: `${contentHeight}px`,  // Explicitly set the height
           },
           filter: (node) => {
             // Explicitly include Recharts SVG elements
@@ -296,7 +300,7 @@ const Index = () => {
         // Create a canvas with higher resolution
         const canvas = document.createElement('canvas');
         canvas.width = qualityCardRef.current.offsetWidth * 2;
-        canvas.height = qualityCardRef.current.offsetHeight * 2;
+        canvas.height = contentHeight * 2;  // Use the full content height
         
         // Wait for the image to load
         img.onload = async () => {
