@@ -96,7 +96,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <SidebarTrigger />
               </div>
             </div>
-            {children}
+            <div className="animate-fadeIn animate-slideIn">
+              {children}
+            </div>
           </div>
         </main>
 
