@@ -1,8 +1,7 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Copy } from "lucide-react";
+import { ArrowUp, ArrowDown, Copy, HelpCircle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -128,6 +127,41 @@ const monthlyQualityTrend = [
   { month: 'Jun', quality: 92 },
 ];
 
+// Add new type for product quality ranking
+type ProductQuality = {
+  product: string;
+  incidents: number;
+  quality: string;
+  trend: "up" | "down";
+  change: string;
+};
+
+const getProductQualityForPeriod = (period: Period): ProductQuality[] => {
+  switch (period) {
+    case "month":
+      return [
+        { product: "Payment Gateway", incidents: 3, quality: "Poor", trend: "down", change: "+2" },
+        { product: "User Authentication", incidents: 2, quality: "Fair", trend: "down", change: "+1" },
+        { product: "Analytics Dashboard", incidents: 1, quality: "Good", trend: "up", change: "-1" },
+        { product: "Search Service", incidents: 0, quality: "Good", trend: "up", change: "0" },
+      ];
+    case "quarter":
+      return [
+        { product: "Payment Gateway", incidents: 8, quality: "Poor", trend: "down", change: "+5" },
+        { product: "User Authentication", incidents: 5, quality: "Fair", trend: "down", change: "+2" },
+        { product: "Search Service", incidents: 3, quality: "Good", trend: "up", change: "-1" },
+        { product: "Analytics Dashboard", incidents: 2, quality: "Good", trend: "up", change: "-2" },
+      ];
+    case "year":
+      return [
+        { product: "Payment Gateway", incidents: 24, quality: "Poor", trend: "down", change: "+12" },
+        { product: "User Authentication", incidents: 15, quality: "Fair", trend: "down", change: "+8" },
+        { product: "Search Service", incidents: 10, quality: "Good", trend: "up", change: "-3" },
+        { product: "Analytics Dashboard", incidents: 8, quality: "Good", trend: "up", change: "-5" },
+      ];
+  }
+};
+
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
@@ -153,6 +187,8 @@ const Index = () => {
       }
     }
   };
+
+  const productQualityRanking = getProductQualityForPeriod(period);
 
   return (
     <DashboardLayout>
@@ -277,66 +313,118 @@ const Index = () => {
             </div>
           </Card>
 
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-            <div className="space-y-4">
-              {paginatedActivity.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
+          <div className="space-y-8">
+            <Card className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
+                <HelpCircle className="h-4 w-4 text-gray-400" />
+              </div>
+              <div className="space-y-4">
+                {productQualityRanking.map((product, index) => (
                   <div
-                    className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
-                      activity.type === "release"
-                        ? "bg-brand-500"
-                        : "bg-red-500"
-                    }`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-gray-900">
-                        {activity.title}
-                      </p>
-                      <p className="text-xs text-gray-500">{activity.date}</p>
+                    key={product.product}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
+                        {index + 1}
+                      </span>
+                      <div>
+                        <p className="font-medium text-sm">{product.product}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            product.quality === "Good" 
+                              ? "bg-green-100 text-green-800"
+                              : product.quality === "Fair"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                          }`}>
+                            {product.quality}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {product.incidents} incidents
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-xs text-brand-600 mt-1">
-                      {activity.product} • {activity.releaseName}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
+                    <div className={`flex items-center gap-1 ${
+                      product.trend === "up" 
+                        ? "text-green-600" 
+                        : "text-red-600"
+                    }`}>
+                      {product.trend === "up" ? (
+                        <ArrowUp className="h-4 w-4" />
+                      ) : (
+                        <ArrowDown className="h-4 w-4" />
+                      )}
+                      <span className="text-sm">{product.change}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious 
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                ))}
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+              <div className="space-y-4">
+                {paginatedActivity.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <div
+                      className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
+                        activity.type === "release"
+                          ? "bg-brand-500"
+                          : "bg-red-500"
+                      }`}
                     />
-                  </PaginationItem>
-                  {Array.from({ length: totalPages }).map((_, i) => (
-                    <PaginationItem key={i + 1}>
-                      <PaginationLink
-                        onClick={() => setCurrentPage(i + 1)}
-                        isActive={currentPage === i + 1}
-                        className="cursor-pointer"
-                      >
-                        {i + 1}
-                      </PaginationLink>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-gray-900">
+                          {activity.title}
+                        </p>
+                        <p className="text-xs text-gray-500">{activity.date}</p>
+                      </div>
+                      <p className="text-xs text-brand-600 mt-1">
+                        {activity.product} • {activity.releaseName}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
                     </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationNext 
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          </Card>
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                      <PaginationItem key={i + 1}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(i + 1)}
+                          isActive={currentPage === i + 1}
+                          className="cursor-pointer"
+                        >
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext 
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            </Card>
+          </div>
         </div>
       </div>
     </DashboardLayout>
