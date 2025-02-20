@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,14 @@ export function ChatbotPanel() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
+
+  // Auto scroll to bottom when messages change
+  useEffect(() => {
+    if (scrollViewportRef.current) {
+      scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +51,10 @@ export function ChatbotPanel() {
         <h2 className="text-lg font-semibold">AI Assistant</h2>
       </div>
       
-      <ScrollArea className="h-[300px] pr-4 mb-4">
+      <ScrollArea 
+        className="h-[300px] pr-4 mb-4"
+        ref={scrollViewportRef}
+      >
         <div className="space-y-4">
           {messages.map((message, index) => (
             <div
