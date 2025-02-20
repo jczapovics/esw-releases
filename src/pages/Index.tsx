@@ -1,8 +1,8 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const stats = [
   {
@@ -49,6 +49,15 @@ const activityFeed = [
   },
 ];
 
+const monthlyQualityTrend = [
+  { month: 'Jan', quality: 88 },
+  { month: 'Feb', quality: 92 },
+  { month: 'Mar', quality: 85 },
+  { month: 'Apr', quality: 94 },
+  { month: 'May', quality: 90 },
+  { month: 'Jun', quality: 92 },
+];
+
 const Index = () => {
   return (
     <DashboardLayout>
@@ -93,10 +102,47 @@ const Index = () => {
               </div>
               <div>
                 <div className="flex justify-between mb-1 text-sm">
+                  <span>This Quarter</span>
+                  <span className="font-medium">90%</span>
+                </div>
+                <Progress value={90} className="h-2" />
+              </div>
+              <div>
+                <div className="flex justify-between mb-1 text-sm">
                   <span>This Month</span>
                   <span className="font-medium">88%</span>
                 </div>
                 <Progress value={88} className="h-2" />
+              </div>
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Quality Trend</h3>
+                <div className="h-[200px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={monthlyQualityTrend}>
+                      <XAxis 
+                        dataKey="month" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        domain={[80, 100]}
+                        ticks={[80, 85, 90, 95, 100]}
+                      />
+                      <Tooltip />
+                      <Line 
+                        type="monotone" 
+                        dataKey="quality" 
+                        stroke="#14b8a6" 
+                        strokeWidth={2}
+                        dot={{ fill: '#14b8a6', strokeWidth: 2 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </Card>
