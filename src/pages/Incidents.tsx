@@ -21,13 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { ReleasePanel } from "@/components/ReleasePanel";
 
 // Using the same Release type from Releases page
 type Release = {
@@ -44,7 +38,7 @@ type Release = {
   incidents: number;
 };
 
-// Mock releases data
+// Mock releases data - keeping the same as Releases page for consistency
 const releases: Release[] = [
   {
     id: 1,
@@ -87,6 +81,9 @@ const releases: Release[] = [
   }
 ];
 
+const businessUnits = ["Financial Services", "Security", "Data Intelligence", "Core Services"];
+const products = ["Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
+
 type Incident = {
   id: string;
   name: string;
@@ -107,7 +104,7 @@ const mockIncidents: Incident[] = [
     description: "Users experiencing slow response times in the payment gateway",
     documentLink: "https://docs.google.com/doc/payment-incident-001",
     linkedRelease: {
-      id: "1", // Changed to match the release ID
+      id: "1",
       name: "Payment Gateway v2.1",
     },
   },
@@ -118,7 +115,7 @@ const mockIncidents: Incident[] = [
     description: "Complete authentication service downtime for 15 minutes",
     documentLink: "https://docs.google.com/doc/auth-incident-002",
     linkedRelease: {
-      id: "2", // Changed to match the release ID
+      id: "2",
       name: "User Authentication v1.5",
     },
   },
@@ -129,7 +126,7 @@ const mockIncidents: Incident[] = [
     description: "Analytics dashboard showing delayed data updates",
     documentLink: "https://docs.google.com/doc/analytics-incident-003",
     linkedRelease: {
-      id: "3", // Changed to match the release ID
+      id: "3",
       name: "Analytics Dashboard v3.0",
     },
   },
@@ -174,8 +171,11 @@ const Incidents = () => {
     });
   };
 
-  const handleReleaseClick = (release: Release) => {
-    setSelectedRelease(release);
+  const handleReleaseClick = (releaseId: string) => {
+    const release = releases.find(r => r.id === Number(releaseId));
+    if (release) {
+      setSelectedRelease(release);
+    }
   };
 
   return (
@@ -284,15 +284,7 @@ const Incidents = () => {
                       </Select>
                     ) : (
                       <button
-                        onClick={() => {
-                          console.log('Linked release ID:', incident.linkedRelease.id); // Debug log
-                          console.log('All releases:', releases); // Debug log
-                          const release = releases.find(r => r.id === Number(incident.linkedRelease.id));
-                          console.log('Found release:', release); // Debug log
-                          if (release) {
-                            handleReleaseClick(release);
-                          }
-                        }}
+                        onClick={() => handleReleaseClick(incident.linkedRelease.id)}
                         className="text-brand-500 hover:text-brand-600"
                       >
                         {incident.linkedRelease.name}
@@ -344,54 +336,12 @@ const Incidents = () => {
           </Table>
         </Card>
 
-        <Sheet open={!!selectedRelease} onOpenChange={() => setSelectedRelease(null)}>
-          <SheetContent className="sm:max-w-[600px] overflow-y-auto">
-            {selectedRelease && (
-              <>
-                <SheetHeader>
-                  <SheetTitle>Release Details</SheetTitle>
-                  <SheetDescription>
-                    View release information
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="mt-6 space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Business Unit</label>
-                    <p className="text-sm">{selectedRelease.businessUnit}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Product</label>
-                    <p className="text-sm">{selectedRelease.product}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Release Name</label>
-                    <p className="text-sm">{selectedRelease.releaseName}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Release Date</label>
-                    <p className="text-sm">{format(new Date(selectedRelease.releaseDate), "MMM d, yyyy")}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">DRI</label>
-                    <p className="text-sm">{selectedRelease.dri}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Status</label>
-                    <p className="text-sm">{selectedRelease.status}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Quality</label>
-                    <p className="text-sm">{selectedRelease.quality}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Description</label>
-                    <p className="text-sm">{selectedRelease.description}</p>
-                  </div>
-                </div>
-              </>
-            )}
-          </SheetContent>
-        </Sheet>
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null)}
+          businessUnits={businessUnits}
+          products={products}
+        />
       </div>
     </DashboardLayout>
   );
