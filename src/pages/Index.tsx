@@ -128,12 +128,12 @@ const activityFeed = [
 const ITEMS_PER_PAGE = 3;
 
 const monthlyQualityTrend = [
-  { month: 'Jan', quality: 88 },
-  { month: 'Feb', quality: 92 },
-  { month: 'Mar', quality: 85 },
-  { month: 'Apr', quality: 94 },
-  { month: 'May', quality: 90 },
-  { month: 'Jun', quality: 92 },
+  { month: 'Jan', quality: 88, releases: 15 },
+  { month: 'Feb', quality: 92, releases: 12 },
+  { month: 'Mar', quality: 85, releases: 18 },
+  { month: 'Apr', quality: 94, releases: 14 },
+  { month: 'May', quality: 90, releases: 16 },
+  { month: 'Jun', quality: 92, releases: 20 },
 ];
 
 // Update type for product quality ranking
@@ -384,7 +384,7 @@ const Index = () => {
                 <Progress value={88} className="h-2" />
               </div>
               <div className="mt-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Quality Trend</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
                 <div className="h-[200px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={monthlyQualityTrend}>
@@ -395,19 +395,40 @@ const Index = () => {
                         axisLine={false}
                       />
                       <YAxis 
+                        yAxisId="left"
                         fontSize={12}
                         tickLine={false}
                         axisLine={false}
                         domain={[80, 100]}
                         ticks={[80, 85, 90, 95, 100]}
                       />
+                      <YAxis 
+                        yAxisId="right"
+                        orientation="right"
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        domain={[0, 25]}
+                        ticks={[0, 5, 10, 15, 20, 25]}
+                      />
                       <RechartsTooltip />
                       <Line 
+                        yAxisId="left"
                         type="monotone" 
                         dataKey="quality" 
                         stroke="#14b8a6" 
                         strokeWidth={2}
                         dot={{ fill: '#14b8a6', strokeWidth: 2 }}
+                        name="Quality Score"
+                      />
+                      <Line 
+                        yAxisId="right"
+                        type="monotone" 
+                        dataKey="releases" 
+                        stroke="#2563eb" 
+                        strokeWidth={2}
+                        dot={{ fill: '#2563eb', strokeWidth: 2 }}
+                        name="Number of Releases"
                       />
                     </LineChart>
                   </ResponsiveContainer>
