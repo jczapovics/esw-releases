@@ -23,6 +23,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { format } from "date-fns";
+import { ReleasePanel } from "@/components/ReleasePanel";
 
 type Period = "month" | "quarter" | "year";
 
@@ -287,6 +288,9 @@ const Index = () => {
       setSelectedRelease(release);
     }
   };
+
+  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
+  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
 
   return (
     <DashboardLayout>
@@ -569,55 +573,12 @@ const Index = () => {
             </div>
           </Card>
         </div>
-              {/* Add Sheet component for release details */}
-              <Sheet open={!!selectedRelease} onOpenChange={() => setSelectedRelease(null)}>
-                <SheetContent className="sm:max-w-[600px] overflow-y-auto">
-                  {selectedRelease && (
-                    <>
-                      <SheetHeader>
-                        <SheetTitle>Release Details</SheetTitle>
-                        <SheetDescription>
-                          View release information
-                        </SheetDescription>
-                      </SheetHeader>
-                      <div className="mt-6 space-y-4">
-                        <div>
-                          <label className="text-sm font-medium">Business Unit</label>
-                          <p className="text-sm">{selectedRelease.businessUnit}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Product</label>
-                          <p className="text-sm">{selectedRelease.product}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Release Name</label>
-                          <p className="text-sm">{selectedRelease.releaseName}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Release Date</label>
-                          <p className="text-sm">{format(new Date(selectedRelease.releaseDate), "MMM d, yyyy")}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">DRI</label>
-                          <p className="text-sm">{selectedRelease.dri}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Status</label>
-                          <p className="text-sm">{selectedRelease.status}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Quality</label>
-                          <p className="text-sm">{selectedRelease.quality}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Description</label>
-                          <p className="text-sm">{selectedRelease.description}</p>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </SheetContent>
-              </Sheet>
+              <ReleasePanel 
+                release={selectedRelease}
+                onClose={() => setSelectedRelease(null)}
+                businessUnits={businessUnits.filter(bu => bu !== "All")}
+                products={products.filter(p => p !== "All")}
+              />
       </div>
     </DashboardLayout>
   );
