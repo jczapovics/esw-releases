@@ -58,18 +58,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center space-y-2">
                   <Button
                     variant="outline"
-                    className="w-full justify-center text-gray-700 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                    className="w-full justify-center text-gray-700 group"
                     onClick={handleAddRelease}
                   >
-                    <Plus className="h-4 w-4 mr-2" />
+                    <Plus className="h-4 w-4 mr-2 transition-transform duration-500 ease-in-out group-hover:rotate-180" />
                     Add Release
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full justify-center text-gray-700 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                    className="w-full justify-center text-gray-700 group"
                     onClick={handleAddIncident}
                   >
-                    <Plus className="h-4 w-4 mr-2" />
+                    <Plus className="h-4 w-4 mr-2 transition-transform duration-500 ease-in-out group-hover:rotate-180" />
                     Add Incident
                   </Button>
                 </div>
