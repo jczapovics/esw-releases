@@ -1,3 +1,4 @@
+
 import { DashboardLayout } from "@/components/DashboardLayout";
 import {
   Card,
@@ -9,16 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { useState } from "react";
 import { Check, Link, Calendar, Edit2 } from "lucide-react";
 import { ReleasePanel } from "@/components/ReleasePanel";
+import { useState } from "react";
 
 // Type definitions
 type Release = {
@@ -89,29 +83,28 @@ const activityFeed = [
 const Index = () => {
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
 
-  const handleReleaseClick = (activity: typeof activityFeed[0]) => {
-    if (activity.type === "release") {
-      setSelectedRelease({
-        id: activity.id,
-        businessUnit: activity.businessUnit,
-        product: activity.product,
-        releaseName: activity.releaseName,
-        releaseDate: activity.releaseDate,
-        dri: activity.dri,
-        releaseNotes: activity.releaseNotes,
-        status: activity.status,
-        quality: activity.quality,
-        description: activity.description,
-        incidents: activity.incidents
-      });
-    }
+  const handleClick = (activity: typeof activityFeed[0]) => {
+    // For both releases and incidents, we'll show the associated release details
+    setSelectedRelease({
+      id: activity.id,
+      businessUnit: activity.businessUnit,
+      product: activity.product,
+      releaseName: activity.releaseName,
+      releaseDate: activity.releaseDate,
+      dri: activity.dri,
+      releaseNotes: activity.releaseNotes,
+      status: activity.status,
+      quality: activity.quality,
+      description: activity.description,
+      incidents: activity.incidents
+    });
   };
 
   return (
     <DashboardLayout>
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {activityFeed.map((activity) => (
-          <Card key={activity.id} className="cursor-pointer" onClick={() => handleReleaseClick(activity)}>
+          <Card key={activity.id} className="cursor-pointer" onClick={() => handleClick(activity)}>
             <CardHeader>
               <CardTitle>{activity.title}</CardTitle>
               <CardDescription>{activity.date}</CardDescription>
@@ -127,18 +120,14 @@ const Index = () => {
               )}
             </CardContent>
             <CardFooter className="flex justify-between items-center">
-              {activity.type === "release" ? (
-                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                  activity.quality === "Good"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}>
-                  {activity.quality === "Good" && <Check className="h-3 w-3" />}
-                  {activity.quality}
-                </span>
-              ) : (
-                <Button size="sm" variant="secondary">View Details</Button>
-              )}
+              <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                activity.quality === "Good"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+              }`}>
+                {activity.quality === "Good" && <Check className="h-3 w-3" />}
+                {activity.quality}
+              </span>
             </CardFooter>
           </Card>
         ))}
@@ -147,8 +136,8 @@ const Index = () => {
       <ReleasePanel
         release={selectedRelease}
         onClose={() => setSelectedRelease(null)}
-        businessUnits={activityFeed.filter(item => item.type === 'release').map(item => item.businessUnit)}
-        products={activityFeed.filter(item => item.type === 'release').map(item => item.product)}
+        businessUnits={activityFeed.map(item => item.businessUnit)}
+        products={activityFeed.map(item => item.product)}
       />
     </DashboardLayout>
   );
