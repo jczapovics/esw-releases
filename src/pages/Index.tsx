@@ -279,58 +279,6 @@ const Index = () => {
   return (
     <DashboardLayout>
       <div className="animate-fadeIn">
-        <Card className="p-6 mb-6">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-8">
-              {stats.map((stat) => (
-                <div key={stat.name}>
-                  <p className="text-sm text-gray-500">{stat.name}</p>
-                  <div className="flex items-center mt-1">
-                    <span className="text-2xl font-semibold text-gray-900">{stat.value}</span>
-                    <span
-                      className={`ml-2 flex items-center text-sm ${
-                        stat.trend === "up"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {stat.change}
-                      {stat.trend === "up" ? (
-                        <ArrowUp className="ml-1 h-4 w-4" />
-                      ) : (
-                        <ArrowDown className="ml-1 h-4 w-4" />
-                      )}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex space-x-2">
-              <Button
-                variant={period === "month" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setPeriod("month")}
-              >
-                Month
-              </Button>
-              <Button
-                variant={period === "quarter" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setPeriod("quarter")}
-              >
-                Quarter
-              </Button>
-              <Button
-                variant={period === "year" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setPeriod("year")}
-              >
-                Year
-              </Button>
-            </div>
-          </div>
-        </Card>
-
         <div className="grid grid-cols-1 gap-6 mb-8">
           <Card className="p-6" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-6">
@@ -440,6 +388,58 @@ const Index = () => {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex justify-between items-center">
+              <div className="flex gap-8">
+                {stats.map((stat) => (
+                  <div key={stat.name}>
+                    <p className="text-sm text-gray-500">{stat.name}</p>
+                    <div className="flex items-center mt-1">
+                      <span className="text-2xl font-semibold text-gray-900">{stat.value}</span>
+                      <span
+                        className={`ml-2 flex items-center text-sm ${
+                          stat.trend === "up"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {stat.change}
+                        {stat.trend === "up" ? (
+                          <ArrowUp className="ml-1 h-4 w-4" />
+                        ) : (
+                          <ArrowDown className="ml-1 h-4 w-4" />
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex space-x-2">
+                <Button
+                  variant={period === "month" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPeriod("month")}
+                >
+                  Month
+                </Button>
+                <Button
+                  variant={period === "quarter" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPeriod("quarter")}
+                >
+                  Quarter
+                </Button>
+                <Button
+                  variant={period === "year" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPeriod("year")}
+                >
+                  Year
+                </Button>
               </div>
             </div>
           </Card>
