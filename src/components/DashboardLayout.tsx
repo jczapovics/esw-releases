@@ -29,10 +29,19 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
+      <div className="min-h-screen flex w-full bg-gray-50 relative">
+        {/* Dot pattern overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]" 
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, black 1px, transparent 1px)`,
+            backgroundSize: '20px 20px'
+          }}
+        />
+        
         <Sidebar>
           <SidebarContent>
-            <div className="px-3 py-4 flex flex-col h-full">
+            <div className="px-3 py-4 flex flex-col h-full relative z-10">
               <div className="mb-8">
                 <h1 className="text-2xl font-bold text-brand-700">
                   ESW Releases
@@ -89,7 +98,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </SidebarContent>
         </Sidebar>
 
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 relative z-10">
           <div className="mx-auto">
             <div className="flex items-center justify-between mb-8">
               <div className="flex-1">
