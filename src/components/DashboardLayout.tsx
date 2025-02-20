@@ -4,6 +4,8 @@ import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/comp
 import { Box, LayoutDashboard, AlertCircle, LogOut, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useState } from "react";
+import { AddReleaseSheet } from "./AddReleaseSheet";
 
 const mainNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -13,10 +15,10 @@ const mainNavigation = [
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
 
   const handleAddRelease = () => {
-    // Placeholder for add release functionality
-    toast.info("Add release functionality coming soon");
+    setIsAddReleaseOpen(true);
   };
 
   const handleAddIncident = () => {
@@ -96,6 +98,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             {children}
           </div>
         </main>
+
+        <AddReleaseSheet 
+          isOpen={isAddReleaseOpen}
+          onClose={() => setIsAddReleaseOpen(false)}
+        />
       </div>
     </SidebarProvider>
   );
