@@ -399,7 +399,7 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <Card className="p-6" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Release Quality</h2>
+              <h2 className="text-lg font-semibold">Release Scorecard</h2>
               <Button
                 variant="outline"
                 size="sm"
