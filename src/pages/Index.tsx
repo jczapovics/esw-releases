@@ -4,27 +4,60 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
-const stats = [
-  {
-    name: "Total Releases",
-    value: "156",
-    change: "+12%",
-    trend: "up",
-  },
-  {
-    name: "High Quality",
-    value: "92%",
-    change: "+4%",
-    trend: "up",
-  },
-  {
-    name: "Active Incidents",
-    value: "3",
-    change: "-2",
-    trend: "down",
-  },
-];
+type Period = "month" | "quarter" | "year";
+
+const getStatsForPeriod = (period: Period) => {
+  switch (period) {
+    case "month":
+      return [
+        {
+          name: "Total Releases",
+          value: "12",
+          change: "+3",
+          trend: "up",
+        },
+        {
+          name: "High Quality",
+          value: "92%",
+          change: "+4%",
+          trend: "up",
+        },
+      ];
+    case "quarter":
+      return [
+        {
+          name: "Total Releases",
+          value: "45",
+          change: "+8",
+          trend: "up",
+        },
+        {
+          name: "High Quality",
+          value: "88%",
+          change: "+2%",
+          trend: "up",
+        },
+      ];
+    case "year":
+      return [
+        {
+          name: "Total Releases",
+          value: "156",
+          change: "+12%",
+          trend: "up",
+        },
+        {
+          name: "High Quality",
+          value: "90%",
+          change: "+5%",
+          trend: "up",
+        },
+      ];
+  }
+};
 
 const activityFeed = [
   {
@@ -66,10 +99,37 @@ const monthlyQualityTrend = [
 ];
 
 const Index = () => {
+  const [period, setPeriod] = useState<Period>("month");
+  const stats = getStatsForPeriod(period);
+
   return (
     <DashboardLayout>
       <div className="animate-fadeIn">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="mb-6 flex justify-end space-x-2">
+          <Button
+            variant={period === "month" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setPeriod("month")}
+          >
+            This Month
+          </Button>
+          <Button
+            variant={period === "quarter" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setPeriod("quarter")}
+          >
+            This Quarter
+          </Button>
+          <Button
+            variant={period === "year" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setPeriod("year")}
+          >
+            This Year
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {stats.map((stat) => (
             <Card key={stat.name} className="p-6 card-hover">
               <div className="flex items-center justify-between">
