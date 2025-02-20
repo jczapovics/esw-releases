@@ -162,7 +162,7 @@ const Index = () => {
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-1 text-sm">
-                  <span>Overall Quality</span>
+                  <span>This Year</span>
                   <span className="font-medium">92%</span>
                 </div>
                 <Progress value={92} className="h-2" />
