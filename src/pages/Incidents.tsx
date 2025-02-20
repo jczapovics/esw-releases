@@ -219,22 +219,22 @@ const Incidents = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
+                <TableHead className="w-[100px] whitespace-nowrap">ID</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Date Reported</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Document</TableHead>
-                <TableHead>Linked Release</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
+                <TableHead className="w-[120px] whitespace-nowrap">Date Reported</TableHead>
+                <TableHead className="w-[300px]">Description</TableHead>
+                <TableHead className="w-[80px]">Document</TableHead>
+                <TableHead className="w-[200px]">Linked Release</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {incidents.map((incident) => (
                 <TableRow key={incident.id}>
-                  <TableCell className="font-medium">{incident.id}</TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
                   <TableCell>{incident.name}</TableCell>
-                  <TableCell>{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
-                  <TableCell className="max-w-md">
+                  <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
+                  <TableCell className="max-w-[300px]">
                     <span className="truncate block">{incident.description}</span>
                   </TableCell>
                   <TableCell>
