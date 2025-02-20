@@ -1,12 +1,10 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Area } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -398,10 +396,11 @@ const Index = () => {
                         dot={{ fill: '#2563eb', strokeWidth: 2 }}
                         name="Number of Releases"
                       />
-                      <area
+                      <Area
+                        yAxisId="left"
                         type="monotone"
                         dataKey="quality"
-                        stroke="false"
+                        stroke="none"
                         fillOpacity={1}
                         fill="url(#qualityGradient)"
                       />
