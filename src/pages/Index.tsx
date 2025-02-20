@@ -127,11 +127,11 @@ const monthlyQualityTrend = [
   { month: 'Jun', quality: 92 },
 ];
 
-// Add new type for product quality ranking
+// Update type for product quality ranking
 type ProductQuality = {
   product: string;
+  qualityPercentage: number;
   incidents: number;
-  quality: string;
   trend: "up" | "down";
   change: string;
 };
@@ -140,24 +140,24 @@ const getProductQualityForPeriod = (period: Period): ProductQuality[] => {
   switch (period) {
     case "month":
       return [
-        { product: "Payment Gateway", incidents: 3, quality: "Poor", trend: "down", change: "+2" },
-        { product: "User Authentication", incidents: 2, quality: "Fair", trend: "down", change: "+1" },
-        { product: "Analytics Dashboard", incidents: 1, quality: "Good", trend: "up", change: "-1" },
-        { product: "Search Service", incidents: 0, quality: "Good", trend: "up", change: "0" },
+        { product: "Payment Gateway", qualityPercentage: 85, incidents: 3, trend: "down", change: "-5%" },
+        { product: "User Authentication", qualityPercentage: 88, incidents: 2, trend: "down", change: "-3%" },
+        { product: "Analytics Dashboard", qualityPercentage: 92, incidents: 1, trend: "up", change: "+2%" },
+        { product: "Search Service", qualityPercentage: 95, incidents: 0, trend: "up", change: "+4%" },
       ];
     case "quarter":
       return [
-        { product: "Payment Gateway", incidents: 8, quality: "Poor", trend: "down", change: "+5" },
-        { product: "User Authentication", incidents: 5, quality: "Fair", trend: "down", change: "+2" },
-        { product: "Search Service", incidents: 3, quality: "Good", trend: "up", change: "-1" },
-        { product: "Analytics Dashboard", incidents: 2, quality: "Good", trend: "up", change: "-2" },
+        { product: "Payment Gateway", qualityPercentage: 82, incidents: 8, trend: "down", change: "-8%" },
+        { product: "User Authentication", qualityPercentage: 86, incidents: 5, trend: "down", change: "-4%" },
+        { product: "Search Service", qualityPercentage: 90, incidents: 3, trend: "up", change: "+3%" },
+        { product: "Analytics Dashboard", qualityPercentage: 93, incidents: 2, trend: "up", change: "+5%" },
       ];
     case "year":
       return [
-        { product: "Payment Gateway", incidents: 24, quality: "Poor", trend: "down", change: "+12" },
-        { product: "User Authentication", incidents: 15, quality: "Fair", trend: "down", change: "+8" },
-        { product: "Search Service", incidents: 10, quality: "Good", trend: "up", change: "-3" },
-        { product: "Analytics Dashboard", incidents: 8, quality: "Good", trend: "up", change: "-5" },
+        { product: "Payment Gateway", qualityPercentage: 80, incidents: 24, trend: "down", change: "-10%" },
+        { product: "User Authentication", qualityPercentage: 84, incidents: 15, trend: "down", change: "-6%" },
+        { product: "Search Service", qualityPercentage: 88, incidents: 10, trend: "up", change: "+4%" },
+        { product: "Analytics Dashboard", qualityPercentage: 92, incidents: 8, trend: "up", change: "+6%" },
       ];
   }
 };
@@ -333,13 +333,13 @@ const Index = () => {
                         <p className="font-medium text-sm">{product.product}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <span className={`text-xs px-2 py-0.5 rounded-full ${
-                            product.quality === "Good" 
+                            product.qualityPercentage >= 90 
                               ? "bg-green-100 text-green-800"
-                              : product.quality === "Fair"
+                              : product.qualityPercentage >= 85
                               ? "bg-yellow-100 text-yellow-800"
                               : "bg-red-100 text-red-800"
                           }`}>
-                            {product.quality}
+                            {product.qualityPercentage}% Quality
                           </span>
                           <span className="text-xs text-gray-500">
                             {product.incidents} incidents
