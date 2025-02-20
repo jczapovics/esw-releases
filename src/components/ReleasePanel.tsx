@@ -14,6 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -42,6 +52,7 @@ interface ReleasePanelProps {
 export const ReleasePanel = ({ release, onClose, businessUnits = [], products = [] }: ReleasePanelProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedRelease, setEditedRelease] = useState<Release | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (release) {
@@ -57,9 +68,14 @@ export const ReleasePanel = ({ release, onClose, businessUnits = [], products = 
   };
 
   const handleDelete = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
     // In a real app, this would make an API call to delete the release
     console.log("Deleting release:", release);
     toast.success("Release deleted successfully");
+    setShowDeleteConfirm(false);
     onClose();
   };
 
@@ -68,36 +84,55 @@ export const ReleasePanel = ({ release, onClose, businessUnits = [], products = 
   }
 
   return (
-    <Sheet open={!!release} onOpenChange={onClose}>
-      <SheetContent className="sm:max-w-[600px] overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="flex items-center justify-between">
-            <span>Release Details</span>
-            <div className="flex gap-2">
-              {!isEditing && (
-                <>
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    size="icon"
-                    onClick={handleDelete}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </>
-              )}
-            </div>
-          </SheetTitle>
-          <SheetDescription>
-            View and edit release information
-          </SheetDescription>
-        </SheetHeader>
+    <>
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the release
+              "{release.releaseName}" and remove all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete Release
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <Sheet open={!!release} onOpenChange={onClose}>
+        <SheetContent className="sm:max-w-[600px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle className="flex items-center justify-between">
+              <span>Release Details</span>
+              <div className="flex gap-2">
+                {!isEditing && (
+                  <>
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="icon"
+                      onClick={handleDelete}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
+              </div>
+            </SheetTitle>
+            <SheetDescription>
+              View and edit release information
+            </SheetDescription>
+          </SheetHeader>
         
         <div className="mt-6 space-y-6">
           <div className="space-y-4">
@@ -296,6 +331,7 @@ export const ReleasePanel = ({ release, onClose, businessUnits = [], products = 
           )}
         </div>
       </SheetContent>
-    </Sheet>
+      </Sheet>
+    </>
   );
 };

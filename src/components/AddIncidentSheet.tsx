@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Sheet,
@@ -16,7 +15,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { Edit2, Trash2 } from "lucide-react";
 
 interface AddIncidentSheetProps {
   isOpen: boolean;
@@ -38,6 +48,8 @@ export function AddIncidentSheet({ isOpen, onClose }: AddIncidentSheetProps) {
     documentLink: "",
     linkedRelease: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,76 +59,153 @@ export function AddIncidentSheet({ isOpen, onClose }: AddIncidentSheetProps) {
     onClose();
   };
 
-  return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="sm:max-w-[600px] overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Add New Incident</SheetTitle>
-          <SheetDescription>
-            Fill in the details for the new incident
-          </SheetDescription>
-        </SheetHeader>
+  const handleDelete = () => {
+    setShowDeleteConfirm(true);
+  };
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
-          <div className="space-y-4">
+  const confirmDelete = () => {
+    // In a real app, this would make an API call to delete the incident
+    console.log("Deleting incident:", formData);
+    toast.success("Incident deleted successfully");
+    setShowDeleteConfirm(false);
+    onClose();
+  };
+
+  return (
+    <>
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the incident
+              "{formData.incidentName}" and remove all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete Incident
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <Sheet open={isOpen} onOpenChange={onClose}>
+        <SheetContent className="sm:max-w-[600px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle className="flex items-center justify-between">
+              <span>Add New Incident</span>
+              {!isEditing && (
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="icon"
+                    onClick={handleDelete}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </SheetTitle>
+            <SheetDescription>
+              Fill in the details for the new incident
+            </SheetDescription>
+          </SheetHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-6 mt-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Incident Name/ID</label>
+              <label
+                htmlFor="incidentName"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Incident Name
+              </label>
               <Input
+                id="incidentName"
+                placeholder="Enter incident name"
+                className="w-full"
                 value={formData.incidentName}
-                onChange={(e) => 
-                  setFormData({...formData, incidentName: e.target.value})
+                onChange={(e) =>
+                  setFormData({ ...formData, incidentName: e.target.value })
                 }
-                placeholder="Enter incident name or ID"
-                required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Date Reported</label>
+              <label
+                htmlFor="dateReported"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Date Reported
+              </label>
               <Input
                 type="date"
+                id="dateReported"
+                className="w-full"
                 value={formData.dateReported}
-                onChange={(e) => 
-                  setFormData({...formData, dateReported: e.target.value})
+                onChange={(e) =>
+                  setFormData({ ...formData, dateReported: e.target.value })
                 }
-                required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label
+                htmlFor="description"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Description
+              </label>
               <Input
+                id="description"
+                placeholder="Enter description"
+                className="w-full"
                 value={formData.description}
-                onChange={(e) => 
-                  setFormData({...formData, description: e.target.value})
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
                 }
-                placeholder="Describe the incident"
-                required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Incident Document Link</label>
+              <label
+                htmlFor="documentLink"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Document Link
+              </label>
               <Input
-                type="url"
+                id="documentLink"
+                placeholder="Enter document link"
+                className="w-full"
                 value={formData.documentLink}
-                onChange={(e) => 
-                  setFormData({...formData, documentLink: e.target.value})
+                onChange={(e) =>
+                  setFormData({ ...formData, documentLink: e.target.value })
                 }
-                placeholder="https://docs.google.com/..."
-                required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Linked Release</label>
+              <label
+                htmlFor="linkedRelease"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Linked Release
+              </label>
               <Select
-                value={formData.linkedRelease}
-                onValueChange={(value) => 
-                  setFormData({...formData, linkedRelease: value})
+                onValueChange={(value) =>
+                  setFormData({ ...formData, linkedRelease: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a release" />
                 </SelectTrigger>
                 <SelectContent>
@@ -128,18 +217,18 @@ export function AddIncidentSheet({ isOpen, onClose }: AddIncidentSheetProps) {
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="outline" type="button" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit">
-              Add Incident
-            </Button>
-          </div>
-        </form>
-      </SheetContent>
-    </Sheet>
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button variant="outline" type="button" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                Add Incident
+              </Button>
+            </div>
+          </form>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
