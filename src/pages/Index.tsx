@@ -1,3 +1,4 @@
+
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -278,82 +279,40 @@ const Index = () => {
   return (
     <DashboardLayout>
       <div className="animate-fadeIn">
-        <div className="mb-6 grid grid-cols-2 gap-6">
-          {stats.map((stat) => (
-            <Card key={stat.name} className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-500">{stat.name}</p>
-                <span
-                  className={`flex items-center text-sm ${
-                    stat.trend === "up"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }`}
-                >
-                  {stat.change}
-                  {stat.trend === "up" ? (
-                    <ArrowUp className="ml-1 h-4 w-4" />
-                  ) : (
-                    <ArrowDown className="ml-1 h-4 w-4" />
-                  )}
-                </span>
-              </div>
-              <p className="text-2xl font-semibold mt-1">{stat.value}</p>
-            </Card>
-          ))}
-        </div>
-
         <div className="grid grid-cols-1 gap-6 mb-8">
           <Card className="p-6" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900">Release Scorecard</h2>
-              <div className="flex items-center gap-4">
-                <Select value={selectedBusinessUnit} onValueChange={setSelectedBusinessUnit}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Business Unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {businessUnits.map((unit) => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Product" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products.map((product) => (
-                      <SelectItem key={product} value={product}>
-                        {product}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <div className="flex space-x-2">
-                  <Button
-                    variant={period === "month" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPeriod("month")}
-                  >
-                    Month
-                  </Button>
-                  <Button
-                    variant={period === "quarter" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPeriod("quarter")}
-                  >
-                    Quarter
-                  </Button>
-                  <Button
-                    variant={period === "year" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPeriod("year")}
-                  >
-                    Year
-                  </Button>
+              <div className="flex items-center gap-6">
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-gray-500">Business Unit</span>
+                  <Select value={selectedBusinessUnit} onValueChange={setSelectedBusinessUnit}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select Business Unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {businessUnits.map((unit) => (
+                        <SelectItem key={unit} value={unit}>
+                          {unit}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-gray-500">Product</span>
+                  <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select Product" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {products.map((product) => (
+                        <SelectItem key={product} value={product}>
+                          {product}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>
@@ -428,6 +387,55 @@ const Index = () => {
                       />
                     </LineChart>
                   </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="mt-8 pt-6 border-t flex justify-between items-center">
+                <div className="flex gap-8">
+                  {stats.map((stat) => (
+                    <div key={stat.name}>
+                      <p className="text-sm text-gray-500">{stat.name}</p>
+                      <div className="flex items-center mt-1">
+                        <span className="text-2xl font-semibold text-gray-900">{stat.value}</span>
+                        <span
+                          className={`ml-2 flex items-center text-sm ${
+                            stat.trend === "up"
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }`}
+                        >
+                          {stat.change}
+                          {stat.trend === "up" ? (
+                            <ArrowUp className="ml-1 h-4 w-4" />
+                          ) : (
+                            <ArrowDown className="ml-1 h-4 w-4" />
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex space-x-2">
+                  <Button
+                    variant={period === "month" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setPeriod("month")}
+                  >
+                    Month
+                  </Button>
+                  <Button
+                    variant={period === "quarter" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setPeriod("quarter")}
+                  >
+                    Quarter
+                  </Button>
+                  <Button
+                    variant={period === "year" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setPeriod("year")}
+                  >
+                    Year
+                  </Button>
                 </div>
               </div>
             </div>
