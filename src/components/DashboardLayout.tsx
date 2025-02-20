@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sidebar } from "./ui/sidebar";
+import { Sidebar, SidebarProvider } from "./ui/sidebar";
 
 interface Props {
   children: React.ReactNode;
@@ -59,39 +59,21 @@ export const DashboardLayout = ({ children }: Props) => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar>
-        <div className="px-3 py-2">
-          <Link
-            to="/"
-            className="px-3 py-2 flex items-center gap-2 mb-8 mt-2 text-xl font-medium"
-          >
-            <span className="font-bold text-brand-600">E</span>
-            <span className="font-normal text-gray-600">ngineering</span>
-            <span className="font-bold text-brand-600">R</span>
-            <span className="font-normal text-gray-600">eleases</span>
-          </Link>
-          <div className="space-y-1">
-            {links.map((link) => (
-              <Button
-                key={link.href}
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start gap-2",
-                  pathname === link.href && "bg-gray-100"
-                )}
-                asChild
-              >
-                <Link to={link.href}>
-                  <link.icon className="h-4 w-4" />
-                  {link.name}
-                </Link>
-              </Button>
-            ))}
-          </div>
-          <div className="mt-8">
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <Sidebar>
+          <div className="px-3 py-2">
+            <Link
+              to="/"
+              className="px-3 py-2 flex items-center gap-2 mb-8 mt-2 text-xl font-medium"
+            >
+              <span className="font-bold text-brand-600">E</span>
+              <span className="font-normal text-gray-600">ngineering</span>
+              <span className="font-bold text-brand-600">R</span>
+              <span className="font-normal text-gray-600">eleases</span>
+            </Link>
             <div className="space-y-1">
-              {secondaryLinks.map((link) => (
+              {links.map((link) => (
                 <Button
                   key={link.href}
                   variant="ghost"
@@ -108,10 +90,30 @@ export const DashboardLayout = ({ children }: Props) => {
                 </Button>
               ))}
             </div>
+            <div className="mt-8">
+              <div className="space-y-1">
+                {secondaryLinks.map((link) => (
+                  <Button
+                    key={link.href}
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start gap-2",
+                      pathname === link.href && "bg-gray-100"
+                    )}
+                    asChild
+                  >
+                    <Link to={link.href}>
+                      <link.icon className="h-4 w-4" />
+                      {link.name}
+                    </Link>
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </Sidebar>
-      <main className="flex-1 p-8 overflow-auto">{children}</main>
-    </div>
+        </Sidebar>
+        <main className="flex-1 p-8 overflow-auto">{children}</main>
+      </div>
+    </SidebarProvider>
   );
 };
