@@ -1,3 +1,4 @@
+
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -7,6 +8,13 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -14,14 +22,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { format } from "date-fns";
 import { ReleasePanel } from "@/components/ReleasePanel";
 
 type Period = "month" | "quarter" | "year";
@@ -250,6 +250,8 @@ const releases = [
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
+  const [selectedProduct, setSelectedProduct] = useState("All");
   const stats = getStatsForPeriod(period);
   const qualityCardRef = useRef<HTMLDivElement>(null);
   const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
@@ -258,17 +260,14 @@ const Index = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedActivity = activityFeed.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Add back the necessary variables
   const productQualityRanking = getProductQualityForPeriod(period);
   const activeProducts = getActiveProductsForPeriod(period);
 
   const handleReleaseClick = (activity: typeof activityFeed[0]) => {
-    console.log("Clicking release:", activity);
     const release = releases.find(r => 
       r.product === activity.product && 
       r.releaseName === activity.releaseName
     );
-    console.log("Found release:", release);
     if (release) {
       setSelectedRelease(release);
     }
@@ -280,61 +279,86 @@ const Index = () => {
   return (
     <DashboardLayout>
       <div className="animate-fadeIn">
-        <div className="mb-6 flex justify-end space-x-2">
-          <Button
-            variant={period === "month" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setPeriod("month")}
-          >
-            This Month
-          </Button>
-          <Button
-            variant={period === "quarter" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setPeriod("quarter")}
-          >
-            This Quarter
-          </Button>
-          <Button
-            variant={period === "year" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setPeriod("year")}
-          >
-            This Year
-          </Button>
+        <div className="mb-6 flex justify-between items-center">
+          <div className="flex gap-4">
+            <Select value={selectedBusinessUnit} onValueChange={setSelectedBusinessUnit}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Business Unit" />
+              </SelectTrigger>
+              <SelectContent>
+                {businessUnits.map((unit) => (
+                  <SelectItem key={unit} value={unit}>
+                    {unit}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Product" />
+              </SelectTrigger>
+              <SelectContent>
+                {products.map((product) => (
+                  <SelectItem key={product} value={product}>
+                    {product}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              variant={period === "month" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPeriod("month")}
+            >
+              This Month
+            </Button>
+            <Button
+              variant={period === "quarter" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPeriod("quarter")}
+            >
+              This Quarter
+            </Button>
+            <Button
+              variant={period === "year" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPeriod("year")}
+            >
+              This Year
+            </Button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {stats.map((stat) => (
-            <Card key={stat.name} className="p-6 card-hover">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-500">{stat.name}</h3>
-                <span
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    stat.trend === "up"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {stat.change}
-                  {stat.trend === "up" ? (
-                    <ArrowUp className="ml-1 h-3 w-3" />
-                  ) : (
-                    <ArrowDown className="ml-1 h-3 w-3" />
-                  )}
-                </span>
-              </div>
-              <p className="mt-2 text-3xl font-semibold text-gray-900">
-                {stat.value}
-              </p>
-            </Card>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 gap-6 mb-8">
           <Card className="p-6" ref={qualityCardRef}>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Release Scorecard</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">Release Scorecard</h2>
+              <div className="flex items-center gap-4">
+                {stats.map((stat) => (
+                  <div key={stat.name} className="text-right">
+                    <p className="text-sm text-gray-500">{stat.name}</p>
+                    <div className="flex items-center mt-1">
+                      <span className="text-2xl font-semibold text-gray-900">{stat.value}</span>
+                      <span
+                        className={`ml-2 flex items-center text-sm ${
+                          stat.trend === "up"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {stat.change}
+                        {stat.trend === "up" ? (
+                          <ArrowUp className="ml-1 h-4 w-4" />
+                        ) : (
+                          <ArrowDown className="ml-1 h-4 w-4" />
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="space-y-4">
               <div>
@@ -360,7 +384,7 @@ const Index = () => {
               </div>
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
-                <div className="chart-container h-[200px] w-full">
+                <div className="chart-container h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={monthlyQualityTrend}>
                       <XAxis 
@@ -411,7 +435,9 @@ const Index = () => {
               </div>
             </div>
           </Card>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
@@ -460,9 +486,7 @@ const Index = () => {
               ))}
             </div>
           </Card>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Most Active Products</h2>
@@ -500,77 +524,78 @@ const Index = () => {
               ))}
             </div>
           </Card>
-
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-            <div className="space-y-4">
-              {paginatedActivity.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div
-                    className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
-                      activity.type === "release"
-                        ? "bg-brand-500"
-                        : "bg-red-500"
-                    }`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-gray-900">
-                        {activity.title}
-                      </p>
-                      <p className="text-xs text-gray-500">{activity.date}</p>
-                    </div>
-                    <button
-                      onClick={() => handleReleaseClick(activity)}
-                      className="text-xs text-brand-600 mt-1 hover:text-brand-700"
-                    >
-                      {activity.product} • {activity.releaseName}
-                    </button>
-                    <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious 
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                  {Array.from({ length: totalPages }).map((_, i) => (
-                    <PaginationItem key={i + 1}>
-                      <PaginationLink
-                        onClick={() => setCurrentPage(i + 1)}
-                        isActive={currentPage === i + 1}
-                        className="cursor-pointer"
-                      >
-                        {i + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationNext 
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          </Card>
         </div>
-              <ReleasePanel 
-                release={selectedRelease}
-                onClose={() => setSelectedRelease(null)}
-                businessUnits={businessUnits.filter(bu => bu !== "All")}
-                products={products.filter(p => p !== "All")}
-              />
+
+        <Card className="p-6 w-full">
+          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+          <div className="space-y-4">
+            {paginatedActivity.map((activity) => (
+              <div
+                key={activity.id}
+                className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div
+                  className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
+                    activity.type === "release"
+                      ? "bg-brand-500"
+                      : "bg-red-500"
+                  }`}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-gray-900">
+                      {activity.title}
+                    </p>
+                    <p className="text-xs text-gray-500">{activity.date}</p>
+                  </div>
+                  <button
+                    onClick={() => handleReleaseClick(activity)}
+                    className="text-xs text-brand-600 mt-1 hover:text-brand-700"
+                  >
+                    {activity.product} • {activity.releaseName}
+                  </button>
+                  <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <PaginationItem key={i + 1}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(i + 1)}
+                      isActive={currentPage === i + 1}
+                      className="cursor-pointer"
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </Card>
+
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null)}
+          businessUnits={businessUnits.filter(bu => bu !== "All")}
+          products={products.filter(p => p !== "All")}
+        />
       </div>
     </DashboardLayout>
   );
