@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle, LogOut, Plus } from "lucide-react";
+import { Box, LayoutDashboard, AlertCircle, LogOut, Plus, Code, Terminal, Database, Server, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -13,6 +13,8 @@ const mainNavigation = [
   { name: "Releases", href: "/releases", icon: Box },
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
 ];
+
+const backgroundIcons = [Code, Terminal, Database, Server, Monitor];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -29,7 +31,30 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50 relative">
+      <div className="min-h-screen flex w-full bg-gray-50 relative overflow-hidden">
+        {/* Icons pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          {[...Array(20)].map((_, i) => {
+            const Icon = backgroundIcons[i % backgroundIcons.length];
+            const randomX = Math.random() * 100;
+            const randomY = Math.random() * 100;
+            const randomRotate = Math.random() * 360;
+            return (
+              <Icon
+                key={i}
+                className="absolute text-black"
+                style={{
+                  left: `${randomX}%`,
+                  top: `${randomY}%`,
+                  transform: `rotate(${randomRotate}deg)`,
+                  width: '48px',
+                  height: '48px'
+                }}
+              />
+            );
+          })}
+        </div>
+        
         {/* Dot pattern overlay */}
         <div 
           className="absolute inset-0 opacity-[0.03]" 
