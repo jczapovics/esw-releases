@@ -47,7 +47,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                       window.location.pathname === item.href ? 'bg-brand-50 text-brand-700' : 'hover:bg-brand-50 hover:text-brand-700'
                     }`}
                   >
-                    <item.icon className="h-5 w-5 mr-3 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12" />
+                    <item.icon className="h-5 w-5 mr-3 rotate-0 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12" />
                     {item.name}
                   </a>
                 ))}
@@ -61,7 +61,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                     className="w-full justify-center text-gray-700 group"
                     onClick={handleAddRelease}
                   >
-                    <Plus className="h-4 w-4 mr-2 transition-transform duration-500 ease-in-out group-hover:rotate-180 group-hover:scale-110" />
+                    <Plus className="h-4 w-4 mr-2 rotate-0 transition-transform duration-500 ease-in-out group-hover:rotate-180 group-hover:scale-110" />
                     Add Release
                   </Button>
                   <Button
@@ -69,7 +69,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                     className="w-full justify-center text-gray-700 group"
                     onClick={handleAddIncident}
                   >
-                    <Plus className="h-4 w-4 mr-2 transition-transform duration-500 ease-in-out group-hover:rotate-180 group-hover:scale-110" />
+                    <Plus className="h-4 w-4 mr-2 rotate-0 transition-transform duration-500 ease-in-out group-hover:rotate-180 group-hover:scale-110" />
                     Add Incident
                   </Button>
                 </div>
@@ -80,7 +80,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                     href="/login"
                     className="flex items-center px-4 py-3 text-gray-700 rounded-lg transition-all duration-300 group hover:bg-brand-50 hover:text-brand-700"
                   >
-                    <LogOut className="h-5 w-5 mr-3 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12" />
+                    <LogOut className="h-5 w-5 mr-3 rotate-0 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12" />
                     Sign Out
                   </a>
                 </div>
