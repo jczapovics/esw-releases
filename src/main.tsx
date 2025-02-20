@@ -11,7 +11,6 @@ import Releases from "./pages/Releases";
 import Incidents from "./pages/Incidents";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import AskAI from "./pages/AskAI";
 
 const router = createBrowserRouter([
   {
@@ -30,10 +29,6 @@ const router = createBrowserRouter([
   {
     path: "/incidents",
     element: <Incidents />,
-  },
-  {
-    path: "/ask-ai",
-    element: <AskAI />,
   },
 ]);
 
