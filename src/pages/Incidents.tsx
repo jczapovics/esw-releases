@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { DashboardLayout } from "@/components/DashboardLayout";
@@ -241,9 +242,9 @@ const Incidents = () => {
                       href={incident.documentLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-brand-500 hover:text-brand-600 inline-flex items-center gap-1"
+                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
+                      title="View document"
                     >
-                      View Doc
                       <ExternalLink className="h-4 w-4" />
                     </a>
                   </TableCell>
