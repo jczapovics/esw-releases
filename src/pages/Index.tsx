@@ -278,7 +278,11 @@ const Index = () => {
   const activeProducts = getActiveProductsForPeriod(period);
 
   const handleReleaseClick = (releaseName: string) => {
-    const release = releases.find(r => `${r.product} ${r.releaseName}` === releaseName);
+    console.log("Clicking release:", releaseName); // Debug log
+    const [product, version] = releaseName.split(" • ");
+    console.log("Looking for product:", product, "version:", version); // Debug log
+    const release = releases.find(r => r.product === product && r.releaseName === version);
+    console.log("Found release:", release); // Debug log
     if (release) {
       setSelectedRelease(release);
     }
@@ -521,7 +525,10 @@ const Index = () => {
                       <p className="text-xs text-gray-500">{activity.date}</p>
                     </div>
                     <button
-                      onClick={() => handleReleaseClick(`${activity.product} ${activity.releaseName}`)}
+                      onClick={() => {
+                        console.log("Button clicked:", `${activity.product} • ${activity.releaseName}`); // Debug log
+                        handleReleaseClick(`${activity.product} • ${activity.releaseName}`);
+                      }}
                       className="text-xs text-brand-600 mt-1 hover:text-brand-700"
                     >
                       {activity.product} • {activity.releaseName}
