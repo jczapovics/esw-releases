@@ -362,7 +362,7 @@ const Index = () => {
   const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
 
   const handleCopyChart = async () => {
-    const chartSection = qualityCardRef.current?.querySelector('.h-[200px]');
+    const chartSection = qualityCardRef.current?.querySelector('.h-[200px]') as HTMLDivElement | null;
     if (!chartSection) {
       toast.error("Chart not found");
       return;
