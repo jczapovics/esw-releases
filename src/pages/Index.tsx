@@ -215,8 +215,8 @@ const releases = [
     releaseDate: "2024-03-15",
     dri: "Jane Smith",
     releaseNotes: "https://example.com/releases/payment-gateway-summer-2024",
-    status: "Deployed",
-    quality: "Good",
+    status: "Deployed" as const,
+    quality: "Good" as const,
     description: "Major version release with new features",
     incidents: 0
   },
@@ -228,8 +228,8 @@ const releases = [
     releaseDate: "2024-03-10",
     dri: "John Doe",
     releaseNotes: "https://example.com/releases/auth-service-v1-5",
-    status: "Deployed",
-    quality: "Bad",
+    status: "Deployed" as const,
+    quality: "Bad" as const,
     description: "API Performance Degradation",
     incidents: 2
   },
@@ -241,8 +241,8 @@ const releases = [
     releaseDate: "2024-03-05",
     dri: "Alice Johnson",
     releaseNotes: "https://example.com/releases/analytics-hotfix-v1-9-1",
-    status: "Deployed",
-    quality: "Good",
+    status: "Deployed" as const,
+    quality: "Good" as const,
     description: "Hotfix v1.9.1 deployed successfully",
     incidents: 0
   }
