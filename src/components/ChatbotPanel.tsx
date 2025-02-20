@@ -9,6 +9,7 @@ import { Send, MessageSquare, User } from "lucide-react";
 type Message = {
   role: "assistant" | "user";
   content: string;
+  isStreaming?: boolean;
 };
 
 export function ChatbotPanel() {
@@ -37,19 +38,49 @@ export function ChatbotPanel() {
     setTimeout(scrollToBottom, 100);
   }, [messages]);
 
+  const simulateStreamingResponse = async (response: string) => {
+    const fullResponse = response;
+    let currentResponse = "";
+    
+    // Add empty streaming message
+    setMessages(prev => [...prev, { 
+      role: "assistant", 
+      content: "",
+      isStreaming: true
+    }]);
+
+    // Stream each character
+    for (let i = 0; i < fullResponse.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 50)); // Delay between each character
+      currentResponse += fullResponse[i];
+      
+      setMessages(prev => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = {
+          role: "assistant",
+          content: currentResponse,
+          isStreaming: i < fullResponse.length - 1
+        };
+        return newMessages;
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     const userMessage = input.trim();
     setInput("");
+    setIsLoading(true);
+    
+    // Add user message immediately
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     
-    // For now, just echo back the message
-    setMessages(prev => [...prev, { 
-      role: "assistant", 
-      content: "I'm still learning about your release data. Soon I'll be able to help you analyze it!" 
-    }]);
+    // Simulate streaming AI response
+    await simulateStreamingResponse("I'm still learning about your release data. Soon I'll be able to help you analyze it!");
+    
+    setIsLoading(false);
   };
 
   return (
@@ -79,6 +110,9 @@ export function ChatbotPanel() {
                       : "bg-brand-600 text-white"
                   }`}>
                     {message.content}
+                    {message.isStreaming && (
+                      <span className="inline-block w-1.5 h-4 ml-1 bg-brand-600 animate-pulse" />
+                    )}
                   </div>
                 </div>
                 {message.role === "user" && (
