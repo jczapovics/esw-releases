@@ -262,7 +262,22 @@ const Index = () => {
   const handleCopyAsImage = async () => {
     if (qualityCardRef.current) {
       try {
-        const dataUrl = await toPng(qualityCardRef.current, { quality: 1.0 });
+        // Add a small delay to ensure charts are fully rendered
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        const dataUrl = await toPng(qualityCardRef.current, { 
+          quality: 1.0,
+          height: qualityCardRef.current.offsetHeight,
+          width: qualityCardRef.current.offsetWidth,
+          style: {
+            // Ensure charts are visible in the captured image
+            '.recharts-surface': {
+              visibility: 'visible',
+            }
+          },
+          cacheBust: true, // Prevent caching issues
+        });
+
         // Create a temporary img element
         const img = document.createElement('img');
         img.src = dataUrl;
@@ -275,22 +290,24 @@ const Index = () => {
         // Wait for the image to load
         img.onload = async () => {
           const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0);
-          try {
-            // Copy to clipboard
-            canvas.toBlob(async (blob) => {
-              if (blob) {
-                await navigator.clipboard.write([
-                  new ClipboardItem({
-                    'image/png': blob
-                  })
-                ]);
-                toast.success("Quality report copied to clipboard");
-              }
-            }, 'image/png');
-          } catch (err) {
-            toast.error("Failed to copy to clipboard");
-            console.error(err);
+          if (ctx) {
+            ctx.drawImage(img, 0, 0);
+            try {
+              // Copy to clipboard
+              canvas.toBlob(async (blob) => {
+                if (blob) {
+                  await navigator.clipboard.write([
+                    new ClipboardItem({
+                      'image/png': blob
+                    })
+                  ]);
+                  toast.success("Quality report copied to clipboard");
+                }
+              }, 'image/png', 1.0);
+            } catch (err) {
+              toast.error("Failed to copy to clipboard");
+              console.error(err);
+            }
           }
         };
       } catch (err) {
