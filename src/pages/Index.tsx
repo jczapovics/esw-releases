@@ -269,11 +269,12 @@ const Index = () => {
           quality: 1.0,
           height: qualityCardRef.current.offsetHeight,
           width: qualityCardRef.current.offsetWidth,
-          style: {
-            // Ensure charts are visible in the captured image
-            '.recharts-surface': {
-              visibility: 'visible',
+          filter: (node) => {
+            // Make sure recharts elements are included
+            if (node.classList?.contains('recharts-surface')) {
+              return true;
             }
+            return true;
           },
           cacheBust: true, // Prevent caching issues
         });
