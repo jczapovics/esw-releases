@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { DashboardLayout } from "@/components/DashboardLayout";
@@ -9,6 +10,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
 import { ExternalLink, Pencil, Trash2, X, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -137,6 +148,8 @@ const Incidents = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Incident>>({});
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletingIncident, setDeletingIncident] = useState<Incident | null>(null);
   const { toast } = useToast();
 
   const handleEdit = (incident: Incident) => {
@@ -163,12 +176,21 @@ const Incidents = () => {
     });
   };
 
-  const handleDelete = (id: string) => {
-    setIncidents(incidents.filter(inc => inc.id !== id));
-    toast({
-      title: "Success",
-      description: "Incident deleted successfully",
-    });
+  const handleDeleteClick = (incident: Incident) => {
+    setDeletingIncident(incident);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    if (deletingIncident) {
+      setIncidents(incidents.filter(inc => inc.id !== deletingIncident.id));
+      toast({
+        title: "Success",
+        description: "Incident deleted successfully",
+      });
+      setShowDeleteConfirm(false);
+      setDeletingIncident(null);
+    }
   };
 
   const handleReleaseClick = (releaseId: string) => {
@@ -180,6 +202,24 @@ const Incidents = () => {
 
   return (
     <DashboardLayout>
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the incident
+              "{deletingIncident?.name}" and remove all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete Incident
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="animate-fadeIn">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">Incidents</h1>
@@ -322,7 +362,7 @@ const Incidents = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDelete(incident.id)}
+                            onClick={() => handleDeleteClick(incident)}
                           >
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
