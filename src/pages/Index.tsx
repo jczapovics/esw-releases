@@ -265,28 +265,29 @@ const Index = () => {
         // Add a longer delay to ensure charts are fully rendered
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        // Get all the content height including the chart
-        const contentHeight = qualityCardRef.current.scrollHeight;
+        // Get the chart container
+        const chartContainer = qualityCardRef.current.querySelector('.recharts-wrapper');
+        if (!chartContainer) {
+          console.error('Chart container not found');
+          return;
+        }
+
+        // Calculate total height including the chart
+        const chartHeight = 200; // Fixed height from the chart container
+        const otherContent = qualityCardRef.current.querySelector('.space-y-4');
+        const totalHeight = (otherContent?.clientHeight || 0) + chartHeight + 100; // Add padding
         
         const dataUrl = await toPng(qualityCardRef.current, { 
           quality: 1.0,
-          height: contentHeight,
+          height: totalHeight,
           width: qualityCardRef.current.offsetWidth,
           style: {
             transform: 'scale(1)',
             transformOrigin: 'top left',
-            height: `${contentHeight}px`,  // Explicitly set the height
+            height: `${totalHeight}px`,  // Explicitly set the height
           },
           filter: (node) => {
-            // Explicitly include Recharts SVG elements
-            if (
-              node instanceof HTMLElement && 
-              (node.classList?.contains('recharts-wrapper') ||
-               node.classList?.contains('recharts-surface') ||
-               node.tagName.toLowerCase() === 'svg')
-            ) {
-              return true;
-            }
+            // Include all elements
             return true;
           },
           cacheBust: true,
@@ -300,7 +301,7 @@ const Index = () => {
         // Create a canvas with higher resolution
         const canvas = document.createElement('canvas');
         canvas.width = qualityCardRef.current.offsetWidth * 2;
-        canvas.height = contentHeight * 2;  // Use the full content height
+        canvas.height = totalHeight * 2;  // Use the calculated total height
         
         // Wait for the image to load
         img.onload = async () => {
