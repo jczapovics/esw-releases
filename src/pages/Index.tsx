@@ -204,45 +204,45 @@ const getActiveProductsForPeriod = (period: Period): ActiveProduct[] => {
   }
 };
 
-// Add releases data
+// Update releases data to match activity feed
 const releases = [
   {
     id: 1,
     businessUnit: "Financial Services",
     product: "Payment Gateway",
-    releaseName: "v2.1",
+    releaseName: "Summer Release 2024",
     releaseDate: "2024-03-15",
     dri: "Jane Smith",
-    releaseNotes: "https://example.com/releases/payment-gateway-v2-1",
+    releaseNotes: "https://example.com/releases/payment-gateway-summer-2024",
     status: "Deployed",
     quality: "Good",
-    description: "Major update to the payment processing system with improved security features.",
+    description: "Major version release with new features",
     incidents: 0
   },
   {
     id: 2,
     businessUnit: "Security",
     product: "User Authentication",
-    releaseName: "v1.5",
+    releaseName: "Auth Service v1.5",
     releaseDate: "2024-03-10",
     dri: "John Doe",
     releaseNotes: "https://example.com/releases/auth-service-v1-5",
     status: "Deployed",
     quality: "Bad",
-    description: "Enhanced two-factor authentication implementation.",
+    description: "API Performance Degradation",
     incidents: 2
   },
   {
     id: 3,
     businessUnit: "Data Intelligence",
     product: "Analytics Dashboard",
-    releaseName: "v3.0",
+    releaseName: "Hotfix v1.9.1",
     releaseDate: "2024-03-05",
     dri: "Alice Johnson",
-    releaseNotes: "https://example.com/releases/analytics-v3-0",
+    releaseNotes: "https://example.com/releases/analytics-hotfix-v1-9-1",
     status: "Deployed",
     quality: "Good",
-    description: "Complete redesign of the analytics dashboard with new metrics.",
+    description: "Hotfix v1.9.1 deployed successfully",
     incidents: 0
   }
 ];
