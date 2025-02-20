@@ -1,3 +1,4 @@
+
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -29,6 +30,8 @@ const activityFeed = [
   {
     id: 1,
     title: "New Release: v2.0.0",
+    product: "Payment Gateway",
+    releaseName: "Summer Release 2024",
     description: "Major version release with new features",
     date: "2h ago",
     type: "release",
@@ -36,6 +39,8 @@ const activityFeed = [
   {
     id: 2,
     title: "Incident Reported",
+    product: "User Authentication",
+    releaseName: "Auth Service v1.5",
     description: "API Performance Degradation",
     date: "4h ago",
     type: "incident",
@@ -43,6 +48,8 @@ const activityFeed = [
   {
     id: 3,
     title: "Release Deployed",
+    product: "Analytics Dashboard",
+    releaseName: "Hotfix v1.9.1",
     description: "Hotfix v1.9.1 deployed successfully",
     date: "1d ago",
     type: "release",
@@ -153,7 +160,7 @@ const Index = () => {
               {activityFeed.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-start space-x-3 animate-slideIn"
+                  className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <div
                     className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
@@ -163,13 +170,16 @@ const Index = () => {
                     }`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">
-                      {activity.title}
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-900">
+                        {activity.title}
+                      </p>
+                      <p className="text-xs text-gray-500">{activity.date}</p>
+                    </div>
+                    <p className="text-xs text-brand-600 mt-1">
+                      {activity.product} • {activity.releaseName}
                     </p>
-                    <p className="text-sm text-gray-500">{activity.description}</p>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <p className="text-xs text-gray-500">{activity.date}</p>
+                    <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
                   </div>
                 </div>
               ))}
