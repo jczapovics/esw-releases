@@ -2,10 +2,12 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown, Copy } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { toPng } from 'html-to-image';
+import { toast } from "sonner";
 import {
   Pagination,
   PaginationContent,
@@ -130,10 +132,27 @@ const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
   const stats = getStatsForPeriod(period);
+  const qualityCardRef = useRef<HTMLDivElement>(null);
 
   const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedActivity = activityFeed.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handleCopyAsImage = async () => {
+    if (qualityCardRef.current) {
+      try {
+        const dataUrl = await toPng(qualityCardRef.current, { quality: 1.0 });
+        const link = document.createElement('a');
+        link.download = 'release-quality.png';
+        link.href = dataUrl;
+        link.click();
+        toast.success("Quality report downloaded as image");
+      } catch (err) {
+        toast.error("Failed to download image");
+        console.error(err);
+      }
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -190,8 +209,19 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Release Quality</h2>
+          <Card className="p-6" ref={qualityCardRef}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Release Quality</h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopyAsImage}
+                className="flex items-center gap-2"
+              >
+                <Copy className="h-4 w-4" />
+                Save as Image
+              </Button>
+            </div>
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-1 text-sm">
