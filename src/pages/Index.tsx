@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Copy, HelpCircle } from "lucide-react";
+import { ArrowUp, ArrowDown, Copy } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -24,12 +24,6 @@ import {
 } from "@/components/ui/sheet";
 import { format } from "date-fns";
 import { ReleasePanel } from "@/components/ReleasePanel";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 type Period = "month" | "quarter" | "year";
 
@@ -175,7 +169,7 @@ const getProductQualityForPeriod = (period: Period): ProductQuality[] => {
         { product: "Analytics Dashboard", qualityPercentage: 92, incidents: 8, trend: "up", change: "+6%" },
       ];
   }
-};
+}
 
 // Add type for active products
 type ActiveProduct = {
@@ -209,7 +203,7 @@ const getActiveProductsForPeriod = (period: Period): ActiveProduct[] => {
         { product: "User Authentication", releases: 54, change: "-5", trend: "down" },
       ];
   }
-};
+}
 
 // Update releases data to match activity feed
 const releases = [
@@ -425,24 +419,6 @@ const Index = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <HelpCircle className="h-4 w-4 text-gray-400" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">
-                      Quality ranking is calculated based on:
-                      <br />- Number of successful releases
-                      <br />- Incident frequency
-                      <br />- Mean time between failures
-                      <br />- Customer impact severity
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
             <div className="space-y-4">
               {productQualityRanking.map((product, index) => (
@@ -494,24 +470,6 @@ const Index = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Most Active Products</h2>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <HelpCircle className="h-4 w-4 text-gray-400" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">
-                      Activity ranking is based on:
-                      <br />- Release frequency
-                      <br />- Number of deployments
-                      <br />- Development velocity
-                      <br />- Commit frequency
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
             <div className="space-y-4">
               {activeProducts.map((product, index) => (
