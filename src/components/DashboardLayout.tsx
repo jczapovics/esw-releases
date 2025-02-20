@@ -43,11 +43,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                   <a
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center px-4 py-3 text-gray-700 rounded-lg transition-all duration-300 group ${
-                      window.location.pathname === item.href ? 'bg-brand-50 text-brand-700' : 'hover:bg-brand-50 hover:text-brand-700'
+                    className={`flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200 ${
+                      window.location.pathname === item.href ? 'bg-brand-50 text-brand-700' : ''
                     }`}
                   >
-                    <item.icon className="h-5 w-5 mr-3 transform transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12" />
+                    <item.icon className="h-5 w-5 mr-3" />
                     {item.name}
                   </a>
                 ))}
@@ -58,18 +58,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center space-y-2">
                   <Button
                     variant="outline"
-                    className="w-full justify-center text-gray-700 group"
+                    className="w-full justify-center text-gray-700 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
                     onClick={handleAddRelease}
                   >
-                    <Plus className="h-4 w-4 mr-2 transform transition-all duration-500 ease-in-out group-hover:rotate-180 group-hover:scale-110" />
+                    <Plus className="h-4 w-4 mr-2" />
                     Add Release
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full justify-center text-gray-700 group"
+                    className="w-full justify-center text-gray-700 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
                     onClick={handleAddIncident}
                   >
-                    <Plus className="h-4 w-4 mr-2 transform transition-all duration-500 ease-in-out group-hover:rotate-180 group-hover:scale-110" />
+                    <Plus className="h-4 w-4 mr-2" />
                     Add Incident
                   </Button>
                 </div>
@@ -78,9 +78,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <div className="mt-4">
                   <a
                     href="/login"
-                    className="flex items-center px-4 py-3 text-gray-700 rounded-lg transition-all duration-300 group hover:bg-brand-50 hover:text-brand-700"
+                    className="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200"
                   >
-                    <LogOut className="h-5 w-5 mr-3 transform transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12" />
+                    <LogOut className="h-5 w-5 mr-3" />
                     Sign Out
                   </a>
                 </div>
