@@ -24,6 +24,12 @@ import {
 } from "@/components/ui/sheet";
 import { format } from "date-fns";
 import { ReleasePanel } from "@/components/ReleasePanel";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Period = "month" | "quarter" | "year";
 
@@ -419,7 +425,22 @@ const Index = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
-              <HelpCircle className="h-4 w-4 text-gray-400" />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      Quality ranking is calculated based on:
+                      <br />- Number of successful releases
+                      <br />- Incident frequency
+                      <br />- Mean time between failures
+                      <br />- Customer impact severity
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div className="space-y-4">
               {productQualityRanking.map((product, index) => (
@@ -471,7 +492,22 @@ const Index = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Most Active Products</h2>
-              <HelpCircle className="h-4 w-4 text-gray-400" />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      Activity ranking is based on:
+                      <br />- Release frequency
+                      <br />- Number of deployments
+                      <br />- Development velocity
+                      <br />- Commit frequency
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div className="space-y-4">
               {activeProducts.map((product, index) => (
