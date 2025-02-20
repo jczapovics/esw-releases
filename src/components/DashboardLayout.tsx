@@ -1,119 +1,114 @@
 
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
+import { Box, LayoutDashboard, AlertCircle, LogOut, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  BarChart3,
-  AlertCircle,
-  Boxes,
-  Activity,
-  Settings,
-  HelpCircle,
-} from "lucide-react";
-import { useLocation } from "react-router-dom";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Sidebar, SidebarProvider } from "./ui/sidebar";
+import { toast } from "sonner";
+import { useState } from "react";
+import { AddReleaseSheet } from "./AddReleaseSheet";
+import { AddIncidentSheet } from "./AddIncidentSheet";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-const links = [
-  {
-    name: "Overview",
-    href: "/",
-    icon: BarChart3,
-  },
-  {
-    name: "Releases",
-    href: "/releases",
-    icon: Boxes,
-  },
-  {
-    name: "Incidents",
-    href: "/incidents",
-    icon: AlertCircle,
-  },
-  {
-    name: "Activity",
-    href: "/activity",
-    icon: Activity,
-  },
+const mainNavigation = [
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Releases", href: "/releases", icon: Box },
+  { name: "Incidents", href: "/incidents", icon: AlertCircle },
 ];
 
-const secondaryLinks = [
-  {
-    name: "Help",
-    href: "/help",
-    icon: HelpCircle,
-  },
-  {
-    name: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
-];
+export function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
+  const [isAddIncidentOpen, setIsAddIncidentOpen] = useState(false);
 
-export const DashboardLayout = ({ children }: Props) => {
-  const { pathname } = useLocation();
-  const isMobile = useIsMobile();
+  const handleAddRelease = () => {
+    setIsAddReleaseOpen(true);
+  };
+
+  const handleAddIncident = () => {
+    setIsAddIncidentOpen(true);
+  };
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
+      <div className="min-h-screen flex w-full bg-gray-50">
         <Sidebar>
-          <div className="px-3 py-2">
-            <Link
-              to="/"
-              className="px-3 py-2 flex items-center mb-8 mt-2 text-xl tracking-wide"
-            >
-              <span className="font-bold text-brand-600">E</span>
-              <span className="font-normal text-gray-600 mx-1">SW</span>
-              <span className="font-bold text-brand-600">R</span>
-              <span className="font-normal text-gray-600">eleases</span>
-            </Link>
-            <div className="space-y-1">
-              {links.map((link) => (
-                <Button
-                  key={link.href}
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start gap-2",
-                    pathname === link.href && "bg-gray-100"
-                  )}
-                  asChild
-                >
-                  <Link to={link.href}>
-                    <link.icon className="h-4 w-4" />
-                    {link.name}
-                  </Link>
-                </Button>
-              ))}
-            </div>
-            <div className="mt-8">
-              <div className="space-y-1">
-                {secondaryLinks.map((link) => (
-                  <Button
-                    key={link.href}
-                    variant="ghost"
-                    className={cn(
-                      "w-full justify-start gap-2",
-                      pathname === link.href && "bg-gray-100"
-                    )}
-                    asChild
+          <SidebarContent>
+            <div className="px-3 py-4 flex flex-col h-full">
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-brand-700">
+                  ESW Releases
+                </h1>
+              </div>
+              <nav className="space-y-1">
+                {mainNavigation.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className={`flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200 ${
+                      window.location.pathname === item.href ? 'bg-brand-50 text-brand-700' : ''
+                    }`}
                   >
-                    <Link to={link.href}>
-                      <link.icon className="h-4 w-4" />
-                      {link.name}
-                    </Link>
-                  </Button>
+                    <item.icon className="h-5 w-5 mr-3" />
+                    {item.name}
+                  </a>
                 ))}
+              </nav>
+              
+              {/* Action Buttons Section */}
+              <div className="mt-auto mb-4">
+                <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center space-y-2">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-center text-gray-700 hover:text-brand-700"
+                    onClick={handleAddRelease}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Release
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-center text-gray-700 hover:text-brand-700"
+                    onClick={handleAddIncident}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Incident
+                  </Button>
+                </div>
+                
+                {/* Sign Out at the bottom */}
+                <div className="mt-4">
+                  <a
+                    href="/login"
+                    className="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200"
+                  >
+                    <LogOut className="h-5 w-5 mr-3" />
+                    Sign Out
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          </SidebarContent>
         </Sidebar>
-        <main className="flex-1 p-8 overflow-auto">{children}</main>
+
+        <main className="flex-1 p-8">
+          <div className="mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex-1">
+                <SidebarTrigger />
+              </div>
+            </div>
+            {children}
+          </div>
+        </main>
+
+        <AddReleaseSheet 
+          isOpen={isAddReleaseOpen}
+          onClose={() => setIsAddReleaseOpen(false)}
+        />
+        <AddIncidentSheet 
+          isOpen={isAddIncidentOpen}
+          onClose={() => setIsAddIncidentOpen(false)}
+        />
       </div>
     </SidebarProvider>
   );
-};
+}
