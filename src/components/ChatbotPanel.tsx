@@ -50,18 +50,16 @@ export function ChatbotPanel() {
               key={index}
               className={`flex ${
                 message.role === "assistant" ? "justify-start" : "justify-end"
-              } gap-3`}
+              } items-start gap-3`}
             >
               {message.role === "assistant" && (
                 <MessageSquare className="w-6 h-6 mt-1 text-brand-600 shrink-0" />
               )}
-              <div className={`flex-1 max-w-[80%] space-y-2 ${
-                message.role === "user" ? "ml-auto" : ""
-              }`}>
-                <div className={`inline-block rounded-lg p-3 shadow-sm ${
+              <div className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} max-w-[80%]`}>
+                <div className={`inline-block rounded-lg px-4 py-2 shadow-sm ${
                   message.role === "assistant" 
                     ? "bg-white text-gray-700" 
-                    : "bg-brand-600 text-white ml-auto"
+                    : "bg-brand-600 text-white"
                 }`}>
                   {message.content}
                 </div>
