@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
 import { AddReleaseSheet } from "./AddReleaseSheet";
+import { AddIncidentSheet } from "./AddIncidentSheet";
 
 const mainNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -16,14 +17,14 @@ const mainNavigation = [
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
+  const [isAddIncidentOpen, setIsAddIncidentOpen] = useState(false);
 
   const handleAddRelease = () => {
     setIsAddReleaseOpen(true);
   };
 
   const handleAddIncident = () => {
-    // Placeholder for add incident functionality
-    toast.info("Add incident functionality coming soon");
+    setIsAddIncidentOpen(true);
   };
 
   return (
@@ -102,6 +103,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         <AddReleaseSheet 
           isOpen={isAddReleaseOpen}
           onClose={() => setIsAddReleaseOpen(false)}
+        />
+        <AddIncidentSheet 
+          isOpen={isAddIncidentOpen}
+          onClose={() => setIsAddIncidentOpen(false)}
         />
       </div>
     </SidebarProvider>
