@@ -37,66 +37,59 @@ export function ChatbotPanel() {
   };
 
   return (
-    <Card className="mt-8 p-4 shadow-lg bg-white/50 backdrop-blur-sm border-brand-100">
-      <div className="flex items-center gap-2 mb-6 pb-3 border-b">
-        <div className="bg-brand-100 p-2 rounded-lg">
-          <MessageSquare className="h-5 w-5 text-brand-600" />
-        </div>
-        <h2 className="text-lg font-semibold text-gray-800">AI Assistant</h2>
+    <Card className="mt-8 p-4 shadow-lg bg-white/50 backdrop-blur-sm">
+      <div className="flex items-center gap-2 mb-4">
+        <MessageSquare className="h-5 w-5 text-brand-600" />
+        <h2 className="text-lg font-semibold">AI Assistant</h2>
       </div>
       
-      <ScrollArea className="h-[300px] pr-4 mb-6">
-        <div className="space-y-6">
+      <ScrollArea className="h-[300px] pr-4 mb-4">
+        <div className="space-y-4">
           {messages.map((message, index) => (
             <div
               key={index}
               className={`flex ${
                 message.role === "assistant" ? "justify-start" : "justify-end"
-              } gap-3 animate-fadeIn`}
+              } gap-3`}
             >
               {message.role === "assistant" && (
-                <div className="bg-brand-50 p-1.5 rounded-lg h-fit">
-                  <MessageSquare className="w-5 h-5 text-brand-600 shrink-0" />
-                </div>
+                <MessageSquare className="w-6 h-6 mt-1 text-brand-600 shrink-0" />
               )}
-              <div className={`flex-1 max-w-[80%] ${
+              <div className={`flex-1 max-w-[80%] space-y-2 ${
                 message.role === "user" ? "ml-auto" : ""
               }`}>
-                <div className={`rounded-xl p-3.5 shadow-sm ${
+                <div className={`rounded-lg p-3 shadow-sm ${
                   message.role === "assistant" 
-                    ? "bg-white text-gray-700 border border-brand-100" 
-                    : "bg-gradient-to-br from-brand-600 to-brand-700 text-white"
+                    ? "bg-white text-gray-700" 
+                    : "bg-brand-600 text-white ml-auto"
                 }`}>
                   {message.content}
                 </div>
               </div>
               {message.role === "user" && (
-                <div className="bg-gray-100 p-1.5 rounded-lg h-fit">
-                  <User className="w-5 h-5 text-gray-600 shrink-0" />
-                </div>
+                <User className="w-6 h-6 mt-1 text-gray-600 shrink-0" />
               )}
             </div>
           ))}
         </div>
       </ScrollArea>
 
-      <div className="pt-3 border-t">
-        <form onSubmit={handleSubmit} className="flex gap-3">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about your releases..."
-            className="flex-1 bg-white/80 border-brand-100 focus-visible:ring-brand-200"
-          />
-          <Button 
-            type="submit" 
-            disabled={isLoading || !input.trim()}
-            className="bg-brand-600 hover:bg-brand-700 shadow-sm"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
-        </form>
-      </div>
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask about your releases..."
+          className="flex-1"
+          disabled={isLoading}
+        />
+        <Button 
+          type="submit" 
+          disabled={isLoading || !input.trim()}
+          className="bg-brand-600 hover:bg-brand-700"
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      </form>
     </Card>
   );
 }
