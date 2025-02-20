@@ -14,9 +14,9 @@ const mainNavigation = [
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
-  const handleAddProject = () => {
-    // Placeholder for add project functionality
-    toast.info("Add project functionality coming soon");
+  const handleAddRelease = () => {
+    // Placeholder for add release functionality
+    toast.info("Add release functionality coming soon");
   };
 
   const handleAddIncident = () => {
@@ -52,18 +52,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               
               {/* Action Buttons Section */}
               <div className="mt-auto mb-4">
-                <div className="bg-gray-100 rounded-lg p-4 space-y-2">
+                <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center space-y-2">
                   <Button
                     variant="outline"
-                    className="w-full justify-start text-gray-700 hover:text-brand-700"
-                    onClick={handleAddProject}
+                    className="w-full justify-center text-gray-700 hover:text-brand-700"
+                    onClick={handleAddRelease}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Project
+                    Add Release
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full justify-start text-gray-700 hover:text-brand-700"
+                    className="w-full justify-center text-gray-700 hover:text-brand-700"
                     onClick={handleAddIncident}
                   >
                     <Plus className="h-4 w-4 mr-2" />
