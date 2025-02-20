@@ -161,10 +161,7 @@ const Incidents = () => {
             }
           : inc
       ));
-      toast({
-        title: "Success",
-        description: "Incident linked to release successfully",
-      });
+      toast("Incident linked to release successfully");
     }
   };
 
@@ -176,10 +173,7 @@ const Incidents = () => {
   const confirmDelete = () => {
     if (incidentToDelete) {
       setIncidents(incidents.filter(inc => inc.id !== incidentToDelete.id));
-      toast({
-        title: "Success",
-        description: "Incident deleted successfully",
-      });
+      toast("Incident deleted successfully");
       setDeleteDialogOpen(false);
       setIncidentToDelete(null);
     }
