@@ -1,9 +1,8 @@
 
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle, LogOut, Plus } from "lucide-react";
+import { Box, LayoutDashboard, AlertCircle, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { useState } from "react";
 import { AddReleaseSheet } from "./AddReleaseSheet";
 import { AddIncidentSheet } from "./AddIncidentSheet";
@@ -18,14 +17,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
   const [isAddIncidentOpen, setIsAddIncidentOpen] = useState(false);
-
-  const handleAddRelease = () => {
-    setIsAddReleaseOpen(true);
-  };
-
-  const handleAddIncident = () => {
-    setIsAddIncidentOpen(true);
-  };
 
   const handleSignOut = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -61,37 +52,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 ))}
               </nav>
               
-              {/* Action Buttons Section */}
-              <div className="mt-auto mb-4 relative z-10">
-                <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center space-y-2">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-center text-gray-700 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-                    onClick={handleAddRelease}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Release
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-center text-gray-700 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-                    onClick={handleAddIncident}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Incident
-                  </Button>
-                </div>
-                
-                {/* Sign Out at the bottom */}
-                <div className="mt-4">
-                  <button
-                    onClick={handleSignOut}
-                    className="flex w-full items-center px-6 py-2.5 text-gray-700 rounded-full transition-all duration-300 transform hover:translate-x-1 hover:bg-brand-50/50 hover:text-brand-700"
-                  >
-                    <LogOut className="h-5 w-5 mr-3" />
-                    Sign Out
-                  </button>
-                </div>
+              {/* Sign Out at the bottom */}
+              <div className="mt-auto relative z-10">
+                <button
+                  onClick={handleSignOut}
+                  className="flex w-full items-center px-6 py-2.5 text-gray-700 rounded-full transition-all duration-300 transform hover:translate-x-1 hover:bg-brand-50/50 hover:text-brand-700"
+                >
+                  <LogOut className="h-5 w-5 mr-3" />
+                  Sign Out
+                </button>
               </div>
             </div>
           </SidebarContent>
