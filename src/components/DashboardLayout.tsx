@@ -41,23 +41,26 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           <SidebarContent>
             <div className="px-3 py-4 flex flex-col h-full relative">
               {/* Icons pattern overlay - now inside the sidebar */}
-              <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0">
-                {[...Array(20)].map((_, i) => {
-                  const Icon = backgroundIcons[i % backgroundIcons.length];
-                  const randomX = Math.random() * 100;
-                  const randomY = Math.random() * 100;
-                  const randomRotate = Math.random() * 360;
-                  const randomSize = Math.random() * (64 - 32) + 32; // Random size between 32px and 64px
+              <div className="absolute inset-0 opacity-[0.15] pointer-events-none z-0">
+                {[...Array(5)].map((_, i) => {
+                  const Icon = backgroundIcons[i];
+                  const positions = [
+                    { x: 20, y: 15 },
+                    { x: 70, y: 30 },
+                    { x: 40, y: 50 },
+                    { x: 80, y: 70 },
+                    { x: 30, y: 85 },
+                  ];
                   return (
                     <Icon
                       key={i}
                       className="absolute text-brand-700"
                       style={{
-                        left: `${randomX}%`,
-                        top: `${randomY}%`,
-                        transform: `rotate(${randomRotate}deg)`,
-                        width: `${randomSize}px`,
-                        height: `${randomSize}px`
+                        left: `${positions[i].x}%`,
+                        top: `${positions[i].y}%`,
+                        transform: `rotate(${Math.random() * 360}deg)`,
+                        width: '48px',
+                        height: '48px'
                       }}
                     />
                   );
