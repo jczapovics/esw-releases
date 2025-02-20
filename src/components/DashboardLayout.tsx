@@ -1,4 +1,3 @@
-
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Box, LayoutDashboard, AlertCircle, FileText, User } from "lucide-react";
 
@@ -10,7 +9,7 @@ const navigation = [
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
         <Sidebar>
           <SidebarContent>
@@ -25,9 +24,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                   <a
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200 ${
-                      window.location.pathname === item.href ? 'bg-brand-50 text-brand-700' : ''
-                    }`}
+                    className="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200"
                   >
                     <item.icon className="h-5 w-5 mr-3" />
                     {item.name}
