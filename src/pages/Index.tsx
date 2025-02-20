@@ -399,7 +399,7 @@ const Index = () => {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Most Active Products</h2>
@@ -439,71 +439,67 @@ const Index = () => {
             </div>
           </Card>
 
-          <div className="lg:hidden">
-            {/* Empty div for grid spacing on mobile */}
-          </div>
-        </div>
-
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-          <div className="space-y-4">
-            {paginatedActivity.map((activity) => (
-              <div
-                key={activity.id}
-                className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+            <div className="space-y-4">
+              {paginatedActivity.map((activity) => (
                 <div
-                  className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
-                    activity.type === "release"
-                      ? "bg-brand-500"
-                      : "bg-red-500"
-                  }`}
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900">
-                      {activity.title}
+                  key={activity.id}
+                  className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <div
+                    className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
+                      activity.type === "release"
+                        ? "bg-brand-500"
+                        : "bg-red-500"
+                    }`}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-900">
+                        {activity.title}
+                      </p>
+                      <p className="text-xs text-gray-500">{activity.date}</p>
+                    </div>
+                    <p className="text-xs text-brand-600 mt-1">
+                      {activity.product} • {activity.releaseName}
                     </p>
-                    <p className="text-xs text-gray-500">{activity.date}</p>
+                    <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
                   </div>
-                  <p className="text-xs text-brand-600 mt-1">
-                    {activity.product} • {activity.releaseName}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <PaginationItem key={i + 1}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(i + 1)}
-                      isActive={currentPage === i + 1}
-                      className="cursor-pointer"
-                    >
-                      {i + 1}
-                    </PaginationLink>
+              ))}
+            </div>
+            <div className="mt-4">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
                   </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </Card>
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <PaginationItem key={i + 1}>
+                      <PaginationLink
+                        onClick={() => setCurrentPage(i + 1)}
+                        isActive={currentPage === i + 1}
+                        className="cursor-pointer"
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </Card>
+        </div>
       </div>
     </DashboardLayout>
   );
