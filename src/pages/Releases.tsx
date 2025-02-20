@@ -1,6 +1,5 @@
 
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -9,51 +8,47 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Check, X } from "lucide-react";
+import { Check, Link } from "lucide-react";
 
 // Mock data - in a real app this would come from an API
 const releases = [
   {
     id: 1,
-    name: "Payment Gateway v2.1",
     businessUnit: "Financial Services",
     product: "Payment Gateway",
     quality: "high",
     date: "2024-03-15",
-    status: "success"
+    releaseNotes: "https://example.com/releases/payment-gateway-v2-1"
   },
   {
     id: 2,
-    name: "Auth Service v1.5",
     businessUnit: "Security",
     product: "User Authentication",
-    quality: "medium",
+    quality: "low",
     date: "2024-03-10",
-    status: "failed"
+    releaseNotes: "https://example.com/releases/auth-service-v1-5"
   },
   {
     id: 3,
-    name: "Analytics Dashboard v3.0",
     businessUnit: "Data Intelligence",
     product: "Analytics Dashboard",
     quality: "high",
     date: "2024-03-05",
-    status: "success"
+    releaseNotes: "https://example.com/releases/analytics-v3-0"
   },
   {
     id: 4,
-    name: "Search Service v2.0",
     businessUnit: "Core Services",
     product: "Search Engine",
     quality: "low",
     date: "2024-03-01",
-    status: "success"
+    releaseNotes: "https://example.com/releases/search-v2-0"
   }
 ];
 
 const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
 const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
-const qualityLevels = ["All", "high", "medium", "low"];
+const qualityLevels = ["All", "high", "low"];
 
 const Releases = () => {
   const [selectedBU, setSelectedBU] = useState("All");
@@ -111,40 +106,44 @@ const Releases = () => {
           </Select>
         </div>
 
-        <div className="space-y-4">
-          {filteredReleases.map((release) => (
-            <Card key={release.id} className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{release.name}</h3>
-                    {release.status === "success" ? (
-                      <Check className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <X className="h-4 w-4 text-red-500" />
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {release.businessUnit} • {release.product}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      release.quality === "high" 
-                        ? "bg-green-100 text-green-800" 
-                        : release.quality === "medium"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {release.quality.charAt(0).toUpperCase() + release.quality.slice(1)} Quality
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Released on {new Date(release.date).toLocaleDateString()}
-                    </span>
-                  </div>
+        <div className="bg-white rounded-lg shadow">
+          <div className="grid grid-cols-5 gap-4 p-4 font-medium text-gray-700 border-b">
+            <div>Business Unit</div>
+            <div>Product</div>
+            <div>Release Date</div>
+            <div>Quality</div>
+            <div>Release Notes</div>
+          </div>
+          <div className="divide-y">
+            {filteredReleases.map((release) => (
+              <div key={release.id} className="grid grid-cols-5 gap-4 p-4 items-center hover:bg-gray-50">
+                <div>{release.businessUnit}</div>
+                <div>{release.product}</div>
+                <div>{new Date(release.date).toLocaleDateString()}</div>
+                <div>
+                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                    release.quality === "high" 
+                      ? "bg-green-100 text-green-800" 
+                      : "bg-red-100 text-red-800"
+                  }`}>
+                    {release.quality === "high" && <Check className="h-3 w-3" />}
+                    {release.quality.charAt(0).toUpperCase() + release.quality.slice(1)}
+                  </span>
+                </div>
+                <div>
+                  <a 
+                    href={release.releaseNotes}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                  >
+                    <Link className="h-4 w-4" />
+                    View Notes
+                  </a>
                 </div>
               </div>
-            </Card>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </DashboardLayout>
