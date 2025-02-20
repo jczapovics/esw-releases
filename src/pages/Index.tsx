@@ -1,11 +1,10 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Copy } from "lucide-react";
+import { ArrowUp, ArrowDown } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { toPng } from 'html-to-image';
 import { toast } from "sonner";
 import {
   Pagination,
@@ -264,12 +263,12 @@ const Index = () => {
   const activeProducts = getActiveProductsForPeriod(period);
 
   const handleReleaseClick = (activity: typeof activityFeed[0]) => {
-    console.log("Clicking release:", activity); // Debug log
+    console.log("Clicking release:", activity);
     const release = releases.find(r => 
       r.product === activity.product && 
       r.releaseName === activity.releaseName
     );
-    console.log("Found release:", release); // Debug log
+    console.log("Found release:", release);
     if (release) {
       setSelectedRelease(release);
     }
@@ -277,42 +276,6 @@ const Index = () => {
 
   const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
   const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
-
-  const handleCopyChart = async () => {
-    const chartSection = qualityCardRef.current?.querySelector('.chart-container') as HTMLDivElement | null;
-    if (!chartSection) {
-      toast.error("Chart not found");
-      return;
-    }
-
-    try {
-      // Wait for chart to be fully rendered
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const dataUrl = await toPng(chartSection, {
-        quality: 1.0,
-        height: 200,
-        width: chartSection.clientWidth,
-        style: {
-          transform: 'scale(1)',
-          transformOrigin: 'top left',
-        },
-        pixelRatio: 2,
-      });
-
-      const blob = await fetch(dataUrl).then(res => res.blob());
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          'image/png': blob
-        })
-      ]);
-
-      toast.success('Chart copied to clipboard');
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to copy chart');
-    }
-  };
 
   return (
     <DashboardLayout>
@@ -396,18 +359,7 @@ const Index = () => {
                 <Progress value={92} className="h-2" />
               </div>
               <div className="mt-6">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-sm font-medium text-gray-700">Monthly Trend</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleCopyChart}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Copy className="h-4 w-4" />
-                    <span className="sr-only">Copy chart</span>
-                  </Button>
-                </div>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
                 <div className="chart-container h-[200px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={monthlyQualityTrend}>
