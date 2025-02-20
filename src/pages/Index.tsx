@@ -262,39 +262,53 @@ const Index = () => {
   const handleCopyAsImage = async () => {
     if (qualityCardRef.current) {
       try {
-        // Add a small delay to ensure charts are fully rendered
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Add a longer delay to ensure charts are fully rendered
+        await new Promise(resolve => setTimeout(resolve, 500));
         
         const dataUrl = await toPng(qualityCardRef.current, { 
           quality: 1.0,
           height: qualityCardRef.current.offsetHeight,
           width: qualityCardRef.current.offsetWidth,
+          style: {
+            transform: 'scale(1)',
+            transformOrigin: 'top left'
+          },
           filter: (node) => {
-            // Make sure recharts elements are included
-            if (node.classList?.contains('recharts-surface')) {
+            // Explicitly include Recharts SVG elements
+            if (
+              node instanceof HTMLElement && 
+              (node.classList?.contains('recharts-wrapper') ||
+               node.classList?.contains('recharts-surface') ||
+               node.tagName.toLowerCase() === 'svg')
+            ) {
               return true;
             }
             return true;
           },
-          cacheBust: true, // Prevent caching issues
+          cacheBust: true,
+          pixelRatio: 2, // Increase resolution
         });
 
         // Create a temporary img element
         const img = document.createElement('img');
         img.src = dataUrl;
         
-        // Create a canvas to draw the image
+        // Create a canvas with higher resolution
         const canvas = document.createElement('canvas');
-        canvas.width = qualityCardRef.current.offsetWidth;
-        canvas.height = qualityCardRef.current.offsetHeight;
+        canvas.width = qualityCardRef.current.offsetWidth * 2;
+        canvas.height = qualityCardRef.current.offsetHeight * 2;
         
         // Wait for the image to load
         img.onload = async () => {
           const ctx = canvas.getContext('2d');
           if (ctx) {
+            // Enable high-quality image scaling
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.scale(2, 2);
             ctx.drawImage(img, 0, 0);
+            
             try {
-              // Copy to clipboard
               canvas.toBlob(async (blob) => {
                 if (blob) {
                   toast.promise(
@@ -304,8 +318,8 @@ const Index = () => {
                       })
                     ]),
                     {
-                      loading: 'Copying quality report...',
-                      success: 'Quality report copied to clipboard',
+                      loading: 'Copying scorecard...',
+                      success: 'Scorecard copied to clipboard',
                       error: 'Failed to copy to clipboard'
                     }
                   );
