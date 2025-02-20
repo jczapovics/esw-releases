@@ -223,28 +223,31 @@ const Incidents = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="animate-fadeIn">
+      <div className="animate-fadeIn space-y-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">Incidents</h1>
         </div>
 
-        <Card>
+        <Card className="overflow-hidden border-none shadow-md bg-white/50 backdrop-blur-sm">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Date Reported</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Document</TableHead>
-                <TableHead>Linked Release</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
+              <TableRow className="border-b border-gray-100 hover:bg-transparent">
+                <TableHead className="text-xs uppercase tracking-wider text-gray-500 font-medium">ID</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-gray-500 font-medium">Name</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-gray-500 font-medium">Date Reported</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-gray-500 font-medium">Description</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-gray-500 font-medium">Document</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-gray-500 font-medium">Linked Release</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-gray-500 font-medium w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {incidents.map((incident) => (
-                <TableRow key={incident.id}>
-                  <TableCell className="font-medium">{incident.id}</TableCell>
+                <TableRow 
+                  key={incident.id}
+                  className="border-b border-gray-50 transition-colors hover:bg-gray-50/50"
+                >
+                  <TableCell className="font-medium text-sm text-gray-900">{incident.id}</TableCell>
                   <TableCell>
                     {editingId === incident.id ? (
                       <Input
@@ -253,7 +256,7 @@ const Incidents = () => {
                         className="max-w-[200px]"
                       />
                     ) : (
-                      incident.name
+                      <span className="text-sm text-gray-700">{incident.name}</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -265,7 +268,7 @@ const Incidents = () => {
                         className="max-w-[150px]"
                       />
                     ) : (
-                      format(incident.dateReported, "MMM d, yyyy")
+                      <span className="text-sm text-gray-600">{format(incident.dateReported, "MMM d, yyyy")}</span>
                     )}
                   </TableCell>
                   <TableCell className="max-w-md">
@@ -275,7 +278,7 @@ const Incidents = () => {
                         onChange={(e) => setEditData({ ...editData, description: e.target.value })}
                       />
                     ) : (
-                      <span className="truncate block">{incident.description}</span>
+                      <span className="text-sm text-gray-600 truncate block">{incident.description}</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -290,10 +293,10 @@ const Incidents = () => {
                         href={incident.documentLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-brand-500 hover:text-brand-600 inline-flex items-center gap-1"
+                        className="text-brand-500 hover:text-brand-600 inline-flex items-center gap-1 text-sm font-medium"
                       >
                         View Doc
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     )}
                   </TableCell>
@@ -328,29 +331,31 @@ const Incidents = () => {
                     ) : (
                       <button
                         onClick={() => handleReleaseClick(incident.linkedRelease.id)}
-                        className="text-brand-500 hover:text-brand-600"
+                        className="text-brand-500 hover:text-brand-600 text-sm font-medium"
                       >
                         {incident.linkedRelease.name}
                       </button>
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       {editingId === incident.id ? (
                         <>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleSaveEdit(incident.id)}
+                            className="h-8 w-8 p-0 hover:bg-green-50 hover:text-green-600"
                           >
-                            <Check className="h-4 w-4 text-green-600" />
+                            <Check className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={handleCancelEdit}
+                            className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
                           >
-                            <X className="h-4 w-4 text-red-600" />
+                            <X className="h-4 w-4" />
                           </Button>
                         </>
                       ) : (
@@ -359,6 +364,7 @@ const Incidents = () => {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleEdit(incident)}
+                            className="h-8 w-8 p-0 hover:bg-gray-100"
                           >
                             <Pencil className="h-4 w-4 text-gray-600" />
                           </Button>
@@ -366,6 +372,7 @@ const Incidents = () => {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDelete(incident)}
+                            className="h-8 w-8 p-0 hover:bg-red-50"
                           >
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
