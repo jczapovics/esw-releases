@@ -259,6 +259,25 @@ const Index = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedActivity = activityFeed.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
+  // Add back the necessary variables
+  const productQualityRanking = getProductQualityForPeriod(period);
+  const activeProducts = getActiveProductsForPeriod(period);
+
+  const handleReleaseClick = (activity: typeof activityFeed[0]) => {
+    console.log("Clicking release:", activity); // Debug log
+    const release = releases.find(r => 
+      r.product === activity.product && 
+      r.releaseName === activity.releaseName
+    );
+    console.log("Found release:", release); // Debug log
+    if (release) {
+      setSelectedRelease(release);
+    }
+  };
+
+  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
+  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
+
   const handleCopyChart = async () => {
     const chartSection = qualityCardRef.current?.querySelector('.chart-container') as HTMLDivElement | null;
     if (!chartSection) {
