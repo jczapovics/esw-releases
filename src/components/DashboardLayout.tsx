@@ -38,22 +38,23 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50 relative overflow-hidden">
         {/* Icons pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.02]">
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
           {[...Array(20)].map((_, i) => {
             const Icon = backgroundIcons[i % backgroundIcons.length];
             const randomX = Math.random() * 100;
             const randomY = Math.random() * 100;
             const randomRotate = Math.random() * 360;
+            const randomSize = Math.random() * (64 - 32) + 32; // Random size between 32px and 64px
             return (
               <Icon
                 key={i}
-                className="absolute text-black"
+                className="absolute text-brand-200/50"
                 style={{
                   left: `${randomX}%`,
                   top: `${randomY}%`,
                   transform: `rotate(${randomRotate}deg)`,
-                  width: '48px',
-                  height: '48px'
+                  width: `${randomSize}px`,
+                  height: `${randomSize}px`
                 }}
               />
             );
@@ -62,7 +63,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         
         {/* Dot pattern overlay */}
         <div 
-          className="absolute inset-0 opacity-[0.03]" 
+          className="absolute inset-0 opacity-[0.03] pointer-events-none" 
           style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, black 1px, transparent 1px)`,
             backgroundSize: '20px 20px'
