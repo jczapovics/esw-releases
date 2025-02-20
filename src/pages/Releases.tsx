@@ -109,7 +109,7 @@ const Releases = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row gap-4 bg-white/50 backdrop-blur-sm p-6 rounded-lg shadow-md">
+        <div className="flex flex-col sm:flex-row gap-4 bg-white p-6 rounded-lg shadow-sm">
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Business Unit</label>
             <Select value={selectedBU} onValueChange={setSelectedBU}>
@@ -159,23 +159,23 @@ const Releases = () => {
           </div>
         </div>
 
-        <div className="bg-white/50 backdrop-blur-sm rounded-lg shadow-md overflow-hidden">
-          <div className="grid grid-cols-4 gap-4 p-4 text-xs uppercase tracking-wider text-gray-500 font-medium border-b border-gray-100">
+        <div className="bg-white rounded-lg shadow">
+          <div className="grid grid-cols-4 gap-4 p-4 font-medium text-gray-700 border-b">
             <div>Business Unit</div>
             <div>Product</div>
             <div>Release Date</div>
             <div>Quality</div>
           </div>
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y">
             {filteredReleases.map((release) => (
               <div 
                 key={release.id} 
-                className="grid grid-cols-4 gap-4 p-4 items-center hover:bg-gray-50/50 cursor-pointer transition-colors"
+                className="grid grid-cols-4 gap-4 p-4 items-center hover:bg-gray-50 cursor-pointer"
                 onClick={() => handleReleaseClick(release)}
               >
-                <div className="text-sm text-gray-900">{release.businessUnit}</div>
-                <div className="text-sm text-gray-700">{release.product}</div>
-                <div className="text-sm text-gray-600">{new Date(release.releaseDate).toLocaleDateString()}</div>
+                <div>{release.businessUnit}</div>
+                <div>{release.product}</div>
+                <div>{new Date(release.releaseDate).toLocaleDateString()}</div>
                 <div>
                   <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
                     release.quality === "Good" 
