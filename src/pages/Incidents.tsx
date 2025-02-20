@@ -15,6 +15,78 @@ import { ExternalLink, Pencil, Trash2, X, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+
+// Using the same Release type from Releases page
+type Release = {
+  id: number;
+  businessUnit: string;
+  product: string;
+  releaseName: string;
+  releaseDate: string;
+  dri: string;
+  releaseNotes: string;
+  status: "Planned" | "Deployed";
+  quality: "Good" | "Bad";
+  description: string;
+  incidents: number;
+};
+
+// Mock releases data
+const releases: Release[] = [
+  {
+    id: 1,
+    businessUnit: "Financial Services",
+    product: "Payment Gateway",
+    releaseName: "v2.1",
+    releaseDate: "2024-03-15",
+    dri: "Jane Smith",
+    releaseNotes: "https://example.com/releases/payment-gateway-v2-1",
+    status: "Deployed",
+    quality: "Good",
+    description: "Major update to the payment processing system with improved security features.",
+    incidents: 0
+  },
+  {
+    id: 2,
+    businessUnit: "Security",
+    product: "User Authentication",
+    releaseName: "v1.5",
+    releaseDate: "2024-03-10",
+    dri: "John Doe",
+    releaseNotes: "https://example.com/releases/auth-service-v1-5",
+    status: "Deployed",
+    quality: "Bad",
+    description: "Enhanced two-factor authentication implementation.",
+    incidents: 2
+  },
+  {
+    id: 3,
+    businessUnit: "Data Intelligence",
+    product: "Analytics Dashboard",
+    releaseName: "v3.0",
+    releaseDate: "2024-03-05",
+    dri: "Alice Johnson",
+    releaseNotes: "https://example.com/releases/analytics-v3-0",
+    status: "Deployed",
+    quality: "Good",
+    description: "Complete redesign of the analytics dashboard with new metrics.",
+    incidents: 0
+  }
+];
 
 type Incident = {
   id: string;
@@ -68,6 +140,7 @@ const Incidents = () => {
   const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Incident>>({});
+  const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
   const { toast } = useToast();
 
   const handleEdit = (incident: Incident) => {
@@ -100,6 +173,10 @@ const Incidents = () => {
       title: "Success",
       description: "Incident deleted successfully",
     });
+  };
+
+  const handleReleaseClick = (release: Release) => {
+    setSelectedRelease(release);
   };
 
   return (
@@ -179,9 +256,44 @@ const Incidents = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <span className="text-brand-500">
-                      {incident.linkedRelease.name}
-                    </span>
+                    {editingId === incident.id ? (
+                      <Select
+                        value={String(editData.linkedRelease?.id || incident.linkedRelease.id)}
+                        onValueChange={(value) => {
+                          const release = releases.find(r => String(r.id) === value);
+                          if (release) {
+                            setEditData({
+                              ...editData,
+                              linkedRelease: {
+                                id: String(release.id),
+                                name: `${release.product} ${release.releaseName}`
+                              }
+                            });
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="w-[200px]">
+                          <SelectValue placeholder="Select Release" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {releases.map((release) => (
+                            <SelectItem key={release.id} value={String(release.id)}>
+                              {release.product} {release.releaseName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          const release = releases.find(r => String(r.id) === incident.linkedRelease.id);
+                          if (release) handleReleaseClick(release);
+                        }}
+                        className="text-brand-500 hover:text-brand-600"
+                      >
+                        {incident.linkedRelease.name}
+                      </button>
+                    )}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -227,6 +339,55 @@ const Incidents = () => {
             </TableBody>
           </Table>
         </Card>
+
+        <Sheet open={!!selectedRelease} onOpenChange={() => setSelectedRelease(null)}>
+          <SheetContent className="sm:max-w-[600px] overflow-y-auto">
+            {selectedRelease && (
+              <>
+                <SheetHeader>
+                  <SheetTitle>Release Details</SheetTitle>
+                  <SheetDescription>
+                    View release information
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-6 space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Business Unit</label>
+                    <p className="text-sm">{selectedRelease.businessUnit}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Product</label>
+                    <p className="text-sm">{selectedRelease.product}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Release Name</label>
+                    <p className="text-sm">{selectedRelease.releaseName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Release Date</label>
+                    <p className="text-sm">{format(new Date(selectedRelease.releaseDate), "MMM d, yyyy")}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">DRI</label>
+                    <p className="text-sm">{selectedRelease.dri}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Status</label>
+                    <p className="text-sm">{selectedRelease.status}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Quality</label>
+                    <p className="text-sm">{selectedRelease.quality}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Description</label>
+                    <p className="text-sm">{selectedRelease.description}</p>
+                  </div>
+                </div>
+              </>
+            )}
+          </SheetContent>
+        </Sheet>
       </div>
     </DashboardLayout>
   );
