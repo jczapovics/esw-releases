@@ -65,10 +65,10 @@ export const DashboardLayout = ({ children }: Props) => {
           <div className="px-3 py-2">
             <Link
               to="/"
-              className="px-3 py-2 flex items-center gap-2 mb-8 mt-2 text-xl font-medium"
+              className="px-3 py-2 flex items-center gap-1 mb-8 mt-2 text-xl"
             >
               <span className="font-bold text-brand-600">E</span>
-              <span className="font-normal text-gray-600">ngineering</span>
+              <span className="font-normal text-gray-600">SW</span>
               <span className="font-bold text-brand-600">R</span>
               <span className="font-normal text-gray-600">eleases</span>
             </Link>
