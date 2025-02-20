@@ -62,7 +62,7 @@ const getStatsForPeriod = (period: Period) => {
 const activityFeed = [
   {
     id: 1,
-    title: "New Release: v2.0.0",
+    title: "New Release",
     product: "Payment Gateway",
     releaseName: "Summer Release 2024",
     description: "Major version release with new features",
@@ -71,7 +71,7 @@ const activityFeed = [
   },
   {
     id: 2,
-    title: "Incident Reported",
+    title: "New Incident",
     product: "User Authentication",
     releaseName: "Auth Service v1.5",
     description: "API Performance Degradation",
@@ -80,7 +80,7 @@ const activityFeed = [
   },
   {
     id: 3,
-    title: "Release Deployed",
+    title: "New Release",
     product: "Analytics Dashboard",
     releaseName: "Hotfix v1.9.1",
     description: "Hotfix v1.9.1 deployed successfully",
