@@ -11,7 +11,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Sidebar } from "./ui/sidebar";
 
 interface Props {
@@ -56,7 +56,7 @@ const secondaryLinks = [
 
 export const DashboardLayout = ({ children }: Props) => {
   const { pathname } = useLocation();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   return (
     <div className="flex min-h-screen">
