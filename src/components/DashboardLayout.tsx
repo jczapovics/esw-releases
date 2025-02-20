@@ -1,7 +1,7 @@
 
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle, LogOut, Plus, Code, Terminal, Database, Server, Monitor } from "lucide-react";
+import { Box, LayoutDashboard, AlertCircle, LogOut, Plus, Monitor, Laptop, Database, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -14,7 +14,7 @@ const mainNavigation = [
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
 ];
 
-const backgroundIcons = [Code, Terminal, Database, Server, Monitor];
+const backgroundIcons = [Monitor, Laptop, Database, Code];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -42,14 +42,19 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <div className="px-3 py-4 flex flex-col h-full relative">
               {/* Icons pattern overlay - now inside the sidebar */}
               <div className="absolute inset-0 opacity-[0.15] pointer-events-none z-0">
-                {[...Array(5)].map((_, i) => {
-                  const Icon = backgroundIcons[i];
+                {[...Array(10)].map((_, i) => {
+                  const Icon = backgroundIcons[i % backgroundIcons.length];
                   const positions = [
                     { x: 20, y: 15 },
                     { x: 70, y: 30 },
                     { x: 40, y: 50 },
                     { x: 80, y: 70 },
                     { x: 30, y: 85 },
+                    { x: 60, y: 20 },
+                    { x: 25, y: 40 },
+                    { x: 75, y: 60 },
+                    { x: 45, y: 80 },
+                    { x: 15, y: 95 },
                   ];
                   return (
                     <Icon
