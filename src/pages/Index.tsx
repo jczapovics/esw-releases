@@ -297,12 +297,18 @@ const Index = () => {
               // Copy to clipboard
               canvas.toBlob(async (blob) => {
                 if (blob) {
-                  await navigator.clipboard.write([
-                    new ClipboardItem({
-                      'image/png': blob
-                    })
-                  ]);
-                  toast.success("Quality report copied to clipboard");
+                  toast.promise(
+                    navigator.clipboard.write([
+                      new ClipboardItem({
+                        'image/png': blob
+                      })
+                    ]),
+                    {
+                      loading: 'Copying quality report...',
+                      success: 'Quality report copied to clipboard',
+                      error: 'Failed to copy to clipboard'
+                    }
+                  );
                 }
               }, 'image/png', 1.0);
             } catch (err) {
