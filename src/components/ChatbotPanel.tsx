@@ -58,7 +58,7 @@ export function ChatbotPanel() {
               <div className={`flex-1 max-w-[80%] space-y-2 ${
                 message.role === "user" ? "ml-auto" : ""
               }`}>
-                <div className={`rounded-lg p-3 shadow-sm ${
+                <div className={`inline-block rounded-lg p-3 shadow-sm ${
                   message.role === "assistant" 
                     ? "bg-white text-gray-700" 
                     : "bg-brand-600 text-white ml-auto"
