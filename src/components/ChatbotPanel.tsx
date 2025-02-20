@@ -20,13 +20,22 @@ export function ChatbotPanel() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   // Auto scroll to bottom when messages change
   useEffect(() => {
-    if (scrollViewportRef.current) {
-      scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight;
-    }
+    const scrollToBottom = () => {
+      if (scrollAreaRef.current) {
+        const viewport = scrollAreaRef.current;
+        viewport.scrollTo({
+          top: viewport.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // Use a small timeout to ensure the content has been rendered
+    setTimeout(scrollToBottom, 100);
   }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,11 +60,11 @@ export function ChatbotPanel() {
         <h2 className="text-lg font-semibold">AI Assistant</h2>
       </div>
       
-      <ScrollArea 
-        className="h-[300px] pr-4 mb-4"
-        ref={scrollViewportRef}
-      >
-        <div className="space-y-4">
+      <ScrollArea className="h-[300px] pr-4 mb-4">
+        <div 
+          ref={scrollAreaRef}
+          className="space-y-4"
+        >
           {messages.map((message, index) => (
             <div
               key={index}
