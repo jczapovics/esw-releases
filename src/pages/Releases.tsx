@@ -207,7 +207,7 @@ const Releases = () => {
         </div>
 
         <Sheet open={!!selectedRelease} onOpenChange={() => setSelectedRelease(null)}>
-          <SheetContent className="sm:max-w-[600px]">
+          <SheetContent className="sm:max-w-[600px] overflow-y-auto">
             <SheetHeader>
               <SheetTitle className="flex items-center justify-between">
                 <span>Release Details</span>
@@ -229,8 +229,9 @@ const Releases = () => {
             {selectedRelease && editedRelease && (
               <div className="mt-6 space-y-6">
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Business Unit</label>
+                  {/* Business Unit */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Business Unit</label>
                     {isEditing ? (
                       <Select
                         value={editedRelease.businessUnit}
@@ -250,12 +251,13 @@ const Releases = () => {
                         </SelectContent>
                       </Select>
                     ) : (
-                      <p className="text-gray-700">{selectedRelease.businessUnit}</p>
+                      <p className="text-sm text-gray-900">{selectedRelease.businessUnit}</p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Product</label>
+                  {/* Product */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Product</label>
                     {isEditing ? (
                       <Select
                         value={editedRelease.product}
@@ -275,12 +277,13 @@ const Releases = () => {
                         </SelectContent>
                       </Select>
                     ) : (
-                      <p className="text-gray-700">{selectedRelease.product}</p>
+                      <p className="text-sm text-gray-900">{selectedRelease.product}</p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Release Name/Version</label>
+                  {/* Release Name */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Release Name/Version</label>
                     {isEditing ? (
                       <Input 
                         value={editedRelease.releaseName}
@@ -289,12 +292,13 @@ const Releases = () => {
                         }
                       />
                     ) : (
-                      <p className="text-gray-700">{selectedRelease.releaseName}</p>
+                      <p className="text-sm text-gray-900">{selectedRelease.releaseName}</p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Release Date</label>
+                  {/* Release Date */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Release Date</label>
                     {isEditing ? (
                       <Input 
                         type="date"
@@ -304,15 +308,16 @@ const Releases = () => {
                         }
                       />
                     ) : (
-                      <p className="text-gray-700">
-                        <Calendar className="inline h-4 w-4 mr-1" />
+                      <p className="text-sm text-gray-900 flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
                         {new Date(selectedRelease.releaseDate).toLocaleDateString()}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">DRI (Owner)</label>
+                  {/* DRI */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">DRI (Owner)</label>
                     {isEditing ? (
                       <Input 
                         value={editedRelease.dri}
@@ -321,12 +326,13 @@ const Releases = () => {
                         }
                       />
                     ) : (
-                      <p className="text-gray-700">{selectedRelease.dri}</p>
+                      <p className="text-sm text-gray-900">{selectedRelease.dri}</p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Release Note Link</label>
+                  {/* Release Notes */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Release Note Link</label>
                     {isEditing ? (
                       <Input 
                         value={editedRelease.releaseNotes}
@@ -339,7 +345,7 @@ const Releases = () => {
                         href={selectedRelease.releaseNotes}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
+                        className="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center gap-2"
                       >
                         <Link className="h-4 w-4" />
                         View Notes
@@ -347,8 +353,9 @@ const Releases = () => {
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Status</label>
+                  {/* Status */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Status</label>
                     {isEditing ? (
                       <Select
                         value={editedRelease.status}
@@ -365,27 +372,31 @@ const Releases = () => {
                         </SelectContent>
                       </Select>
                     ) : (
-                      <p className="text-gray-700">{selectedRelease.status}</p>
+                      <p className="text-sm text-gray-900">{selectedRelease.status}</p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Quality</label>
-                    <p className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      selectedRelease.quality === "Good" 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {selectedRelease.quality === "Good" && <Check className="h-3 w-3" />}
-                      {selectedRelease.quality}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {selectedRelease.incidents} incident(s) reported
-                    </p>
+                  {/* Quality */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Quality</label>
+                    <div>
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                        selectedRelease.quality === "Good" 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-red-100 text-red-800"
+                      }`}>
+                        {selectedRelease.quality === "Good" && <Check className="h-3 w-3" />}
+                        {selectedRelease.quality}
+                      </span>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {selectedRelease.incidents} incident(s) reported
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Description</label>
+                  {/* Description */}
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Description</label>
                     {isEditing ? (
                       <Input 
                         value={editedRelease.description}
@@ -394,13 +405,13 @@ const Releases = () => {
                         }
                       />
                     ) : (
-                      <p className="text-gray-700">{selectedRelease.description}</p>
+                      <p className="text-sm text-gray-900">{selectedRelease.description}</p>
                     )}
                   </div>
                 </div>
 
                 {isEditing && (
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end gap-2 pt-4">
                     <Button variant="outline" onClick={() => setIsEditing(false)}>
                       Cancel
                     </Button>
