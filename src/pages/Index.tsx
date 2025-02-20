@@ -278,11 +278,12 @@ const Index = () => {
   const productQualityRanking = getProductQualityForPeriod(period);
   const activeProducts = getActiveProductsForPeriod(period);
 
-  const handleReleaseClick = (releaseName: string) => {
-    console.log("Clicking release:", releaseName); // Debug log
-    const [product, version] = releaseName.split(" • ");
-    console.log("Looking for product:", product, "version:", version); // Debug log
-    const release = releases.find(r => r.product === product && r.releaseName === version);
+  const handleReleaseClick = (activity: typeof activityFeed[0]) => {
+    console.log("Clicking release:", activity); // Debug log
+    const release = releases.find(r => 
+      r.product === activity.product && 
+      r.releaseName === activity.releaseName
+    );
     console.log("Found release:", release); // Debug log
     if (release) {
       setSelectedRelease(release);
@@ -529,10 +530,7 @@ const Index = () => {
                       <p className="text-xs text-gray-500">{activity.date}</p>
                     </div>
                     <button
-                      onClick={() => {
-                        console.log("Button clicked:", `${activity.product} • ${activity.releaseName}`); // Debug log
-                        handleReleaseClick(`${activity.product} • ${activity.releaseName}`);
-                      }}
+                      onClick={() => handleReleaseClick(activity)}
                       className="text-xs text-brand-600 mt-1 hover:text-brand-700"
                     >
                       {activity.product} • {activity.releaseName}
