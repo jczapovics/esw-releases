@@ -1,7 +1,7 @@
 
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle, LogOut, Plus, Monitor, Laptop, Database, Code } from "lucide-react";
+import { Box, LayoutDashboard, AlertCircle, LogOut, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -13,8 +13,6 @@ const mainNavigation = [
   { name: "Releases", href: "/releases", icon: Box },
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
 ];
-
-const backgroundIcons = [Monitor, Laptop, Database, Code];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -40,37 +38,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         <Sidebar>
           <SidebarContent>
             <div className="px-3 py-4 flex flex-col h-full relative">
-              {/* Icons pattern overlay - now inside the sidebar */}
-              <div className="absolute inset-0 opacity-[0.15] pointer-events-none z-0">
-                {[...Array(10)].map((_, i) => {
-                  const Icon = backgroundIcons[i % backgroundIcons.length];
-                  const positions = [
-                    { x: 20, y: 15 },
-                    { x: 70, y: 30 },
-                    { x: 40, y: 50 },
-                    { x: 80, y: 70 },
-                    { x: 30, y: 85 },
-                    { x: 60, y: 20 },
-                    { x: 25, y: 40 },
-                    { x: 75, y: 60 },
-                    { x: 45, y: 80 },
-                    { x: 15, y: 95 },
-                  ];
-                  return (
-                    <Icon
-                      key={i}
-                      className="absolute text-brand-700"
-                      style={{
-                        left: `${positions[i].x}%`,
-                        top: `${positions[i].y}%`,
-                        transform: `rotate(${Math.random() * 360}deg)`,
-                        width: '48px',
-                        height: '48px'
-                      }}
-                    />
-                  );
-                })}
-              </div>
+              {/* Dotted background pattern */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none z-0 bg-[radial-gradient(#0f766e_1px,transparent_1px)] [background-size:16px_16px]" />
 
               <div className="mb-8 relative z-10">
                 <h1 className="text-2xl font-bold text-brand-700">
