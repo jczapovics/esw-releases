@@ -332,7 +332,7 @@ const Releases = () => {
 
                   {/* Release Notes */}
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Release Note Link</label>
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Release Notes</label>
                     {isEditing ? (
                       <Input 
                         value={editedRelease.releaseNotes}
@@ -341,15 +341,17 @@ const Releases = () => {
                         }
                       />
                     ) : (
-                      <a 
-                        href={selectedRelease.releaseNotes}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center gap-2"
-                      >
-                        <Link className="h-4 w-4" />
-                        View Notes
-                      </a>
+                      <div className="pt-1">
+                        <a 
+                          href={selectedRelease.releaseNotes}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center gap-2"
+                        >
+                          <Link className="h-4 w-4" />
+                          View Notes
+                        </a>
+                      </div>
                     )}
                   </div>
 
