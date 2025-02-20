@@ -9,6 +9,7 @@ import "./index.css";
 import Index from "./pages/Index";
 import Releases from "./pages/Releases";
 import Incidents from "./pages/Incidents";
+import AskAI from "./pages/AskAI";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/incidents",
     element: <Incidents />,
+  },
+  {
+    path: "/ask-ai",
+    element: <AskAI />,
   },
 ]);
 
