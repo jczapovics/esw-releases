@@ -43,11 +43,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                   <a
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200 ${
-                      window.location.pathname === item.href ? 'bg-brand-50 text-brand-700' : ''
+                    className={`flex items-center px-4 py-3 text-gray-700 rounded-lg transition-all duration-300 group ${
+                      window.location.pathname === item.href ? 'bg-brand-50 text-brand-700' : 'hover:bg-brand-50 hover:text-brand-700'
                     }`}
                   >
-                    <item.icon className="h-5 w-5 mr-3" />
+                    <item.icon className="h-5 w-5 mr-3 transition-transform duration-300 group-hover:scale-110" />
                     {item.name}
                   </a>
                 ))}
@@ -78,9 +78,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <div className="mt-4">
                   <a
                     href="/login"
-                    className="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200"
+                    className="flex items-center px-4 py-3 text-gray-700 rounded-lg transition-all duration-300 group hover:bg-brand-50 hover:text-brand-700"
                   >
-                    <LogOut className="h-5 w-5 mr-3" />
+                    <LogOut className="h-5 w-5 mr-3 transition-transform duration-300 group-hover:scale-110" />
                     Sign Out
                   </a>
                 </div>
