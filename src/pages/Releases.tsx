@@ -125,44 +125,53 @@ const Releases = () => {
     <DashboardLayout>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-4 bg-white p-6 rounded-lg shadow-sm">
-          <Select value={selectedBU} onValueChange={setSelectedBU}>
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="Business Unit" />
-            </SelectTrigger>
-            <SelectContent>
-              {businessUnits.map((bu) => (
-                <SelectItem key={bu} value={bu}>
-                  {bu}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Business Unit</label>
+            <Select value={selectedBU} onValueChange={setSelectedBU}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Business Unit" />
+              </SelectTrigger>
+              <SelectContent>
+                {businessUnits.map((bu) => (
+                  <SelectItem key={bu} value={bu}>
+                    {bu}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="Product" />
-            </SelectTrigger>
-            <SelectContent>
-              {products.map((product) => (
-                <SelectItem key={product} value={product}>
-                  {product}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Product</label>
+            <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Product" />
+              </SelectTrigger>
+              <SelectContent>
+                {products.map((product) => (
+                  <SelectItem key={product} value={product}>
+                    {product}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <Select value={selectedQuality} onValueChange={setSelectedQuality}>
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="Quality" />
-            </SelectTrigger>
-            <SelectContent>
-              {qualityLevels.map((quality) => (
-                <SelectItem key={quality} value={quality}>
-                  {quality}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Quality</label>
+            <Select value={selectedQuality} onValueChange={setSelectedQuality}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Quality" />
+              </SelectTrigger>
+              <SelectContent>
+                {qualityLevels.map((quality) => (
+                  <SelectItem key={quality} value={quality}>
+                    {quality}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow">
