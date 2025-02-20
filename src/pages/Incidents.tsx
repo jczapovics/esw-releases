@@ -285,8 +285,10 @@ const Incidents = () => {
                     ) : (
                       <button
                         onClick={() => {
-                          const release = releases.find(r => String(r.id) === incident.linkedRelease.id);
-                          console.log('Clicked release:', release); // Debug log
+                          console.log('Linked release ID:', incident.linkedRelease.id); // Debug log
+                          console.log('All releases:', releases); // Debug log
+                          const release = releases.find(r => r.id === Number(incident.linkedRelease.id));
+                          console.log('Found release:', release); // Debug log
                           if (release) {
                             handleReleaseClick(release);
                           }
