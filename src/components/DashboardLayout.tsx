@@ -19,7 +19,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <div className="px-3 py-4">
               <div className="mb-8">
                 <h1 className="text-2xl font-bold text-brand-700">
-                  Release Harmony
+                  ESW Release Tracker
                 </h1>
               </div>
               <nav className="space-y-1">
