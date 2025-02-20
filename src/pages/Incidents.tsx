@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { DashboardLayout } from "@/components/DashboardLayout";
@@ -108,8 +107,8 @@ const mockIncidents: Incident[] = [
     description: "Users experiencing slow response times in the payment gateway",
     documentLink: "https://docs.google.com/doc/payment-incident-001",
     linkedRelease: {
-      id: "REL-123",
-      name: "Payment Gateway v2.1.0",
+      id: "1", // Changed to match the release ID
+      name: "Payment Gateway v2.1",
     },
   },
   {
@@ -119,8 +118,8 @@ const mockIncidents: Incident[] = [
     description: "Complete authentication service downtime for 15 minutes",
     documentLink: "https://docs.google.com/doc/auth-incident-002",
     linkedRelease: {
-      id: "REL-124",
-      name: "Auth Service v1.5.0",
+      id: "2", // Changed to match the release ID
+      name: "User Authentication v1.5",
     },
   },
   {
@@ -130,8 +129,8 @@ const mockIncidents: Incident[] = [
     description: "Analytics dashboard showing delayed data updates",
     documentLink: "https://docs.google.com/doc/analytics-incident-003",
     linkedRelease: {
-      id: "REL-125",
-      name: "Analytics Dashboard v3.0.1",
+      id: "3", // Changed to match the release ID
+      name: "Analytics Dashboard v3.0",
     },
   },
 ];
@@ -258,7 +257,7 @@ const Incidents = () => {
                   <TableCell>
                     {editingId === incident.id ? (
                       <Select
-                        value={String(editData.linkedRelease?.id || incident.linkedRelease.id)}
+                        value={editData.linkedRelease?.id || incident.linkedRelease.id}
                         onValueChange={(value) => {
                           const release = releases.find(r => String(r.id) === value);
                           if (release) {
@@ -287,7 +286,10 @@ const Incidents = () => {
                       <button
                         onClick={() => {
                           const release = releases.find(r => String(r.id) === incident.linkedRelease.id);
-                          if (release) handleReleaseClick(release);
+                          console.log('Clicked release:', release); // Debug log
+                          if (release) {
+                            handleReleaseClick(release);
+                          }
                         }}
                         className="text-brand-500 hover:text-brand-600"
                       >
