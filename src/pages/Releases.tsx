@@ -1,4 +1,3 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import {
   Select,
@@ -167,18 +166,17 @@ const Releases = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow">
-          <div className="grid grid-cols-5 gap-4 p-4 font-medium text-gray-700 border-b">
+          <div className="grid grid-cols-4 gap-4 p-4 font-medium text-gray-700 border-b">
             <div>Business Unit</div>
             <div>Product</div>
             <div>Release Date</div>
             <div>Quality</div>
-            <div>Release Notes</div>
           </div>
           <div className="divide-y">
             {filteredReleases.map((release) => (
               <div 
                 key={release.id} 
-                className="grid grid-cols-5 gap-4 p-4 items-center hover:bg-gray-50 cursor-pointer"
+                className="grid grid-cols-4 gap-4 p-4 items-center hover:bg-gray-50 cursor-pointer"
                 onClick={() => handleReleaseClick(release)}
               >
                 <div>{release.businessUnit}</div>
@@ -193,18 +191,6 @@ const Releases = () => {
                     {release.quality === "Good" && <Check className="h-3 w-3" />}
                     {release.quality}
                   </span>
-                </div>
-                <div>
-                  <a 
-                    href={release.releaseNotes}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Link className="h-4 w-4" />
-                    View Notes
-                  </a>
                 </div>
               </div>
             ))}
