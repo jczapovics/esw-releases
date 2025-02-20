@@ -39,9 +39,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen flex w-full bg-gray-50 relative overflow-hidden">
         <Sidebar>
           <SidebarContent>
-            <div className="px-3 py-4 flex flex-col h-full relative z-10">
+            <div className="px-3 py-4 flex flex-col h-full relative">
               {/* Icons pattern overlay - now inside the sidebar */}
-              <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+              <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0">
                 {[...Array(20)].map((_, i) => {
                   const Icon = backgroundIcons[i % backgroundIcons.length];
                   const randomX = Math.random() * 100;
@@ -51,7 +51,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                   return (
                     <Icon
                       key={i}
-                      className="absolute text-brand-200/50"
+                      className="absolute text-brand-700"
                       style={{
                         left: `${randomX}%`,
                         top: `${randomY}%`,
@@ -64,12 +64,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 })}
               </div>
 
-              <div className="mb-8">
+              <div className="mb-8 relative z-10">
                 <h1 className="text-2xl font-bold text-brand-700">
                   ESW Releases
                 </h1>
               </div>
-              <nav className="space-y-1">
+              <nav className="space-y-1 relative z-10">
                 {mainNavigation.map((item) => (
                   <Link
                     key={item.name}
@@ -85,7 +85,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               </nav>
               
               {/* Action Buttons Section */}
-              <div className="mt-auto mb-4">
+              <div className="mt-auto mb-4 relative z-10">
                 <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center space-y-2">
                   <Button
                     variant="outline"
