@@ -162,6 +162,40 @@ const getProductQualityForPeriod = (period: Period): ProductQuality[] => {
   }
 };
 
+// Add type for active products
+type ActiveProduct = {
+  product: string;
+  releases: number;
+  change: string;
+  trend: "up" | "down";
+};
+
+const getActiveProductsForPeriod = (period: Period): ActiveProduct[] => {
+  switch (period) {
+    case "month":
+      return [
+        { product: "Analytics Dashboard", releases: 8, change: "+3", trend: "up" },
+        { product: "Payment Gateway", releases: 6, change: "+2", trend: "up" },
+        { product: "User Authentication", releases: 4, change: "-1", trend: "down" },
+        { product: "Search Service", releases: 3, change: "0", trend: "up" },
+      ];
+    case "quarter":
+      return [
+        { product: "Analytics Dashboard", releases: 24, change: "+8", trend: "up" },
+        { product: "Payment Gateway", releases: 18, change: "+5", trend: "up" },
+        { product: "Search Service", releases: 15, change: "+3", trend: "up" },
+        { product: "User Authentication", releases: 12, change: "-2", trend: "down" },
+      ];
+    case "year":
+      return [
+        { product: "Analytics Dashboard", releases: 85, change: "+15", trend: "up" },
+        { product: "Payment Gateway", releases: 76, change: "+12", trend: "up" },
+        { product: "Search Service", releases: 65, change: "+8", trend: "up" },
+        { product: "User Authentication", releases: 54, change: "-5", trend: "down" },
+      ];
+  }
+};
+
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
@@ -189,6 +223,7 @@ const Index = () => {
   };
 
   const productQualityRanking = getProductQualityForPeriod(period);
+  const activeProducts = getActiveProductsForPeriod(period);
 
   return (
     <DashboardLayout>
@@ -362,6 +397,51 @@ const Index = () => {
               ))}
             </div>
           </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <Card className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold">Most Active Products</h2>
+              <HelpCircle className="h-4 w-4 text-gray-400" />
+            </div>
+            <div className="space-y-4">
+              {activeProducts.map((product, index) => (
+                <div
+                  key={product.product}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <p className="font-medium text-sm">{product.product}</p>
+                      <span className="text-xs text-gray-500">
+                        {product.releases} releases
+                      </span>
+                    </div>
+                  </div>
+                  <div className={`flex items-center gap-1 ${
+                    product.trend === "up" 
+                      ? "text-green-600" 
+                      : "text-red-600"
+                  }`}>
+                    {product.trend === "up" ? (
+                      <ArrowUp className="h-4 w-4" />
+                    ) : (
+                      <ArrowDown className="h-4 w-4" />
+                    )}
+                    <span className="text-sm">{product.change}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div className="lg:hidden">
+            {/* Empty div for grid spacing on mobile */}
+          </div>
         </div>
 
         <Card className="p-6">
