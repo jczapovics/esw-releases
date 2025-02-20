@@ -6,6 +6,14 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 type Period = "month" | "quarter" | "year";
 
@@ -87,7 +95,27 @@ const activityFeed = [
     date: "1d ago",
     type: "release",
   },
+  {
+    id: 4,
+    title: "New Release",
+    product: "User Management",
+    releaseName: "v2.1.0",
+    description: "User roles and permissions update",
+    date: "2d ago",
+    type: "release",
+  },
+  {
+    id: 5,
+    title: "New Incident",
+    product: "Search Service",
+    releaseName: "Search v1.2",
+    description: "Search latency increased",
+    date: "3d ago",
+    type: "incident",
+  },
 ];
+
+const ITEMS_PER_PAGE = 3;
 
 const monthlyQualityTrend = [
   { month: 'Jan', quality: 88 },
@@ -100,7 +128,12 @@ const monthlyQualityTrend = [
 
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
+  const [currentPage, setCurrentPage] = useState(1);
   const stats = getStatsForPeriod(period);
+
+  const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedActivity = activityFeed.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <DashboardLayout>
@@ -217,7 +250,7 @@ const Index = () => {
           <Card className="p-6">
             <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
             <div className="space-y-4">
-              {activityFeed.map((activity) => (
+              {paginatedActivity.map((activity) => (
                 <div
                   key={activity.id}
                   className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
@@ -243,6 +276,35 @@ const Index = () => {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-4">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <PaginationItem key={i + 1}>
+                      <PaginationLink
+                        onClick={() => setCurrentPage(i + 1)}
+                        isActive={currentPage === i + 1}
+                        className="cursor-pointer"
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           </Card>
         </div>
