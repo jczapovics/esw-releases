@@ -1,5 +1,5 @@
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Box, LayoutDashboard, AlertCircle, LogOut, Plus, Code, Terminal, Database, Server, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   const handleAddIncident = () => {
     setIsAddIncidentOpen(true);
+  };
+
+  const handleSignOut = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/login');
   };
 
   return (
@@ -74,16 +79,16 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               </div>
               <nav className="space-y-1">
                 {mainNavigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className={`flex items-center px-6 py-2.5 text-gray-700 rounded-full transition-all duration-300 transform hover:translate-x-1 ${
                       window.location.pathname === item.href ? 'bg-brand-50 text-brand-700 shadow-sm' : 'hover:bg-brand-50/50 hover:text-brand-700'
                     }`}
                   >
                     <item.icon className="h-5 w-5 mr-3 transition-transform duration-300 group-hover:scale-110" />
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
               
@@ -110,13 +115,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 
                 {/* Sign Out at the bottom */}
                 <div className="mt-4">
-                  <a
-                    href="/login"
-                    className="flex items-center px-6 py-2.5 text-gray-700 rounded-full transition-all duration-300 transform hover:translate-x-1 hover:bg-brand-50/50 hover:text-brand-700"
+                  <button
+                    onClick={handleSignOut}
+                    className="flex w-full items-center px-6 py-2.5 text-gray-700 rounded-full transition-all duration-300 transform hover:translate-x-1 hover:bg-brand-50/50 hover:text-brand-700"
                   >
                     <LogOut className="h-5 w-5 mr-3" />
                     Sign Out
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
