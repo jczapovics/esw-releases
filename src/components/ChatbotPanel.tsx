@@ -26,11 +26,10 @@ export function ChatbotPanel() {
   useEffect(() => {
     const scrollToBottom = () => {
       if (scrollAreaRef.current) {
-        const viewport = scrollAreaRef.current;
-        viewport.scrollTo({
-          top: viewport.scrollHeight,
-          behavior: 'smooth'
-        });
+        const viewport = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+        if (viewport) {
+          viewport.scrollTop = viewport.scrollHeight;
+        }
       }
     };
 
@@ -60,37 +59,36 @@ export function ChatbotPanel() {
         <h2 className="text-lg font-semibold">AI Assistant</h2>
       </div>
       
-      <ScrollArea className="h-[300px] pr-4 mb-4">
-        <div 
-          ref={scrollAreaRef}
-          className="space-y-4"
-        >
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`flex ${
-                message.role === "assistant" ? "justify-start" : "justify-end"
-              } items-start gap-3`}
-            >
-              {message.role === "assistant" && (
-                <MessageSquare className="w-6 h-6 mt-1 text-brand-600 shrink-0" />
-              )}
-              <div className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} max-w-[80%]`}>
-                <div className={`inline-block rounded-lg px-4 py-2 shadow-sm ${
-                  message.role === "assistant" 
-                    ? "bg-white text-gray-700" 
-                    : "bg-brand-600 text-white"
-                }`}>
-                  {message.content}
+      <div ref={scrollAreaRef}>
+        <ScrollArea className="h-[300px] pr-4 mb-4">
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex ${
+                  message.role === "assistant" ? "justify-start" : "justify-end"
+                } items-start gap-3`}
+              >
+                {message.role === "assistant" && (
+                  <MessageSquare className="w-6 h-6 mt-1 text-brand-600 shrink-0" />
+                )}
+                <div className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} max-w-[80%]`}>
+                  <div className={`inline-block rounded-lg px-4 py-2 shadow-sm ${
+                    message.role === "assistant" 
+                      ? "bg-white text-gray-700" 
+                      : "bg-brand-600 text-white"
+                  }`}>
+                    {message.content}
+                  </div>
                 </div>
+                {message.role === "user" && (
+                  <User className="w-6 h-6 mt-1 text-gray-600 shrink-0" />
+                )}
               </div>
-              {message.role === "user" && (
-                <User className="w-6 h-6 mt-1 text-gray-600 shrink-0" />
-              )}
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2">
         <Input
