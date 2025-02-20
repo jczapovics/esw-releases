@@ -22,7 +22,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ReleasePanel } from "@/components/ReleasePanel";
-import { ChatbotPanel } from "@/components/ChatbotPanel";
 
 type Period = "month" | "quarter" | "year";
 
@@ -604,8 +603,6 @@ const Index = () => {
           businessUnits={businessUnits.filter(bu => bu !== "All")}
           products={products.filter(p => p !== "All")}
         />
-        
-        <ChatbotPanel />
       </div>
     </DashboardLayout>
   );
