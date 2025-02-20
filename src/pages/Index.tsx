@@ -259,108 +259,6 @@ const Index = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedActivity = activityFeed.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  const handleCopyAsImage = async () => {
-    if (qualityCardRef.current) {
-      try {
-        // Add a longer delay to ensure charts are fully rendered
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Get the chart container
-        const chartContainer = qualityCardRef.current.querySelector('.recharts-wrapper');
-        if (!chartContainer) {
-          console.error('Chart container not found');
-          return;
-        }
-
-        // Calculate total height including the chart
-        const chartHeight = 200; // Fixed height from the chart container
-        const otherContent = qualityCardRef.current.querySelector('.space-y-4');
-        const totalHeight = (otherContent?.clientHeight || 0) + chartHeight + 100; // Add padding
-        
-        const dataUrl = await toPng(qualityCardRef.current, { 
-          quality: 1.0,
-          height: totalHeight,
-          width: qualityCardRef.current.offsetWidth,
-          style: {
-            transform: 'scale(1)',
-            transformOrigin: 'top left',
-            height: `${totalHeight}px`,  // Explicitly set the height
-          },
-          filter: (node) => {
-            // Include all elements
-            return true;
-          },
-          cacheBust: true,
-          pixelRatio: 2, // Increase resolution
-        });
-
-        // Create a temporary img element
-        const img = document.createElement('img');
-        img.src = dataUrl;
-        
-        // Create a canvas with higher resolution
-        const canvas = document.createElement('canvas');
-        canvas.width = qualityCardRef.current.offsetWidth * 2;
-        canvas.height = totalHeight * 2;  // Use the calculated total height
-        
-        // Wait for the image to load
-        img.onload = async () => {
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            // Enable high-quality image scaling
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.scale(2, 2);
-            ctx.drawImage(img, 0, 0);
-            
-            try {
-              canvas.toBlob(async (blob) => {
-                if (blob) {
-                  toast.promise(
-                    navigator.clipboard.write([
-                      new ClipboardItem({
-                        'image/png': blob
-                      })
-                    ]),
-                    {
-                      loading: 'Copying scorecard...',
-                      success: 'Scorecard copied to clipboard',
-                      error: 'Failed to copy to clipboard'
-                    }
-                  );
-                }
-              }, 'image/png', 1.0);
-            } catch (err) {
-              toast.error("Failed to copy to clipboard");
-              console.error(err);
-            }
-          }
-        };
-      } catch (err) {
-        toast.error("Failed to generate image");
-        console.error(err);
-      }
-    }
-  };
-
-  const productQualityRanking = getProductQualityForPeriod(period);
-  const activeProducts = getActiveProductsForPeriod(period);
-
-  const handleReleaseClick = (activity: typeof activityFeed[0]) => {
-    console.log("Clicking release:", activity); // Debug log
-    const release = releases.find(r => 
-      r.product === activity.product && 
-      r.releaseName === activity.releaseName
-    );
-    console.log("Found release:", release); // Debug log
-    if (release) {
-      setSelectedRelease(release);
-    }
-  };
-
-  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
-  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
-
   const handleCopyChart = async () => {
     const chartSection = qualityCardRef.current?.querySelector('.chart-container') as HTMLDivElement | null;
     if (!chartSection) {
@@ -455,15 +353,6 @@ const Index = () => {
           <Card className="p-6" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Release Scorecard</h2>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopyAsImage}
-                className="flex items-center gap-2"
-              >
-                <Copy className="h-4 w-4" />
-                Copy as Image
-              </Button>
             </div>
             <div className="space-y-4">
               <div>
