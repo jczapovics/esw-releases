@@ -1,4 +1,3 @@
-
 import {
   Sheet,
   SheetContent,
@@ -16,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Release = {
   id: number;
@@ -42,6 +41,12 @@ interface ReleasePanelProps {
 export const ReleasePanel = ({ release, onClose, businessUnits = [], products = [] }: ReleasePanelProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedRelease, setEditedRelease] = useState<Release | null>(release);
+
+  // Add useEffect to update editedRelease when release changes
+  useEffect(() => {
+    setEditedRelease(release);
+    setIsEditing(false); // Reset editing state when release changes
+  }, [release]);
 
   const handleSave = () => {
     // In a real app, this would make an API call to update the release
