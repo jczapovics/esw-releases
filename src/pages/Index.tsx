@@ -413,10 +413,10 @@ const Index = () => {
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-1 text-sm">
-                  <span>This Year</span>
-                  <span className="font-medium">92%</span>
+                  <span>This Month</span>
+                  <span className="font-medium">88%</span>
                 </div>
-                <Progress value={92} className="h-2" />
+                <Progress value={88} className="h-2" />
               </div>
               <div>
                 <div className="flex justify-between mb-1 text-sm">
@@ -427,10 +427,10 @@ const Index = () => {
               </div>
               <div>
                 <div className="flex justify-between mb-1 text-sm">
-                  <span>This Month</span>
-                  <span className="font-medium">88%</span>
+                  <span>This Year</span>
+                  <span className="font-medium">92%</span>
                 </div>
-                <Progress value={88} className="h-2" />
+                <Progress value={92} className="h-2" />
               </div>
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
