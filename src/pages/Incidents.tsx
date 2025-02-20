@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { DashboardLayout } from "@/components/DashboardLayout";
@@ -11,10 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { ExternalLink, Pencil, Trash2, X, Check } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { ExternalLink, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -145,35 +143,29 @@ const mockIncidents: Incident[] = [
 
 const Incidents = () => {
   const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Partial<Incident>>({});
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
-  const { toast } = useToast();
 
-  const handleEdit = (incident: Incident) => {
-    setEditingId(incident.id);
-    setEditData(incident);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setEditData({});
-  };
-
-  const handleSaveEdit = (id: string) => {
-    setIncidents(incidents.map(inc => 
-      inc.id === id 
-        ? { ...inc, ...editData, dateReported: new Date(editData.dateReported || inc.dateReported) }
-        : inc
-    ));
-    setEditingId(null);
-    setEditData({});
-    toast({
-      title: "Success",
-      description: "Incident updated successfully",
-    });
+  const handleUpdateRelease = (incidentId: string, releaseId: string) => {
+    const release = releases.find(r => String(r.id) === releaseId);
+    if (release) {
+      setIncidents(incidents.map(inc => 
+        inc.id === incidentId 
+          ? { 
+              ...inc, 
+              linkedRelease: {
+                id: String(release.id),
+                name: `${release.product} ${release.releaseName}`
+              }
+            }
+          : inc
+      ));
+      toast({
+        title: "Success",
+        description: "Incident linked to release successfully",
+      });
+    }
   };
 
   const handleDelete = (incident: Incident) => {
@@ -245,132 +237,48 @@ const Incidents = () => {
               {incidents.map((incident) => (
                 <TableRow key={incident.id}>
                   <TableCell className="font-medium">{incident.id}</TableCell>
-                  <TableCell>
-                    {editingId === incident.id ? (
-                      <Input
-                        value={editData.name || ""}
-                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                        className="max-w-[200px]"
-                      />
-                    ) : (
-                      incident.name
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editingId === incident.id ? (
-                      <Input
-                        type="date"
-                        value={format(new Date(editData.dateReported || incident.dateReported), "yyyy-MM-dd")}
-                        onChange={(e) => setEditData({ ...editData, dateReported: new Date(e.target.value) })}
-                        className="max-w-[150px]"
-                      />
-                    ) : (
-                      format(incident.dateReported, "MMM d, yyyy")
-                    )}
-                  </TableCell>
+                  <TableCell>{incident.name}</TableCell>
+                  <TableCell>{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
                   <TableCell className="max-w-md">
-                    {editingId === incident.id ? (
-                      <Input
-                        value={editData.description || ""}
-                        onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                      />
-                    ) : (
-                      <span className="truncate block">{incident.description}</span>
-                    )}
+                    <span className="truncate block">{incident.description}</span>
                   </TableCell>
                   <TableCell>
-                    {editingId === incident.id ? (
-                      <Input
-                        value={editData.documentLink || ""}
-                        onChange={(e) => setEditData({ ...editData, documentLink: e.target.value })}
-                        className="max-w-[200px]"
-                      />
-                    ) : (
-                      <a
-                        href={incident.documentLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-brand-500 hover:text-brand-600 inline-flex items-center gap-1"
-                      >
-                        View Doc
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
+                    <a
+                      href={incident.documentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand-500 hover:text-brand-600 inline-flex items-center gap-1"
+                    >
+                      View Doc
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
                   </TableCell>
                   <TableCell>
-                    {editingId === incident.id ? (
-                      <Select
-                        value={editData.linkedRelease?.id || incident.linkedRelease.id}
-                        onValueChange={(value) => {
-                          const release = releases.find(r => String(r.id) === value);
-                          if (release) {
-                            setEditData({
-                              ...editData,
-                              linkedRelease: {
-                                id: String(release.id),
-                                name: `${release.product} ${release.releaseName}`
-                              }
-                            });
-                          }
-                        }}
-                      >
-                        <SelectTrigger className="w-[200px]">
-                          <SelectValue placeholder="Select Release" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {releases.map((release) => (
-                            <SelectItem key={release.id} value={String(release.id)}>
-                              {release.product} {release.releaseName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <button
-                        onClick={() => handleReleaseClick(incident.linkedRelease.id)}
-                        className="text-brand-500 hover:text-brand-600"
-                      >
-                        {incident.linkedRelease.name}
-                      </button>
-                    )}
+                    <Select
+                      value={incident.linkedRelease.id}
+                      onValueChange={(value) => handleUpdateRelease(incident.id, value)}
+                    >
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="Select Release" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {releases.map((release) => (
+                          <SelectItem key={release.id} value={String(release.id)}>
+                            {release.product} {release.releaseName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      {editingId === incident.id ? (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleSaveEdit(incident.id)}
-                          >
-                            <Check className="h-4 w-4 text-green-600" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleCancelEdit}
-                          >
-                            <X className="h-4 w-4 text-red-600" />
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEdit(incident)}
-                          >
-                            <Pencil className="h-4 w-4 text-gray-600" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(incident)}
-                          >
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
-                        </>
-                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(incident)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
