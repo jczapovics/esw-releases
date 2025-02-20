@@ -1,4 +1,3 @@
-
 import {
   Sheet,
   SheetContent,
@@ -7,7 +6,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Edit2, Link, Calendar, Check } from "lucide-react";
+import { Edit2, Link, Calendar, Check, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 type Release = {
   id: number;
@@ -53,6 +53,14 @@ export const ReleasePanel = ({ release, onClose, businessUnits = [], products = 
     // In a real app, this would make an API call to update the release
     console.log("Saving release:", editedRelease);
     setIsEditing(false);
+    toast.success("Release updated successfully");
+  };
+
+  const handleDelete = () => {
+    // In a real app, this would make an API call to delete the release
+    console.log("Deleting release:", release);
+    toast.success("Release deleted successfully");
+    onClose();
   };
 
   if (!release || !editedRelease) {
@@ -65,15 +73,26 @@ export const ReleasePanel = ({ release, onClose, businessUnits = [], products = 
         <SheetHeader>
           <SheetTitle className="flex items-center justify-between">
             <span>Release Details</span>
-            {!isEditing && (
-              <Button 
-                variant="outline" 
-                size="icon"
-                onClick={() => setIsEditing(true)}
-              >
-                <Edit2 className="h-4 w-4" />
-              </Button>
-            )}
+            <div className="flex gap-2">
+              {!isEditing && (
+                <>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="icon"
+                    onClick={handleDelete}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
+            </div>
           </SheetTitle>
           <SheetDescription>
             View and edit release information
