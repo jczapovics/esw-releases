@@ -1,14 +1,18 @@
 
+import { useNavigate } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle } from "lucide-react";
+import { Box, LayoutDashboard, AlertCircle, LogOut } from "lucide-react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Releases", href: "/releases", icon: Box },
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
+  { name: "Sign Out", href: "/login", icon: LogOut },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
@@ -43,11 +47,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center justify-between mb-8">
               <div className="flex-1">
                 <SidebarTrigger />
-              </div>
-              <div className="flex items-center space-x-4">
-                <button className="glass-effect px-4 py-2 rounded-lg text-brand-700 hover:bg-brand-50 transition-all duration-200">
-                  Sign In
-                </button>
               </div>
             </div>
             {children}
