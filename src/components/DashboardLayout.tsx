@@ -1,7 +1,6 @@
-
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle, LogOut, Plus } from "lucide-react";
+import { Box, LayoutDashboard, AlertCircle, LogOut, Plus, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -12,6 +11,7 @@ const mainNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Releases", href: "/releases", icon: Box },
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
+  { name: "Ask AI", href: "/ask-ai", icon: MessageSquare },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
