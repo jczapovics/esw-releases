@@ -1,3 +1,4 @@
+
 import { DashboardLayout } from "@/components/DashboardLayout";
 import {
   Select,
@@ -6,18 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { useState } from "react";
-import { Check, Link, Calendar, Edit2 } from "lucide-react";
+import { Check } from "lucide-react";
 import { ReleasePanel } from "@/components/ReleasePanel";
+import { useState } from "react";
 
 // Type definitions
 type Release = {
@@ -99,8 +91,6 @@ const Releases = () => {
   const [selectedProduct, setSelectedProduct] = useState("All");
   const [selectedQuality, setSelectedQuality] = useState("All");
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedRelease, setEditedRelease] = useState<Release | null>(null);
 
   const filteredReleases = releases.filter(release => {
     const matchesBU = selectedBU === "All" || release.businessUnit === selectedBU;
@@ -110,16 +100,10 @@ const Releases = () => {
   });
 
   const handleReleaseClick = (release: Release) => {
+    console.log("Linked release ID:", release.id);
+    console.log("All releases:", releases);
+    console.log("Found release:", release);
     setSelectedRelease(release);
-    setEditedRelease(release);
-    setIsEditing(false);
-  };
-
-  const handleSave = () => {
-    // In a real app, this would make an API call to update the release
-    console.log("Saving release:", editedRelease);
-    setIsEditing(false);
-    setSelectedRelease(editedRelease);
   };
 
   return (
