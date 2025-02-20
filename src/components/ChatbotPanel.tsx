@@ -48,20 +48,27 @@ export function ChatbotPanel() {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex items-start gap-3 ${
-                message.role === "assistant" ? "text-gray-700" : "text-gray-800"
-              }`}
+              className={`flex ${
+                message.role === "assistant" ? "justify-start" : "justify-end"
+              } gap-3`}
             >
-              {message.role === "assistant" ? (
-                <MessageSquare className="w-6 h-6 mt-1 text-brand-600" />
-              ) : (
-                <User className="w-6 h-6 mt-1 text-gray-600" />
+              {message.role === "assistant" && (
+                <MessageSquare className="w-6 h-6 mt-1 text-brand-600 shrink-0" />
               )}
-              <div className="flex-1 space-y-2">
-                <div className="rounded-lg bg-white p-3 shadow-sm">
+              <div className={`flex-1 max-w-[80%] space-y-2 ${
+                message.role === "user" ? "ml-auto" : ""
+              }`}>
+                <div className={`rounded-lg p-3 shadow-sm ${
+                  message.role === "assistant" 
+                    ? "bg-white text-gray-700" 
+                    : "bg-brand-600 text-white ml-auto"
+                }`}>
                   {message.content}
                 </div>
               </div>
+              {message.role === "user" && (
+                <User className="w-6 h-6 mt-1 text-gray-600 shrink-0" />
+              )}
             </div>
           ))}
         </div>
