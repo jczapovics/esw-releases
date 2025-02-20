@@ -1,7 +1,9 @@
 
 import { useNavigate } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle, LogOut } from "lucide-react";
+import { Box, LayoutDashboard, AlertCircle, LogOut, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const mainNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -11,6 +13,16 @@ const mainNavigation = [
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+
+  const handleAddProject = () => {
+    // Placeholder for add project functionality
+    toast.info("Add project functionality coming soon");
+  };
+
+  const handleAddIncident = () => {
+    // Placeholder for add incident functionality
+    toast.info("Add incident functionality coming soon");
+  };
 
   return (
     <SidebarProvider>
@@ -37,15 +49,38 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                   </a>
                 ))}
               </nav>
-              {/* Sign Out at the bottom */}
-              <div className="mt-auto pt-4">
-                <a
-                  href="/login"
-                  className="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200"
-                >
-                  <LogOut className="h-5 w-5 mr-3" />
-                  Sign Out
-                </a>
+              
+              {/* Action Buttons Section */}
+              <div className="mt-auto mb-4">
+                <div className="bg-gray-100 rounded-lg p-4 space-y-2">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-gray-700 hover:text-brand-700"
+                    onClick={handleAddProject}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Project
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-gray-700 hover:text-brand-700"
+                    onClick={handleAddIncident}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Incident
+                  </Button>
+                </div>
+                
+                {/* Sign Out at the bottom */}
+                <div className="mt-4">
+                  <a
+                    href="/login"
+                    className="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition-all duration-200"
+                  >
+                    <LogOut className="h-5 w-5 mr-3" />
+                    Sign Out
+                  </a>
+                </div>
               </div>
             </div>
           </SidebarContent>
