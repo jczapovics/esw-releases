@@ -2,7 +2,7 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown, Copy, HelpCircle } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toPng } from 'html-to-image';
@@ -407,7 +407,7 @@ const Index = () => {
                         domain={[80, 100]}
                         ticks={[80, 85, 90, 95, 100]}
                       />
-                      <Tooltip />
+                      <RechartsTooltip />
                       <Line 
                         type="monotone" 
                         dataKey="quality" 
@@ -427,8 +427,10 @@ const Index = () => {
               <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-gray-400" />
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <HelpCircle className="h-4 w-4 text-gray-400" />
+                    </Button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="max-w-xs">
@@ -494,8 +496,10 @@ const Index = () => {
               <h2 className="text-lg font-semibold">Most Active Products</h2>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-gray-400" />
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <HelpCircle className="h-4 w-4 text-gray-400" />
+                    </Button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="max-w-xs">
