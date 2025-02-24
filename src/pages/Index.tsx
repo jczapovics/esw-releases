@@ -153,7 +153,6 @@ const monthlyQualityTrend = [
   { month: 'Jun', quality: 92, releases: 20 },
 ];
 
-// Update type for product quality ranking
 type ProductQuality = {
   product: string;
   qualityPercentage: number;
@@ -188,7 +187,6 @@ const getProductQualityForPeriod = (period: Period): ProductQuality[] => {
   }
 }
 
-// Add type for active products
 type ActiveProduct = {
   product: string;
   releases: number;
@@ -222,7 +220,6 @@ const getActiveProductsForPeriod = (period: Period): ActiveProduct[] => {
   }
 }
 
-// Update releases data to match activity feed
 const releases = [
   {
     id: 1,
@@ -265,7 +262,6 @@ const releases = [
   }
 ];
 
-// Add incident type definition
 type Incident = {
   id: string;
   name: string;
@@ -278,7 +274,6 @@ type Incident = {
   };
 };
 
-// Add mock incidents data
 const mockIncidents: Incident[] = [
   {
     id: "INC-001",
@@ -323,6 +318,10 @@ const Index = () => {
   const stats = getStatsForPeriod(period);
   const qualityCardRef = useRef<HTMLDivElement>(null);
   const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
+  const [editingIncidentId, setEditingIncidentId] = useState<string | null>(null);
+  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
 
   const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -341,15 +340,6 @@ const Index = () => {
     }
   };
 
-  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
-  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
-  
-  // Add new state for incidents
-  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
-
-  // Add incident handlers
   const handleUpdateRelease = (incidentId: string, releaseId: string) => {
     const release = releases.find(r => String(r.id) === releaseId);
     if (release) {
@@ -364,6 +354,7 @@ const Index = () => {
             }
           : inc
       ));
+      setEditingIncidentId(null);
       toast("Incident linked to release successfully");
     }
   };
@@ -381,6 +372,16 @@ const Index = () => {
       setIncidentToDelete(null);
     }
   };
+
+  const handleReleaseClickFromIncident = (releaseId: string) => {
+    const release = releases.find(r => String(r.id) === releaseId);
+    if (release) {
+      setSelectedRelease(release);
+    }
+  };
+
+  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
+  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
 
   return (
     <DashboardLayout>
@@ -406,7 +407,6 @@ const Index = () => {
       </AlertDialog>
 
       <div className="animate-fadeIn space-y-8">
-        {/* Existing Dashboard Content */}
         <div className="grid grid-cols-1 gap-6 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-6">
@@ -726,7 +726,6 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Releases Table */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Releases</h2>
           <div className="bg-white rounded-lg shadow">
@@ -762,84 +761,9 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Incidents Table */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Incidents</h2>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead className="w-[120px]">Date Reported</TableHead>
-                <TableHead className="w-[300px]">Description</TableHead>
-                <TableHead className="w-[80px]">Document</TableHead>
-                <TableHead className="w-[200px]">Linked Release</TableHead>
-                <TableHead className="w-[80px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {incidents.map((incident) => (
-                <TableRow key={incident.id}>
-                  <TableCell className="font-medium">{incident.id}</TableCell>
-                  <TableCell>{incident.name}</TableCell>
-                  <TableCell>{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
-                  <TableCell className="max-w-[300px]">
-                    <span className="truncate block">{incident.description}</span>
-                  </TableCell>
-                  <TableCell>
-                    <a
-                      href={incident.documentLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
-                      title="View document"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      value={incident.linkedRelease.id}
-                      onValueChange={(value) => handleUpdateRelease(incident.id, value)}
-                    >
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Select Release" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {releases.map((release) => (
-                          <SelectItem key={release.id} value={String(release.id)}>
-                            {release.product} {release.releaseName}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(incident)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
-
-        <ReleasePanel 
-          release={selectedRelease}
-          onClose={() => setSelectedRelease(null)}
-          businessUnits={businessUnits.filter(bu => bu !== "All")}
-          products={products.filter(p => p !== "All")}
-        />
-      </div>
-    </DashboardLayout>
-  );
-};
-
-export default Index;
+                <TableHead className="
