@@ -13,7 +13,7 @@ const mainNavigation = [
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
 ];
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
   const [isAddIncidentOpen, setIsAddIncidentOpen] = useState(false);
@@ -49,6 +49,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 ))}
               </nav>
               
+              {/* Sign Out at the bottom */}
               <div className="mt-auto relative z-10">
                 <button
                   onClick={handleSignOut}
@@ -86,6 +87,4 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
     </SidebarProvider>
   );
-};
-
-export default DashboardLayout;
+}
