@@ -766,4 +766,86 @@ const Index = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="
+                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead className="w-[120px]">Date Reported</TableHead>
+                <TableHead className="w-[300px]">Description</TableHead>
+                <TableHead className="w-[80px]">Document</TableHead>
+                <TableHead className="w-[200px]">Linked Release</TableHead>
+                <TableHead className="w-[120px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {incidents.map((incident) => (
+                <TableRow key={incident.id}>
+                  <TableCell className="font-medium">{incident.id}</TableCell>
+                  <TableCell>{incident.name}</TableCell>
+                  <TableCell>{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
+                  <TableCell className="max-w-[300px]">
+                    <span className="truncate block">{incident.description}</span>
+                  </TableCell>
+                  <TableCell>
+                    <a
+                      href={incident.documentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
+                      title="View document"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </TableCell>
+                  <TableCell>
+                    {editingIncidentId === incident.id ? (
+                      <Select
+                        value={incident.linkedRelease.id}
+                        onValueChange={(value) => handleUpdateRelease(incident.id, value)}
+                      >
+                        <SelectTrigger className="w-[200px]">
+                          <SelectValue placeholder="Select Release" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {releases.map((release) => (
+                            <SelectItem key={release.id} value={String(release.id)}>
+                              {release.product} {release.releaseName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <button
+                        onClick={() => handleReleaseClickFromIncident(incident.linkedRelease.id)}
+                        className="text-brand-600 hover:text-brand-700 hover:underline text-sm text-left"
+                      >
+                        {incident.linkedRelease.name}
+                      </button>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingIncidentId(incident.id)}
+                        className="text-gray-600 hover:text-gray-900"
+                      >
+                        {editingIncidentId === incident.id ? 'Cancel' : 'Edit'}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(incident)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null
