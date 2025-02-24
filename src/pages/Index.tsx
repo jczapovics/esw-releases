@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
+import DashboardLayout from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown, ExternalLink, Trash2, Check } from "lucide-react";
@@ -848,4 +848,4 @@ const Index = () => {
 
         <ReleasePanel 
           release={selectedRelease}
-          onClose={() => setSelectedRelease(null
+          onClose={() => setSelectedRelease(null)}

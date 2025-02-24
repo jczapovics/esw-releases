@@ -1,4 +1,3 @@
-
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Box, LayoutDashboard, AlertCircle, LogOut } from "lucide-react";
@@ -13,7 +12,7 @@ const mainNavigation = [
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
 ];
 
-export function DashboardLayout({ children }: { children: React.ReactNode }) {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
   const [isAddIncidentOpen, setIsAddIncidentOpen] = useState(false);
@@ -87,4 +86,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       </div>
     </SidebarProvider>
   );
-}
+};
+
+export default DashboardLayout;
