@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown, ExternalLink, Trash2, Check } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -22,6 +40,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ReleasePanel } from "@/components/ReleasePanel";
+import { format } from "date-fns";
 
 type Period = "month" | "quarter" | "year";
 
@@ -246,6 +265,56 @@ const releases = [
   }
 ];
 
+// Add incident type definition
+type Incident = {
+  id: string;
+  name: string;
+  dateReported: Date;
+  description: string;
+  documentLink: string;
+  linkedRelease: {
+    id: string;
+    name: string;
+  };
+};
+
+// Add mock incidents data
+const mockIncidents: Incident[] = [
+  {
+    id: "INC-001",
+    name: "API Performance Degradation",
+    dateReported: new Date("2024-03-15"),
+    description: "Users experiencing slow response times in the payment gateway",
+    documentLink: "https://docs.google.com/doc/payment-incident-001",
+    linkedRelease: {
+      id: "1",
+      name: "Payment Gateway v2.1",
+    },
+  },
+  {
+    id: "INC-002",
+    name: "Authentication Service Outage",
+    dateReported: new Date("2024-03-14"),
+    description: "Complete authentication service downtime for 15 minutes",
+    documentLink: "https://docs.google.com/doc/auth-incident-002",
+    linkedRelease: {
+      id: "2",
+      name: "User Authentication v1.5",
+    },
+  },
+  {
+    id: "INC-003",
+    name: "Data Sync Delay",
+    dateReported: new Date("2024-03-13"),
+    description: "Analytics dashboard showing delayed data updates",
+    documentLink: "https://docs.google.com/doc/analytics-incident-003",
+    linkedRelease: {
+      id: "3",
+      name: "Analytics Dashboard v3.0",
+    },
+  },
+];
+
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
@@ -274,10 +343,70 @@ const Index = () => {
 
   const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
   const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
+  
+  // Add new state for incidents
+  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
+
+  // Add incident handlers
+  const handleUpdateRelease = (incidentId: string, releaseId: string) => {
+    const release = releases.find(r => String(r.id) === releaseId);
+    if (release) {
+      setIncidents(incidents.map(inc => 
+        inc.id === incidentId 
+          ? { 
+              ...inc, 
+              linkedRelease: {
+                id: String(release.id),
+                name: `${release.product} ${release.releaseName}`
+              }
+            }
+          : inc
+      ));
+      toast("Incident linked to release successfully");
+    }
+  };
+
+  const handleDelete = (incident: Incident) => {
+    setIncidentToDelete(incident);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (incidentToDelete) {
+      setIncidents(incidents.filter(inc => inc.id !== incidentToDelete.id));
+      toast("Incident deleted successfully");
+      setDeleteDialogOpen(false);
+      setIncidentToDelete(null);
+    }
+  };
 
   return (
     <DashboardLayout>
-      <div className="animate-fadeIn">
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the incident
+              "{incidentToDelete?.name}" and all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Incident
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <div className="animate-fadeIn space-y-8">
+        {/* Existing Dashboard Content */}
         <div className="grid grid-cols-1 gap-6 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-6">
@@ -595,6 +724,111 @@ const Index = () => {
               </PaginationContent>
             </Pagination>
           </div>
+        </Card>
+
+        {/* Releases Table */}
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Releases</h2>
+          <div className="bg-white rounded-lg shadow">
+            <div className="grid grid-cols-4 gap-4 p-4 font-medium text-gray-700 border-b">
+              <div>Business Unit</div>
+              <div>Product</div>
+              <div>Release Date</div>
+              <div>Quality</div>
+            </div>
+            <div className="divide-y">
+              {releases.map((release) => (
+                <div 
+                  key={release.id} 
+                  className="grid grid-cols-4 gap-4 p-4 items-center hover:bg-gray-50 cursor-pointer"
+                  onClick={() => setSelectedRelease(release)}
+                >
+                  <div>{release.businessUnit}</div>
+                  <div>{release.product}</div>
+                  <div>{new Date(release.releaseDate).toLocaleDateString()}</div>
+                  <div>
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                      release.quality === "Good" 
+                        ? "bg-green-100 text-green-800" 
+                        : "bg-red-100 text-red-800"
+                    }`}>
+                      {release.quality === "Good" && <Check className="h-3 w-3" />}
+                      {release.quality}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        {/* Incidents Table */}
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Incidents</h2>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead className="w-[120px]">Date Reported</TableHead>
+                <TableHead className="w-[300px]">Description</TableHead>
+                <TableHead className="w-[80px]">Document</TableHead>
+                <TableHead className="w-[200px]">Linked Release</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {incidents.map((incident) => (
+                <TableRow key={incident.id}>
+                  <TableCell className="font-medium">{incident.id}</TableCell>
+                  <TableCell>{incident.name}</TableCell>
+                  <TableCell>{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
+                  <TableCell className="max-w-[300px]">
+                    <span className="truncate block">{incident.description}</span>
+                  </TableCell>
+                  <TableCell>
+                    <a
+                      href={incident.documentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
+                      title="View document"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      value={incident.linkedRelease.id}
+                      onValueChange={(value) => handleUpdateRelease(incident.id, value)}
+                    >
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="Select Release" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {releases.map((release) => (
+                          <SelectItem key={release.id} value={String(release.id)}>
+                            {release.product} {release.releaseName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(incident)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </Card>
 
         <ReleasePanel 
