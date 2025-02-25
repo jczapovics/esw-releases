@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Check, FileText, ExternalLink } from "lucide-react";
+import { ArrowUp, ArrowDown, Check, FileText, ExternalLink, Trash2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,16 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type Period = "month" | "quarter" | "year";
 
@@ -310,6 +320,9 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState("All");
+  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
   const stats = getStatsForPeriod(period);
   const qualityCardRef = useRef<HTMLDivElement>(null);
   const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
@@ -352,8 +365,43 @@ const Index = () => {
     }
   };
 
+  const handleDelete = (incident: Incident) => {
+    setIncidentToDelete(incident);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (incidentToDelete) {
+      setIncidents(incidents.filter(inc => inc.id !== incidentToDelete.id));
+      toast("Incident deleted successfully");
+      setDeleteDialogOpen(false);
+      setIncidentToDelete(null);
+    }
+  };
+
   return (
     <DashboardLayout>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the incident
+              "{incidentToDelete?.name}" and all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Incident
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="animate-fadeIn space-y-8">
         <div className="grid grid-cols-1 gap-6 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
@@ -688,10 +736,11 @@ const Index = () => {
                 <TableHead className="w-[300px]">Description</TableHead>
                 <TableHead className="w-[80px]">Document</TableHead>
                 <TableHead className="w-[200px]">Linked Release</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockIncidents.map((incident) => (
+              {incidents.map((incident) => (
                 <TableRow key={incident.id}>
                   <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
                   <TableCell>{incident.name}</TableCell>
@@ -726,6 +775,17 @@ const Index = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(incident)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
