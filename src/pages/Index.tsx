@@ -436,7 +436,8 @@ const Index = () => {
               {productQualityRanking.map((product, index) => (
                 <div
                   key={product.product}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors animate-[slide-in-right_0.3s_ease-out_forwards] opacity-0"
+                  style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
@@ -466,9 +467,9 @@ const Index = () => {
                       : "text-red-600"
                   }`}>
                     {product.trend === "up" ? (
-                      <ArrowUp className="h-4 w-4" />
+                      <ArrowUp className="h-4 w-4 animate-[bounce_1s_ease-in-out_infinite]" />
                     ) : (
-                      <ArrowDown className="h-4 w-4" />
+                      <ArrowDown className="h-4 w-4 animate-[bounce_1s_ease-in-out_infinite]" />
                     )}
                     <span className="text-sm">{product.change}</span>
                   </div>
@@ -485,7 +486,8 @@ const Index = () => {
               {activeProducts.map((product, index) => (
                 <div
                   key={product.product}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors animate-[slide-in-right_0.3s_ease-out_forwards] opacity-0"
+                  style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
@@ -504,9 +506,9 @@ const Index = () => {
                       : "text-red-600"
                   }`}>
                     {product.trend === "up" ? (
-                      <ArrowUp className="h-4 w-4" />
+                      <ArrowUp className="h-4 w-4 animate-[bounce_1s_ease-in-out_infinite]" />
                     ) : (
-                      <ArrowDown className="h-4 w-4" />
+                      <ArrowDown className="h-4 w-4 animate-[bounce_1s_ease-in-out_infinite]" />
                     )}
                     <span className="text-sm">{product.change}</span>
                   </div>
