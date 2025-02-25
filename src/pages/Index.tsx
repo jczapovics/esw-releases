@@ -315,10 +315,6 @@ const mockIncidents: Incident[] = [
   },
 ];
 
-// Add pagination constants
-const RELEASES_PER_PAGE = 3;
-const INCIDENTS_PER_PAGE = 3;
-
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
@@ -384,26 +380,6 @@ const Index = () => {
       setIncidentToDelete(null);
     }
   };
-
-  // Add pagination state
-  const [releasesPage, setReleasesPage] = useState(1);
-  const [incidentsPage, setIncidentsPage] = useState(1);
-
-  // Calculate pagination for releases
-  const totalReleasePages = Math.ceil(releases.length / RELEASES_PER_PAGE);
-  const releaseStartIndex = (releasesPage - 1) * RELEASES_PER_PAGE;
-  const paginatedReleases = releases.slice(
-    releaseStartIndex,
-    releaseStartIndex + RELEASES_PER_PAGE
-  );
-
-  // Calculate pagination for incidents
-  const totalIncidentPages = Math.ceil(incidents.length / INCIDENTS_PER_PAGE);
-  const incidentStartIndex = (incidentsPage - 1) * INCIDENTS_PER_PAGE;
-  const paginatedIncidents = incidents.slice(
-    incidentStartIndex,
-    incidentStartIndex + INCIDENTS_PER_PAGE
-  );
 
   return (
     <DashboardLayout>
@@ -761,7 +737,7 @@ const Index = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedReleases.map((release) => (
+              {releases.map((release) => (
                 <TableRow 
                   key={release.id}
                   className="cursor-pointer hover:bg-gray-50"
@@ -784,35 +760,6 @@ const Index = () => {
               ))}
             </TableBody>
           </Table>
-          <div className="mt-4">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => setReleasesPage(p => Math.max(1, p - 1))}
-                    className={releasesPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalReleasePages }).map((_, i) => (
-                  <PaginationItem key={i + 1}>
-                    <PaginationLink
-                      onClick={() => setReleasesPage(i + 1)}
-                      isActive={releasesPage === i + 1}
-                      className="cursor-pointer"
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => setReleasesPage(p => Math.min(totalReleasePages, p + 1))}
-                    className={releasesPage === totalReleasePages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
         </Card>
 
         {/* Add Incidents table */}
@@ -833,10 +780,68 @@ const Index = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedIncidents.map((incident) => (
+              {incidents.map((incident) => (
                 <TableRow key={incident.id}>
                   <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
                   <TableCell>{incident.name}</TableCell>
                   <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
                   <TableCell className="max-w-[300px]">
-                    <span className="truncate block">{
+                    <span className="truncate block">{incident.description}</span>
+                  </TableCell>
+                  <TableCell>
+                    <a
+                      href={incident.documentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
+                      title="View document"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      value={incident.linkedRelease.id}
+                      onValueChange={(value) => handleUpdateRelease(incident.id, value)}
+                    >
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="Select Release" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {releases.map((release) => (
+                          <SelectItem key={release.id} value={String(release.id)}>
+                            {release.product} {release.releaseName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(incident)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null)}
+          businessUnits={businessUnits.filter(bu => bu !== "All")}
+          products={products.filter(p => p !== "All")}
+        />
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default Index;
