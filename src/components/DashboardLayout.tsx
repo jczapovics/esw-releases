@@ -9,7 +9,6 @@ import { AddIncidentSheet } from "./AddIncidentSheet";
 
 const mainNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Releases", href: "/releases", icon: Box },
   { name: "Incidents", href: "/incidents", icon: AlertCircle },
 ];
 
