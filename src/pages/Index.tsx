@@ -12,7 +12,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { GlobalFilters } from "@/components/dashboard/GlobalFilters";
-import { QualityTrend } from "@/components/dashboard/QualityTrend";
 import { ReleaseScorecard } from "@/components/dashboard/ReleaseScorecard";
 import { Card } from "@/components/ui/card";
 import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
@@ -423,10 +422,10 @@ const Index = () => {
           products={products}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <ReleaseScorecard stats={stats} />
-          <QualityTrend monthlyQualityTrend={monthlyQualityTrend} />
-        </div>
+        <ReleaseScorecard 
+          stats={stats} 
+          monthlyQualityTrend={monthlyQualityTrend}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
