@@ -1,86 +1,95 @@
 
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
-import { useRef } from "react";
+import { ArrowUp, ArrowDown } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 interface ReleaseScorecardProps {
-  quality: {
-    value: number;
-    label: string;
-  };
-  monthlyQualityTrend: Array<{
-    month: string;
-    quality: number;
-    releases: number;
+  stats: Array<{
+    name: string;
+    value: string;
+    change: string;
+    trend: "up" | "down";
   }>;
 }
 
-export const ReleaseScorecard = ({ quality, monthlyQualityTrend }: ReleaseScorecardProps) => {
-  const qualityCardRef = useRef<HTMLDivElement>(null);
+export const ReleaseScorecard = ({ stats }: ReleaseScorecardProps) => {
+  // Convert quality percentage to pie chart data
+  const qualityStat = stats.find(s => s.name === "High Quality");
+  const qualityValue = qualityStat ? parseInt(qualityStat.value) : 0;
+  const pieData = [
+    { name: "Quality", value: qualityValue },
+    { name: "Remaining", value: 100 - qualityValue }
+  ];
+  const COLORS = ["#22c55e", "#f3f4f6"];
 
   return (
-    <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
-      <div className="flex justify-between items-center mb-6">
+    <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-900">Release Scorecard</h2>
       </div>
-      <div className="space-y-4">
-        <div>
-          <div className="flex justify-between mb-1 text-sm">
-            <span>{quality.label}</span>
-            <span className="font-medium">{quality.value}%</span>
+      <div className="flex justify-between items-center">
+        <div className="flex gap-12 items-center">
+          <div>
+            <p className="text-sm text-gray-500">{stats[0].name}</p>
+            <div className="flex items-center mt-1">
+              <span className="text-3xl font-semibold text-gray-900">{stats[0].value}</span>
+              <span
+                className={`ml-2 flex items-center text-sm ${
+                  stats[0].trend === "up"
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {stats[0].change}
+                {stats[0].trend === "up" ? (
+                  <ArrowUp className="ml-1 h-4 w-4" />
+                ) : (
+                  <ArrowDown className="ml-1 h-4 w-4" />
+                )}
+              </span>
+            </div>
           </div>
-          <Progress value={quality.value} className="h-2" />
-        </div>
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
-          <div className="chart-container h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={monthlyQualityTrend}>
-                <XAxis 
-                  dataKey="month" 
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis 
-                  yAxisId="left"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  domain={[80, 100]}
-                  ticks={[80, 85, 90, 95, 100]}
-                />
-                <YAxis 
-                  yAxisId="right"
-                  orientation="right"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  domain={[0, 25]}
-                  ticks={[0, 5, 10, 15, 20, 25]}
-                />
-                <RechartsTooltip />
-                <Line 
-                  yAxisId="left"
-                  type="monotone" 
-                  dataKey="quality" 
-                  stroke="#14b8a6" 
-                  strokeWidth={2}
-                  dot={{ fill: '#14b8a6', strokeWidth: 2 }}
-                  name="Quality Score"
-                />
-                <Line 
-                  yAxisId="right"
-                  type="monotone" 
-                  dataKey="releases" 
-                  stroke="#2563eb" 
-                  strokeWidth={2}
-                  dot={{ fill: '#2563eb', strokeWidth: 2 }}
-                  name="Number of Releases"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+
+          <div className="flex items-center gap-6">
+            <div className="h-[100px] w-[100px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    innerRadius={35}
+                    outerRadius={45}
+                    paddingAngle={0}
+                    dataKey="value"
+                    startAngle={90}
+                    endAngle={-270}
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index]} strokeWidth={0} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">{stats[1].name}</p>
+              <div className="flex items-center mt-1">
+                <span className="text-3xl font-semibold text-gray-900">{stats[1].value}</span>
+                <span
+                  className={`ml-2 flex items-center text-sm ${
+                    stats[1].trend === "up"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {stats[1].change}
+                  {stats[1].trend === "up" ? (
+                    <ArrowUp className="ml-1 h-4 w-4" />
+                  ) : (
+                    <ArrowDown className="ml-1 h-4 w-4" />
+                  )}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
