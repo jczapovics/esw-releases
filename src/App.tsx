@@ -1,12 +1,18 @@
-import React from 'react';
-import { DashboardLayout } from "./components/DashboardLayout";
-import "./App.css";
+
+import { Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import Incidents from "./pages/Incidents";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-    <DashboardLayout>
-      {/* children content */}
-    </DashboardLayout>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/incidents" element={<Incidents />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

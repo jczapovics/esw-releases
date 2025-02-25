@@ -1,8 +1,8 @@
-import { DashboardLayout } from "../components/DashboardLayout";
+import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -143,6 +143,15 @@ const activityFeed = [
 ];
 
 const ITEMS_PER_PAGE = 3;
+
+const monthlyQualityTrend = [
+  { month: 'Jan', quality: 88, releases: 15 },
+  { month: 'Feb', quality: 92, releases: 12 },
+  { month: 'Mar', quality: 85, releases: 18 },
+  { month: 'Apr', quality: 94, releases: 14 },
+  { month: 'May', quality: 90, releases: 16 },
+  { month: 'Jun', quality: 92, releases: 20 },
+];
 
 // Update type for product quality ranking
 type ProductQuality = {
@@ -306,27 +315,7 @@ const mockIncidents: Incident[] = [
   },
 ];
 
-const monthlyQualityTrend = [
-  { name: "High Quality", value: 88 },
-  { name: "Medium Quality", value: 8 },
-  { name: "Low Quality", value: 4 }
-];
-
-const quarterlyQualityTrend = [
-  { name: "High Quality", value: 90 },
-  { name: "Medium Quality", value: 7 },
-  { name: "Low Quality", value: 3 }
-];
-
-const yearlyQualityTrend = [
-  { name: "High Quality", value: 92 },
-  { name: "Medium Quality", value: 6 },
-  { name: "Low Quality", value: 2 }
-];
-
-const COLORS = ['#10B981', '#FBBF24', '#EF4444'];
-
-export default function Index() {
+const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
@@ -334,9 +323,6 @@ export default function Index() {
   const stats = getStatsForPeriod(period);
   const qualityCardRef = useRef<HTMLDivElement>(null);
   const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
-  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
 
   const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -357,6 +343,10 @@ export default function Index() {
 
   const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
   const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
+
+  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
 
   // Add incident management functions
   const handleUpdateRelease = (incidentId: string, releaseId: string) => {
@@ -474,75 +464,55 @@ export default function Index() {
                 </div>
                 <Progress value={92} className="h-2" />
               </div>
-              <div className="mt-6 grid grid-cols-3 gap-4">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3 text-center">Monthly Quality</h3>
-                  <div className="h-[200px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={monthlyQualityTrend}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {monthlyQualityTrend.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <RechartsTooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3 text-center">Quarterly Quality</h3>
-                  <div className="h-[200px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={quarterlyQualityTrend}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {quarterlyQualityTrend.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <RechartsTooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3 text-center">Yearly Quality</h3>
-                  <div className="h-[200px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={yearlyQualityTrend}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {yearlyQualityTrend.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <RechartsTooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
+                <div className="chart-container h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={monthlyQualityTrend}>
+                      <XAxis 
+                        dataKey="month" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis 
+                        yAxisId="left"
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        domain={[80, 100]}
+                        ticks={[80, 85, 90, 95, 100]}
+                      />
+                      <YAxis 
+                        yAxisId="right"
+                        orientation="right"
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        domain={[0, 25]}
+                        ticks={[0, 5, 10, 15, 20, 25]}
+                      />
+                      <RechartsTooltip />
+                      <Line 
+                        yAxisId="left"
+                        type="monotone" 
+                        dataKey="quality" 
+                        stroke="#14b8a6" 
+                        strokeWidth={2}
+                        dot={{ fill: '#14b8a6', strokeWidth: 2 }}
+                        name="Quality Score"
+                      />
+                      <Line 
+                        yAxisId="right"
+                        type="monotone" 
+                        dataKey="releases" 
+                        stroke="#2563eb" 
+                        strokeWidth={2}
+                        dot={{ fill: '#2563eb', strokeWidth: 2 }}
+                        name="Number of Releases"
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>
@@ -855,4 +825,25 @@ export default function Index() {
                         size="sm"
                         onClick={() => handleDelete(incident)}
                       >
-                        <Trash2 className="h
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null)}
+          businessUnits={businessUnits.filter(bu => bu !== "All")}
+          products={products.filter(p => p !== "All")}
+        />
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default Index;
