@@ -1,7 +1,7 @@
 
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, AlertCircle, LogOut } from "lucide-react";
+import { LayoutDashboard, AlertCircle, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AddReleaseSheet } from "./AddReleaseSheet";
@@ -30,7 +30,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <div className="px-3 py-4 flex flex-col h-full relative">
               <div className="mb-8 relative z-10">
                 <h1 className="text-2xl font-bold text-brand-700">
-                  ESW Releases
+                  Central Engineering
                 </h1>
               </div>
               <nav className="space-y-1 relative z-10">
