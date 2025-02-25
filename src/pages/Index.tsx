@@ -723,7 +723,7 @@ const Index = () => {
                 ))}
                 <PaginationItem>
                   <PaginationNext 
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}\
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                     className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
                 </PaginationItem>
@@ -846,4 +846,4 @@ const Index = () => {
                         size="sm"
                         onClick={() => handleDelete(incident)}
                       >
-                        <Trash2 className="h-4 w-4 text-red-60
+                        <Trash2 className="h-4 w-4 text-red-600
