@@ -6,7 +6,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Link, Calendar, Check } from "lucide-react";
+import { Link, Calendar, Check, AlertCircle } from "lucide-react";
+
+type Incident = {
+  id: number;
+  title: string;
+  description: string;
+  severity: "Low" | "Medium" | "High";
+  status: "Open" | "Resolved";
+  dateReported: string;
+};
 
 type Release = {
   id: number;
@@ -29,10 +38,36 @@ interface ReleasePanelProps {
   products?: string[];
 }
 
+// Mock incidents data - in a real app, this would come from your data source
+const mockIncidents: Record<number, Incident[]> = {
+  1: [], // No incidents for release 1
+  2: [
+    {
+      id: 1,
+      title: "API Performance Degradation",
+      description: "Users experiencing slow response times",
+      severity: "High",
+      status: "Resolved",
+      dateReported: "2024-03-10"
+    },
+    {
+      id: 2,
+      title: "Authentication Issues",
+      description: "Intermittent login failures",
+      severity: "Medium",
+      status: "Resolved",
+      dateReported: "2024-03-11"
+    }
+  ],
+  3: [] // No incidents for release 3
+};
+
 export const ReleasePanel = ({ release, onClose }: ReleasePanelProps) => {
   if (!release) {
     return null;
   }
+
+  const relatedIncidents = mockIncidents[release.id] || [];
 
   return (
     <Sheet open={!!release} onOpenChange={onClose}>
@@ -123,6 +158,54 @@ export const ReleasePanel = ({ release, onClose }: ReleasePanelProps) => {
             <div className="space-y-1.5">
               <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Description</label>
               <p className="text-sm text-gray-900">{release.description}</p>
+            </div>
+
+            {/* Related Incidents */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Related Incidents</label>
+              {relatedIncidents.length > 0 ? (
+                <div className="mt-2 space-y-3">
+                  {relatedIncidents.map((incident) => (
+                    <div 
+                      key={incident.id}
+                      className="bg-gray-50 p-3 rounded-lg border border-gray-100"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-2">
+                          <AlertCircle className="h-4 w-4 text-red-500 mt-0.5" />
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-900">{incident.title}</h4>
+                            <p className="text-sm text-gray-500 mt-1">{incident.description}</p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                incident.severity === "High" 
+                                  ? "bg-red-100 text-red-800"
+                                  : incident.severity === "Medium"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}>
+                                {incident.severity}
+                              </span>
+                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                incident.status === "Resolved"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}>
+                                {incident.status}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {new Date(incident.dateReported).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 mt-1">No incidents reported for this release</p>
+              )}
             </div>
           </div>
         </div>
