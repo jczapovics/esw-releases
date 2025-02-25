@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Check, FileText } from "lucide-react";
+import { ArrowUp, ArrowDown, Check } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -251,48 +251,6 @@ const releases = [
     quality: "Good" as const,
     description: "Hotfix v1.9.1 deployed successfully",
     incidents: 0
-  }
-];
-
-// Add type for incidents
-type Incident = {
-  id: number;
-  title: string;
-  product: string;
-  description: string;
-  status: "Open" | "Resolved";
-  dateReported: string;
-  documentLink?: string;
-};
-
-// Add mock incidents data
-const incidents: Incident[] = [
-  {
-    id: 1,
-    title: "API Performance Degradation",
-    product: "Payment Gateway",
-    description: "Users experiencing slow response times",
-    status: "Resolved",
-    dateReported: "2024-03-10",
-    documentLink: "https://docs.example.com/incidents/api-degradation"
-  },
-  {
-    id: 2,
-    title: "Authentication Issues",
-    product: "User Authentication",
-    description: "Intermittent login failures",
-    status: "Open",
-    dateReported: "2024-03-11",
-    documentLink: "https://docs.example.com/incidents/auth-issues"
-  },
-  {
-    id: 3,
-    title: "Search Latency",
-    product: "Search Service",
-    description: "Search response time increased",
-    status: "Resolved",
-    dateReported: "2024-03-09",
-    documentLink: "https://docs.example.com/incidents/search-latency"
   }
 ];
 
@@ -685,56 +643,12 @@ const Index = () => {
           </Table>
         </Card>
 
-        {/* Add the incidents table at the bottom */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Incidents</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date Reported</TableHead>
-                <TableHead>Document</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {incidents.map((incident) => (
-                <TableRow 
-                  key={incident.id}
-                  className="cursor-pointer hover:bg-gray-50"
-                >
-                  <TableCell>{incident.title}</TableCell>
-                  <TableCell>{incident.product}</TableCell>
-                  <TableCell>
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      incident.status === "Resolved" 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {incident.status === "Resolved" && <Check className="h-3 w-3" />}
-                      {incident.status}
-                    </span>
-                  </TableCell>
-                  <TableCell>{new Date(incident.dateReported).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    {incident.documentLink && (
-                      <a
-                        href={incident.documentLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
-                      >
-                        <FileText className="h-4 w-4" />
-                        View
-                      </a>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null)}
+          businessUnits={businessUnits.filter(bu => bu !== "All")}
+          products={products.filter(p => p !== "All")}
+        />
       </div>
     </DashboardLayout>
   );
