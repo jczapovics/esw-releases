@@ -1,4 +1,3 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -727,7 +726,7 @@ const Index = () => {
 
         {/* Add the releases table at the bottom */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Releases</h2>
+          <h2 className="text-xl font-semibold mb-4">Releases</h2>
           <Table>
             <TableHeader>
               <TableRow>
@@ -766,7 +765,7 @@ const Index = () => {
         {/* Add Incidents table */}
         <Card className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Recent Incidents</h2>
+            <h2 className="text-xl font-semibold">Incidents</h2>
           </div>
           <Table>
             <TableHeader>
