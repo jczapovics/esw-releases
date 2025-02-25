@@ -423,9 +423,10 @@ const Index = () => {
           products={products}
         />
 
-        <ReleaseScorecard stats={stats} />
-
-        <QualityTrend monthlyQualityTrend={monthlyQualityTrend} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <ReleaseScorecard stats={stats} />
+          <QualityTrend monthlyQualityTrend={monthlyQualityTrend} />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
