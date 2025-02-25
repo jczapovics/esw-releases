@@ -1,9 +1,9 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card } from "@/components/ui/card";
+import { DashboardLayout } from "../components/DashboardLayout";
+import { Card } from "../components/ui/card";
 import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { toast } from "sonner";
 import {
   Select,
@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,7 +21,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "../components/ui/alert-dialog";
 import { format } from "date-fns";
 import {
   Pagination,
@@ -30,8 +30,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
-import { ReleasePanel } from "@/components/ReleasePanel";
+} from "../components/ui/pagination";
+import { ReleasePanel } from "../components/ReleasePanel";
 import {
   Table,
   TableHeader,
@@ -39,7 +39,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/components/ui/table";
+} from "../components/ui/table";
 
 type Period = "month" | "quarter" | "year";
 
@@ -417,7 +417,7 @@ const Index = () => {
   };
 
   return (
-    <DashboardLayout>
+    <div className="container mx-auto">
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -845,4 +845,3 @@ const Index = () => {
                         onClick={() => handleDelete(incident)}
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
