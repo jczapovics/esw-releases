@@ -10,8 +10,6 @@ import {
   Bell,
   LayoutDashboard,
   AlertOctagon,
-  ChevronDown,
-  ChevronUp,
   Info,
 } from "lucide-react";
 import {
@@ -79,45 +77,39 @@ const products = [
     name: "Payment Gateway",
     businessUnit: "Financial Services",
     scores: {
-      "Automated User Experience Tests": 80,
-      "Log Monitoring": 90,
-      "System Metrics": 100,
-      "Alerts": 85,
-      "Status Dashboards": 70,
-      "Incident Management": 95
+      "Automated User Experience Tests": true,
+      "Log Monitoring": true,
+      "System Metrics": true,
+      "Alerts": false,
+      "Status Dashboards": false,
+      "Incident Management": true
     }
   },
   {
     name: "User Authentication",
     businessUnit: "Security",
     scores: {
-      "Automated User Experience Tests": 95,
-      "Log Monitoring": 100,
-      "System Metrics": 90,
-      "Alerts": 90,
-      "Status Dashboards": 85,
-      "Incident Management": 100
+      "Automated User Experience Tests": true,
+      "Log Monitoring": true,
+      "System Metrics": true,
+      "Alerts": true,
+      "Status Dashboards": false,
+      "Incident Management": true
     }
   },
   {
     name: "Analytics Dashboard",
     businessUnit: "Data Intelligence",
     scores: {
-      "Automated User Experience Tests": 70,
-      "Log Monitoring": 85,
-      "System Metrics": 95,
-      "Alerts": 80,
-      "Status Dashboards": 90,
-      "Incident Management": 85
+      "Automated User Experience Tests": false,
+      "Log Monitoring": true,
+      "System Metrics": true,
+      "Alerts": false,
+      "Status Dashboards": true,
+      "Incident Management": false
     }
   }
 ];
-
-const getScoreColor = (score: number) => {
-  if (score >= 90) return "text-green-600 bg-green-50";
-  if (score >= 70) return "text-yellow-600 bg-yellow-50";
-  return "text-red-600 bg-red-50";
-};
 
 const SystemHealth = () => {
   return (
@@ -191,9 +183,11 @@ const SystemHealth = () => {
                     const score = product.scores[criterion.name];
                     return (
                       <TableCell key={criterion.name} className="text-center">
-                        <span className={`inline-flex items-center justify-center w-12 h-8 rounded-full font-medium text-sm ${getScoreColor(score)}`}>
-                          {score}
-                        </span>
+                        {score ? (
+                          <CheckCircle2 className="h-5 w-5 text-green-600 mx-auto" />
+                        ) : (
+                          <AlertCircle className="h-5 w-5 text-red-600 mx-auto" />
+                        )}
                       </TableCell>
                     );
                   })}
