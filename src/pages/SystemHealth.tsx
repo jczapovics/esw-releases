@@ -11,6 +11,9 @@ import {
   LayoutDashboard,
   AlertOctagon,
   Info,
+  TrendingUp,
+  TrendingDown,
+  Minus,
 } from "lucide-react";
 import {
   Tooltip,
@@ -83,6 +86,14 @@ const products = [
       "Alerts": false,
       "Status Dashboards": false,
       "Incident Management": true
+    },
+    lastMonthScores: {
+      "Automated User Experience Tests": false, // Improved
+      "Log Monitoring": true, // No change
+      "System Metrics": true, // No change
+      "Alerts": true, // Degraded
+      "Status Dashboards": false, // No change
+      "Incident Management": false // Improved
     }
   },
   {
@@ -95,6 +106,14 @@ const products = [
       "Alerts": true,
       "Status Dashboards": false,
       "Incident Management": true
+    },
+    lastMonthScores: {
+      "Automated User Experience Tests": true, // No change
+      "Log Monitoring": false, // Improved
+      "System Metrics": true, // No change
+      "Alerts": true, // No change
+      "Status Dashboards": false, // No change
+      "Incident Management": true // No change
     }
   },
   {
@@ -107,6 +126,14 @@ const products = [
       "Alerts": false,
       "Status Dashboards": true,
       "Incident Management": false
+    },
+    lastMonthScores: {
+      "Automated User Experience Tests": true, // Degraded
+      "Log Monitoring": true, // No change
+      "System Metrics": false, // Improved
+      "Alerts": false, // No change
+      "Status Dashboards": false, // Improved
+      "Incident Management": false // No change
     }
   }
 ];
@@ -151,6 +178,17 @@ const SystemHealth = () => {
 
         <Card className="p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Product Health Scores</h2>
+          <div className="mb-4 flex items-center gap-6 text-sm text-gray-600">
+            <span className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-green-600" /> Improved
+            </span>
+            <span className="flex items-center gap-2">
+              <TrendingDown className="h-4 w-4 text-red-600" /> Degraded
+            </span>
+            <span className="flex items-center gap-2">
+              <Minus className="h-4 w-4 text-gray-400" /> No Change
+            </span>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -180,14 +218,29 @@ const SystemHealth = () => {
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell>{product.businessUnit}</TableCell>
                   {criteria.map((criterion) => {
-                    const score = product.scores[criterion.name];
+                    const currentScore = product.scores[criterion.name];
+                    const lastMonthScore = product.lastMonthScores[criterion.name];
+                    const hasImproved = !lastMonthScore && currentScore;
+                    const hasDegraded = lastMonthScore && !currentScore;
+                    
                     return (
-                      <TableCell key={criterion.name} className="text-center">
-                        {score ? (
+                      <TableCell key={criterion.name} className="text-center relative">
+                        {currentScore ? (
                           <CheckCircle2 className="h-5 w-5 text-green-600 mx-auto" />
                         ) : (
                           <AlertCircle className="h-5 w-5 text-red-600 mx-auto" />
                         )}
+                        <div className="absolute -top-1 -right-1">
+                          {hasImproved && (
+                            <TrendingUp className="h-3 w-3 text-green-600" />
+                          )}
+                          {hasDegraded && (
+                            <TrendingDown className="h-3 w-3 text-red-600" />
+                          )}
+                          {!hasImproved && !hasDegraded && (
+                            <Minus className="h-3 w-3 text-gray-400" />
+                          )}
+                        </div>
                       </TableCell>
                     );
                   })}
