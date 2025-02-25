@@ -11,9 +11,10 @@ type Incident = {
   id: number;
   title: string;
   description: string;
+  severity: "Low" | "Medium" | "High";
   status: "Open" | "Resolved";
   dateReported: string;
-  documentLink?: string;
+  documentLink?: string; // Added documentLink property
 };
 
 type Release = {
@@ -45,6 +46,7 @@ const mockIncidents: Record<number, Incident[]> = {
       id: 1,
       title: "API Performance Degradation",
       description: "Users experiencing slow response times",
+      severity: "High",
       status: "Resolved",
       dateReported: "2024-03-10",
       documentLink: "https://docs.example.com/incidents/api-degradation"
@@ -53,6 +55,7 @@ const mockIncidents: Record<number, Incident[]> = {
       id: 2,
       title: "Authentication Issues",
       description: "Intermittent login failures",
+      severity: "Medium",
       status: "Resolved",
       dateReported: "2024-03-11",
       documentLink: "https://docs.example.com/incidents/auth-issues"
@@ -189,6 +192,15 @@ export const ReleasePanel = ({ release, onClose }: ReleasePanelProps) => {
                             </div>
                             <p className="text-sm text-gray-500 mt-1">{incident.description}</p>
                             <div className="flex items-center gap-2 mt-2">
+                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                incident.severity === "High" 
+                                  ? "bg-red-100 text-red-800"
+                                  : incident.severity === "Medium"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}>
+                                {incident.severity}
+                              </span>
                               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                                 incident.status === "Resolved"
                                   ? "bg-green-100 text-green-800"
