@@ -1,4 +1,3 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import {
@@ -139,6 +138,35 @@ const products = [
 ];
 
 const SystemHealth = () => {
+  // Calculate overall statistics
+  const calculateStats = () => {
+    let totalChecks = 0;
+    let passedChecks = 0;
+    let improvements = 0;
+    let degradations = 0;
+
+    products.forEach(product => {
+      criteria.forEach(criterion => {
+        totalChecks++;
+        if (product.scores[criterion.name]) passedChecks++;
+        
+        const currentScore = product.scores[criterion.name];
+        const lastMonthScore = product.lastMonthScores[criterion.name];
+        if (!lastMonthScore && currentScore) improvements++;
+        if (lastMonthScore && !currentScore) degradations++;
+      });
+    });
+
+    return {
+      passRate: Math.round((passedChecks / totalChecks) * 100),
+      improvements,
+      degradations,
+      noChange: totalChecks - improvements - degradations
+    };
+  };
+
+  const stats = calculateStats();
+
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -147,6 +175,54 @@ const SystemHealth = () => {
           <p className="text-gray-600">
             Track and improve the operational health of our products across six key criteria.
           </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="p-6">
+            <div className="flex flex-col items-center">
+              <h3 className="text-sm font-medium text-gray-500">Overall Health</h3>
+              <div className="mt-2 flex items-center">
+                {stats.passRate >= 70 ? (
+                  <CheckCircle2 className="h-8 w-8 text-green-600" />
+                ) : stats.passRate >= 50 ? (
+                  <AlertCircle className="h-8 w-8 text-yellow-500" />
+                ) : (
+                  <AlertCircle className="h-8 w-8 text-red-600" />
+                )}
+                <span className="ml-2 text-2xl font-bold">{stats.passRate}%</span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex flex-col items-center">
+              <h3 className="text-sm font-medium text-gray-500">Improvements</h3>
+              <div className="mt-2 flex items-center">
+                <TrendingUp className="h-8 w-8 text-green-600" />
+                <span className="ml-2 text-2xl font-bold">{stats.improvements}</span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex flex-col items-center">
+              <h3 className="text-sm font-medium text-gray-500">Degradations</h3>
+              <div className="mt-2 flex items-center">
+                <TrendingDown className="h-8 w-8 text-red-600" />
+                <span className="ml-2 text-2xl font-bold">{stats.degradations}</span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex flex-col items-center">
+              <h3 className="text-sm font-medium text-gray-500">No Change</h3>
+              <div className="mt-2 flex items-center">
+                <Minus className="h-8 w-8 text-gray-400" />
+                <span className="ml-2 text-2xl font-bold">{stats.noChange}</span>
+              </div>
+            </div>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
