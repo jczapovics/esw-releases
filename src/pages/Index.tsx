@@ -516,282 +516,173 @@ const Index = () => {
             </div>
           </Card>
 
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <div className="flex justify-between items-center">
-              <div className="flex gap-8">
-                {stats.map((stat) => (
-                  <div key={stat.name}>
-                    <p className="text-sm text-gray-500">{stat.name}</p>
-                    <div className="flex items-center mt-1">
-                      <span className="text-2xl font-semibold text-gray-900">{stat.value}</span>
-                      <span
-                        className={`ml-2 flex items-center text-sm ${
-                          stat.trend === "up"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {stat.change}
-                        {stat.trend === "up" ? (
-                          <ArrowUp className="ml-1 h-4 w-4" />
-                        ) : (
-                          <ArrowDown className="ml-1 h-4 w-4" />
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex space-x-2">
-                <Button
-                  variant={period === "month" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPeriod("month")}
-                >
-                  Month
-                </Button>
-                <Button
-                  variant={period === "quarter" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPeriod("quarter")}
-                >
-                  Quarter
-                </Button>
-                <Button
-                  variant={period === "year" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPeriod("year")}
-                >
-                  Year
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+          {/* Releases table */}
+          <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-semibold">Product Quality Ranking</h2>
+              <h2 className="text-xl font-semibold">Recent Releases</h2>
             </div>
-            <div className="space-y-4">
-              {productQualityRanking.map((product, index) => (
-                <div
-                  key={product.product}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
-                      {index + 1}
-                    </span>
-                    <div>
-                      <p className="font-medium text-sm">{product.product}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${
-                          product.qualityPercentage >= 90 
-                            ? "bg-green-100 text-green-800"
-                            : product.qualityPercentage >= 85
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                        }`}>
-                          {product.qualityPercentage}% Quality
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {product.incidents} incidents
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={`flex items-center gap-1 ${
-                    product.trend === "up" 
-                      ? "text-green-600" 
-                      : "text-red-600"
-                  }`}>
-                    {product.trend === "up" ? (
-                      <ArrowUp className="h-4 w-4" />
-                    ) : (
-                      <ArrowDown className="h-4 w-4" />
-                    )}
-                    <span className="text-sm">{product.change}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-semibold">Most Active Products</h2>
-            </div>
-            <div className="space-y-4">
-              {activeProducts.map((product, index) => (
-                <div
-                  key={product.product}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
-                      {index + 1}
-                    </span>
-                    <div>
-                      <p className="font-medium text-sm">{product.product}</p>
-                      <span className="text-xs text-gray-500">
-                        {product.releases} releases
-                      </span>
-                    </div>
-                  </div>
-                  <div className={`flex items-center gap-1 ${
-                    product.trend === "up" 
-                      ? "text-green-600" 
-                      : "text-red-600"
-                  }`}>
-                    {product.trend === "up" ? (
-                      <ArrowUp className="h-4 w-4" />
-                    ) : (
-                      <ArrowDown className="h-4 w-4" />
-                    )}
-                    <span className="text-sm">{product.change}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        <Card className="p-6 w-full shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-          <div className="space-y-4">
-            {paginatedActivity.map((activity) => (
-              <div
-                key={activity.id}
-                className="flex items-start space-x-3 animate-slideIn p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div
-                  className={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
-                    activity.type === "release"
-                      ? "bg-brand-500"
-                      : "bg-red-500"
-                  }`}
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900">
-                      {activity.title}
-                    </p>
-                    <p className="text-xs text-gray-500">{activity.date}</p>
-                  </div>
-                  <button
-                    onClick={() => handleReleaseClick(activity)}
-                    className="text-xs text-brand-600 mt-1 hover:text-brand-700"
-                  >
-                    {activity.product} • {activity.releaseName}
-                  </button>
-                  <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <PaginationItem key={i + 1}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(i + 1)}
-                      isActive={currentPage === i + 1}
-                      className="cursor-pointer"
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </Card>
-
-        {/* Update the incidents table to match Incidents page */}
-        <Card className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Recent Incidents</h2>
-          </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px] whitespace-nowrap">ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead className="w-[120px] whitespace-nowrap">Date Reported</TableHead>
-                <TableHead className="w-[300px]">Description</TableHead>
-                <TableHead className="w-[80px]">Document</TableHead>
-                <TableHead className="w-[200px]">Linked Release</TableHead>
-                <TableHead className="w-[80px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {incidents.map((incident) => (
-                <TableRow key={incident.id}>
-                  <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
-                  <TableCell>{incident.name}</TableCell>
-                  <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
-                  <TableCell className="max-w-[300px]">
-                    <span className="truncate block">{incident.description}</span>
-                  </TableCell>
-                  <TableCell>
-                    <a
-                      href={incident.documentLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
-                      title="View document"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      value={incident.linkedRelease.id}
-                      onValueChange={(value) => handleUpdateRelease(incident.id, value)}
-                    >
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Select Release" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {releases.map((release) => (
-                          <SelectItem key={release.id} value={String(release.id)}>
-                            {release.product} {release.releaseName}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(incident)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </TableCell>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Business Unit</TableHead>
+                  <TableHead>Product</TableHead>
+                  <TableHead>Release Name</TableHead>
+                  <TableHead>DRI</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Quality</TableHead>
+                  <TableHead>Release Notes</TableHead>
                 </TableRow>
+              </TableHeader>
+              <TableBody>
+                {releases.map((release) => (
+                  <TableRow 
+                    key={release.id}
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => setSelectedRelease(release)}
+                  >
+                    <TableCell>{release.businessUnit}</TableCell>
+                    <TableCell>{release.product}</TableCell>
+                    <TableCell>{release.releaseName}</TableCell>
+                    <TableCell>{release.dri}</TableCell>
+                    <TableCell>
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                        release.status === "Deployed" 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}>
+                        {release.status === "Deployed" && <Check className="h-3 w-3" />}
+                        {release.status}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                        release.quality === "Good" 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-red-100 text-red-800"
+                      }`}>
+                        {release.quality === "Good" && <Check className="h-3 w-3" />}
+                        {release.quality}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <a
+                        href={release.releaseNotes}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FileText className="h-4 w-4" />
+                        View
+                      </a>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+
+          {/* Incidents table */}
+          <Card className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Recent Incidents</h2>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px] whitespace-nowrap">ID</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead className="w-[120px] whitespace-nowrap">Date Reported</TableHead>
+                  <TableHead className="w-[300px]">Description</TableHead>
+                  <TableHead className="w-[80px]">Document</TableHead>
+                  <TableHead className="w-[200px]">Linked Release</TableHead>
+                  <TableHead className="w-[80px]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {incidents.map((incident) => (
+                  <TableRow key={incident.id}>
+                    <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
+                    <TableCell>{incident.name}</TableCell>
+                    <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
+                    <TableCell className="max-w-[300px]">
+                      <span className="truncate block">{incident.description}</span>
+                    </TableCell>
+                    <TableCell>
+                      <a
+                        href={incident.documentLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand-500 hover:text-brand-600 inline-flex items-center"
+                        title="View document"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </TableCell>
+                    <TableCell>
+                      <Select
+                        value={incident.linkedRelease.id}
+                        onValueChange={(value) => handleUpdateRelease(incident.id, value)}
+                      >
+                        <SelectTrigger className="w-[200px]">
+                          <SelectValue placeholder="Select Release" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {releases.map((release) => (
+                            <SelectItem key={release.id} value={String(release.id)}>
+                              {release.product} {release.releaseName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(incident)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+        </div>
+
+        <div className="mt-4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <PaginationItem key={i + 1}>
+                  <PaginationLink
+                    onClick={() => setCurrentPage(i + 1)}
+                    isActive={currentPage === i + 1}
+                    className="cursor-pointer"
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
               ))}
-            </TableBody>
-          </Table>
-        </Card>
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
 
         <ReleasePanel 
           release={selectedRelease}
