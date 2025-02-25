@@ -95,6 +95,10 @@ export default {
         bounce: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-25%)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-4px)" }
         }
       },
       animation: {
@@ -103,6 +107,7 @@ export default {
         fadeIn: "fadeIn 0.3s ease-in-out",
         slideIn: "slideIn 0.4s ease-out",
         bounce: "bounce 1s infinite",
+        float: "float 3s ease-in-out infinite",
       },
     },
   },

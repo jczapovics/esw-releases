@@ -440,7 +440,7 @@ const Index = () => {
                   style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium animate-float">
                       {index + 1}
                     </span>
                     <div>
@@ -490,7 +490,7 @@ const Index = () => {
                   style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-sm font-medium animate-float">
                       {index + 1}
                     </span>
                     <div>
