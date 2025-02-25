@@ -224,21 +224,21 @@ const SystemHealth = () => {
                     const hasDegraded = lastMonthScore && !currentScore;
                     
                     return (
-                      <TableCell key={criterion.name} className="text-center relative">
-                        {currentScore ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-600 mx-auto" />
-                        ) : (
-                          <AlertCircle className="h-5 w-5 text-red-600 mx-auto" />
-                        )}
-                        <div className="absolute -top-1 -right-1">
+                      <TableCell key={criterion.name} className="text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          {currentScore ? (
+                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          ) : (
+                            <AlertCircle className="h-5 w-5 text-red-600" />
+                          )}
                           {hasImproved && (
-                            <TrendingUp className="h-3 w-3 text-green-600" />
+                            <TrendingUp className="h-4 w-4 text-green-600" />
                           )}
                           {hasDegraded && (
-                            <TrendingDown className="h-3 w-3 text-red-600" />
+                            <TrendingDown className="h-4 w-4 text-red-600" />
                           )}
                           {!hasImproved && !hasDegraded && (
-                            <Minus className="h-3 w-3 text-gray-400" />
+                            <Minus className="h-4 w-4 text-gray-400" />
                           )}
                         </div>
                       </TableCell>
