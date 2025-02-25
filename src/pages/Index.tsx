@@ -46,7 +46,12 @@ import {
 
 type Period = "month" | "quarter" | "year";
 
-const getStatsForPeriod = (period: Period) => {
+const getStatsForPeriod = (period: Period): Array<{
+  name: string;
+  value: string;
+  change: string;
+  trend: "up" | "down";
+}> => {
   switch (period) {
     case "month":
       return [
@@ -58,7 +63,7 @@ const getStatsForPeriod = (period: Period) => {
         },
         {
           name: "High Quality",
-          value: "92%",
+          value: "92",
           change: "+4%",
           trend: "up",
         },
@@ -73,7 +78,7 @@ const getStatsForPeriod = (period: Period) => {
         },
         {
           name: "High Quality",
-          value: "88%",
+          value: "88",
           change: "+2%",
           trend: "up",
         },
@@ -88,7 +93,7 @@ const getStatsForPeriod = (period: Period) => {
         },
         {
           name: "High Quality",
-          value: "90%",
+          value: "90",
           change: "+5%",
           trend: "up",
         },
@@ -429,12 +434,12 @@ const Index = () => {
           products={products}
         />
 
+        <StatsSummary stats={stats} />
+
         <ReleaseScorecard
           quality={quality}
           monthlyQualityTrend={monthlyQualityTrend}
         />
-
-        <StatsSummary stats={stats} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
