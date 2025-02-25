@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Check, FileText } from "lucide-react";
+import { ArrowUp, ArrowDown, Check, FileText, ExternalLink } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { format } from "date-fns";
 
 type Period = "month" | "quarter" | "year";
 
@@ -254,46 +255,54 @@ const releases = [
   }
 ];
 
-// Add type for incidents
+// Update the Incident type to match the one from Incidents page
 type Incident = {
-  id: number;
-  title: string;
-  product: string;
+  id: string;
+  name: string;
+  dateReported: Date;
   description: string;
-  status: "Open" | "Resolved";
-  dateReported: string;
-  documentLink?: string;
+  documentLink: string;
+  linkedRelease: {
+    id: string;
+    name: string;
+  };
 };
 
-// Add mock incidents data
-const incidents: Incident[] = [
+// Update mock incidents data to match Incidents page format
+const mockIncidents: Incident[] = [
   {
-    id: 1,
-    title: "API Performance Degradation",
-    product: "Payment Gateway",
-    description: "Users experiencing slow response times",
-    status: "Resolved",
-    dateReported: "2024-03-10",
-    documentLink: "https://docs.example.com/incidents/api-degradation"
+    id: "INC-001",
+    name: "API Performance Degradation",
+    dateReported: new Date("2024-03-15"),
+    description: "Users experiencing slow response times in the payment gateway",
+    documentLink: "https://docs.google.com/doc/payment-incident-001",
+    linkedRelease: {
+      id: "1",
+      name: "Payment Gateway v2.1",
+    },
   },
   {
-    id: 2,
-    title: "Authentication Issues",
-    product: "User Authentication",
-    description: "Intermittent login failures",
-    status: "Open",
-    dateReported: "2024-03-11",
-    documentLink: "https://docs.example.com/incidents/auth-issues"
+    id: "INC-002",
+    name: "Authentication Service Outage",
+    dateReported: new Date("2024-03-14"),
+    description: "Complete authentication service downtime for 15 minutes",
+    documentLink: "https://docs.google.com/doc/auth-incident-002",
+    linkedRelease: {
+      id: "2",
+      name: "User Authentication v1.5",
+    },
   },
   {
-    id: 3,
-    title: "Search Latency",
-    product: "Search Service",
-    description: "Search response time increased",
-    status: "Resolved",
-    dateReported: "2024-03-09",
-    documentLink: "https://docs.example.com/incidents/search-latency"
-  }
+    id: "INC-003",
+    name: "Data Sync Delay",
+    dateReported: new Date("2024-03-13"),
+    description: "Analytics dashboard showing delayed data updates",
+    documentLink: "https://docs.google.com/doc/analytics-incident-003",
+    linkedRelease: {
+      id: "3",
+      name: "Analytics Dashboard v3.0",
+    },
+  },
 ];
 
 const Index = () => {
@@ -324,6 +333,24 @@ const Index = () => {
 
   const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
   const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
+
+  const handleUpdateRelease = (incidentId: string, releaseId: string) => {
+    const release = releases.find(r => String(r.id) === releaseId);
+    if (release) {
+      mockIncidents.map(inc => 
+        inc.id === incidentId 
+          ? { 
+              ...inc, 
+              linkedRelease: {
+                id: String(release.id),
+                name: `${release.product} ${release.releaseName}`
+              }
+            }
+          : inc
+      );
+      toast("Incident linked to release successfully");
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -647,37 +674,58 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Add the releases table at the bottom */}
+        {/* Update the incidents table to match Incidents page */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Releases</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold">Recent Incidents</h2>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Business Unit</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Release Date</TableHead>
-                <TableHead>Quality</TableHead>
+                <TableHead className="w-[100px] whitespace-nowrap">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead className="w-[120px] whitespace-nowrap">Date Reported</TableHead>
+                <TableHead className="w-[300px]">Description</TableHead>
+                <TableHead className="w-[80px]">Document</TableHead>
+                <TableHead className="w-[200px]">Linked Release</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {releases.map((release) => (
-                <TableRow 
-                  key={release.id}
-                  className="cursor-pointer hover:bg-gray-50"
-                  onClick={() => setSelectedRelease(release)}
-                >
-                  <TableCell>{release.businessUnit}</TableCell>
-                  <TableCell>{release.product}</TableCell>
-                  <TableCell>{new Date(release.releaseDate).toLocaleDateString()}</TableCell>
+              {mockIncidents.map((incident) => (
+                <TableRow key={incident.id}>
+                  <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
+                  <TableCell>{incident.name}</TableCell>
+                  <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
+                  <TableCell className="max-w-[300px]">
+                    <span className="truncate block">{incident.description}</span>
+                  </TableCell>
                   <TableCell>
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      release.quality === "Good" 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {release.quality === "Good" && <Check className="h-3 w-3" />}
-                      {release.quality}
-                    </span>
+                    <a
+                      href={incident.documentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
+                      title="View document"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      value={incident.linkedRelease.id}
+                      onValueChange={(value) => handleUpdateRelease(incident.id, value)}
+                    >
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="Select Release" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {releases.map((release) => (
+                          <SelectItem key={release.id} value={String(release.id)}>
+                            {release.product} {release.releaseName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                 </TableRow>
               ))}
@@ -685,56 +733,12 @@ const Index = () => {
           </Table>
         </Card>
 
-        {/* Add the incidents table at the bottom */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Incidents</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date Reported</TableHead>
-                <TableHead>Document</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {incidents.map((incident) => (
-                <TableRow 
-                  key={incident.id}
-                  className="cursor-pointer hover:bg-gray-50"
-                >
-                  <TableCell>{incident.title}</TableCell>
-                  <TableCell>{incident.product}</TableCell>
-                  <TableCell>
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      incident.status === "Resolved" 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {incident.status === "Resolved" && <Check className="h-3 w-3" />}
-                      {incident.status}
-                    </span>
-                  </TableCell>
-                  <TableCell>{new Date(incident.dateReported).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    {incident.documentLink && (
-                      <a
-                        href={incident.documentLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
-                      >
-                        <FileText className="h-4 w-4" />
-                        View
-                      </a>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null)}
+          businessUnits={businessUnits.filter(bu => bu !== "All")}
+          products={products.filter(p => p !== "All")}
+        />
       </div>
     </DashboardLayout>
   );
