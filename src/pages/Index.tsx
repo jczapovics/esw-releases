@@ -516,7 +516,7 @@ const Index = () => {
           </Card>
         </div>
 
-        <Card className="p-6">
+        <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <h2 className="text-xl font-semibold mb-4">Releases</h2>
           <Table>
             <TableHeader>
@@ -553,7 +553,7 @@ const Index = () => {
           </Table>
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Incidents</h2>
           </div>
