@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Check } from "lucide-react";
+import { ArrowUp, ArrowDown } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -22,14 +22,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ReleasePanel } from "@/components/ReleasePanel";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "@/components/ui/table";
 
 type Period = "month" | "quarter" | "year";
 
@@ -285,7 +277,7 @@ const Index = () => {
 
   return (
     <DashboardLayout>
-      <div className="animate-fadeIn space-y-8">
+      <div className="animate-fadeIn">
         <div className="grid grid-cols-1 gap-6 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
             <div className="flex justify-between items-center mb-6">
@@ -603,44 +595,6 @@ const Index = () => {
               </PaginationContent>
             </Pagination>
           </div>
-        </Card>
-
-        {/* Add the releases table at the bottom */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Releases</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Business Unit</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Release Date</TableHead>
-                <TableHead>Quality</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {releases.map((release) => (
-                <TableRow 
-                  key={release.id}
-                  className="cursor-pointer hover:bg-gray-50"
-                  onClick={() => setSelectedRelease(release)}
-                >
-                  <TableCell>{release.businessUnit}</TableCell>
-                  <TableCell>{release.product}</TableCell>
-                  <TableCell>{new Date(release.releaseDate).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      release.quality === "Good" 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {release.quality === "Good" && <Check className="h-3 w-3" />}
-                      {release.quality}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
         </Card>
 
         <ReleasePanel 
