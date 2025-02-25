@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import Index from "./pages/Index";
+import Releases from "./pages/Releases";
 import Incidents from "./pages/Incidents";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <Index />,
     errorElement: <NotFound />,
+  },
+  {
+    path: "/releases",
+    element: <Releases />,
   },
   {
     path: "/incidents",

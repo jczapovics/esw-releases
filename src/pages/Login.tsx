@@ -15,7 +15,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-brand-700">Central Engineering</h1>
+          <h1 className="text-3xl font-bold text-brand-700">ESW Releases</h1>
           <p className="mt-2 text-gray-600">Sign in to access the dashboard</p>
         </div>
         <Button 
