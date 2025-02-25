@@ -1,4 +1,3 @@
-<lov-code>
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -847,4 +846,4 @@ const Index = () => {
           release={selectedRelease}
           onClose={() => setSelectedRelease(null)}
           businessUnits={businessUnits.filter(bu => bu !== "All")}
-          products={products.
+          products={products.filter(p
