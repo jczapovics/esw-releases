@@ -381,6 +381,18 @@ const Index = () => {
     }
   };
 
+  const [releasesPage, setReleasesPage] = useState(1);
+  const RELEASES_PER_PAGE = 5;
+  const totalReleasePages = Math.ceil(releases.length / RELEASES_PER_PAGE);
+  const releasesStartIndex = (releasesPage - 1) * RELEASES_PER_PAGE;
+  const paginatedReleases = releases.slice(releasesStartIndex, releasesStartIndex + RELEASES_PER_PAGE);
+
+  const [incidentsPage, setIncidentsPage] = useState(1);
+  const INCIDENTS_PER_PAGE = 5;
+  const totalIncidentPages = Math.ceil(incidents.length / INCIDENTS_PER_PAGE);
+  const incidentsStartIndex = (incidentsPage - 1) * INCIDENTS_PER_PAGE;
+  const paginatedIncidents = incidents.slice(incidentsStartIndex, incidentsStartIndex + INCIDENTS_PER_PAGE);
+
   return (
     <DashboardLayout>
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
@@ -724,8 +736,8 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Add the releases table at the bottom */}
-        <Card className="p-6">
+        {/* Releases table */}
+        <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <h2 className="text-xl font-semibold mb-4">Releases</h2>
           <Table>
             <TableHeader>
@@ -737,10 +749,10 @@ const Index = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {releases.map((release) => (
+              {paginatedReleases.map((release) => (
                 <TableRow 
                   key={release.id}
-                  className="cursor-pointer hover:bg-gray-50"
+                  className="cursor-pointer transition-colors hover:bg-gray-50/80"
                   onClick={() => setSelectedRelease(release)}
                 >
                   <TableCell>{release.businessUnit}</TableCell>
@@ -760,10 +772,39 @@ const Index = () => {
               ))}
             </TableBody>
           </Table>
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => setReleasesPage(p => Math.max(1, p - 1))}
+                    className={releasesPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalReleasePages }).map((_, i) => (
+                  <PaginationItem key={i + 1}>
+                    <PaginationLink
+                      onClick={() => setReleasesPage(i + 1)}
+                      isActive={releasesPage === i + 1}
+                      className="cursor-pointer"
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => setReleasesPage(p => Math.min(totalReleasePages, p + 1))}
+                    className={releasesPage === totalReleasePages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </Card>
 
-        {/* Add Incidents table */}
-        <Card className="p-6">
+        {/* Incidents table */}
+        <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Incidents</h2>
           </div>
@@ -780,68 +821,8 @@ const Index = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {incidents.map((incident) => (
-                <TableRow key={incident.id}>
-                  <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
-                  <TableCell>{incident.name}</TableCell>
-                  <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
-                  <TableCell className="max-w-[300px]">
-                    <span className="truncate block">{incident.description}</span>
-                  </TableCell>
-                  <TableCell>
-                    <a
-                      href={incident.documentLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-brand-500 hover:text-brand-600 inline-flex items-center"
-                      title="View document"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      value={incident.linkedRelease.id}
-                      onValueChange={(value) => handleUpdateRelease(incident.id, value)}
-                    >
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Select Release" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {releases.map((release) => (
-                          <SelectItem key={release.id} value={String(release.id)}>
-                            {release.product} {release.releaseName}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(incident)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
-
-        <ReleasePanel 
-          release={selectedRelease}
-          onClose={() => setSelectedRelease(null)}
-          businessUnits={businessUnits.filter(bu => bu !== "All")}
-          products={products.filter(p => p !== "All")}
-        />
-      </div>
-    </DashboardLayout>
-  );
-};
-
-export default Index;
+              {paginatedIncidents.map((incident) => (
+                <TableRow 
+                  key={incident.id}
+                  className="transition-colors hover:bg-gray-50/80"
+                >
