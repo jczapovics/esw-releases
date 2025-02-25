@@ -1,3 +1,4 @@
+
 import {
   Sheet,
   SheetContent,
@@ -5,7 +6,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Link, Calendar, Check, AlertCircle, FileText } from "lucide-react";
+import { Link, Calendar, Check, AlertCircle } from "lucide-react";
 
 type Incident = {
   id: number;
@@ -14,7 +15,6 @@ type Incident = {
   severity: "Low" | "Medium" | "High";
   status: "Open" | "Resolved";
   dateReported: string;
-  documentLink?: string; // Added documentLink property
 };
 
 type Release = {
@@ -38,9 +38,9 @@ interface ReleasePanelProps {
   products?: string[];
 }
 
-// Updated mock incidents data to include document links
+// Mock incidents data - in a real app, this would come from your data source
 const mockIncidents: Record<number, Incident[]> = {
-  1: [],
+  1: [], // No incidents for release 1
   2: [
     {
       id: 1,
@@ -48,8 +48,7 @@ const mockIncidents: Record<number, Incident[]> = {
       description: "Users experiencing slow response times",
       severity: "High",
       status: "Resolved",
-      dateReported: "2024-03-10",
-      documentLink: "https://docs.example.com/incidents/api-degradation"
+      dateReported: "2024-03-10"
     },
     {
       id: 2,
@@ -57,11 +56,10 @@ const mockIncidents: Record<number, Incident[]> = {
       description: "Intermittent login failures",
       severity: "Medium",
       status: "Resolved",
-      dateReported: "2024-03-11",
-      documentLink: "https://docs.example.com/incidents/auth-issues"
+      dateReported: "2024-03-11"
     }
   ],
-  3: []
+  3: [] // No incidents for release 3
 };
 
 export const ReleasePanel = ({ release, onClose }: ReleasePanelProps) => {
@@ -176,20 +174,7 @@ export const ReleasePanel = ({ release, onClose }: ReleasePanelProps) => {
                         <div className="flex items-start gap-2">
                           <AlertCircle className="h-4 w-4 text-red-500 mt-0.5" />
                           <div>
-                            <div className="flex items-center gap-2">
-                              <h4 className="text-sm font-medium text-gray-900">{incident.title}</h4>
-                              {incident.documentLink && (
-                                <a
-                                  href={incident.documentLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                                  title="View incident document"
-                                >
-                                  <FileText className="h-4 w-4" />
-                                </a>
-                              )}
-                            </div>
+                            <h4 className="text-sm font-medium text-gray-900">{incident.title}</h4>
                             <p className="text-sm text-gray-500 mt-1">{incident.description}</p>
                             <div className="flex items-center gap-2 mt-2">
                               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
