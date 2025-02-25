@@ -1,5 +1,7 @@
+
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { useState, useRef } from "react";
@@ -314,65 +316,21 @@ const mockIncidents: Incident[] = [
   },
 ];
 
-const COLORS = ['#14b8a6', '#e2e8f0']; // teal for completed, gray for remaining
-
-const ReleaseQualityPieChart = ({ value, label }: { value: number; label: string }) => {
-  const data = [
-    { name: "Complete", value: value },
-    { name: "Remaining", value: 100 - value }
-  ];
-
-  return (
-    <div className="flex flex-col items-center">
-      <div style={{ width: '120px', height: '120px' }}>
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={35}
-              outerRadius={50}
-              fill="#14b8a6"
-              paddingAngle={2}
-              dataKey="value"
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
-            <RechartsTooltip />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-      <div className="text-center mt-2">
-        <div className="text-sm text-gray-500">{label}</div>
-        <div className="font-medium">{value}%</div>
-      </div>
-    </div>
-  );
-};
-
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState("All");
-  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
-  const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
-
   const stats = getStatsForPeriod(period);
   const qualityCardRef = useRef<HTMLDivElement>(null);
+  const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
+
   const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedActivity = activityFeed.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   const productQualityRanking = getProductQualityForPeriod(period);
   const activeProducts = getActiveProductsForPeriod(period);
-
-  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
-  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
 
   const handleReleaseClick = (activity: typeof activityFeed[0]) => {
     const release = releases.find(r => 
@@ -384,6 +342,14 @@ const Index = () => {
     }
   };
 
+  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
+  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
+
+  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
+
+  // Add incident management functions
   const handleUpdateRelease = (incidentId: string, releaseId: string) => {
     const release = releases.find(r => String(r.id) === releaseId);
     if (release) {
@@ -478,10 +444,26 @@ const Index = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <ReleaseQualityPieChart value={88} label="This Month" />
-                <ReleaseQualityPieChart value={90} label="This Quarter" />
-                <ReleaseQualityPieChart value={92} label="This Year" />
+              <div>
+                <div className="flex justify-between mb-1 text-sm">
+                  <span>This Month</span>
+                  <span className="font-medium">88%</span>
+                </div>
+                <Progress value={88} className="h-2" />
+              </div>
+              <div>
+                <div className="flex justify-between mb-1 text-sm">
+                  <span>This Quarter</span>
+                  <span className="font-medium">90%</span>
+                </div>
+                <Progress value={90} className="h-2" />
+              </div>
+              <div>
+                <div className="flex justify-between mb-1 text-sm">
+                  <span>This Year</span>
+                  <span className="font-medium">92%</span>
+                </div>
+                <Progress value={92} className="h-2" />
               </div>
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
@@ -803,9 +785,7 @@ const Index = () => {
                 <TableRow key={incident.id}>
                   <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
                   <TableCell>{incident.name}</TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    {format(incident.dateReported, "MMM d, yyyy")}
-                  </TableCell>
+                  <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
                   <TableCell className="max-w-[300px]">
                     <span className="truncate block">{incident.description}</span>
                   </TableCell>
@@ -846,3 +826,23 @@ const Index = () => {
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
                       </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+
+        <ReleasePanel 
+          release={selectedRelease}
+          onClose={() => setSelectedRelease(null)}
+          businessUnits={businessUnits.filter(bu => bu !== "All")}
+          products={products.filter(p => p !== "All")}
+        />
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default Index;
