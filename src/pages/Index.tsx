@@ -1,19 +1,6 @@
-<lov-code>
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +11,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { GlobalFilters } from "@/components/dashboard/GlobalFilters";
+import { ReleaseScorecard } from "@/components/dashboard/ReleaseScorecard";
+import { StatsSummary } from "@/components/dashboard/StatsSummary";
+import { Card } from "@/components/ui/card";
+import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { format } from "date-fns";
 import {
   Pagination,
@@ -332,12 +333,13 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState("All");
-  const stats = getStatsForPeriod(period);
-  const qualityCardRef = useRef<HTMLDivElement>(null);
   const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
   const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
+
+  const stats = getStatsForPeriod(period);
+  const quality = getQualityForPeriod(period);
 
   const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -392,8 +394,6 @@ const Index = () => {
     }
   };
 
-  const quality = getQualityForPeriod(period);
-
   return (
     <DashboardLayout>
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
@@ -418,166 +418,23 @@ const Index = () => {
       </AlertDialog>
 
       <div className="animate-fadeIn space-y-8">
-        {/* Global Filters Card */}
-        <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-500">Time Period</span>
-                <div className="flex space-x-2">
-                  <Button
-                    variant={period === "month" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPeriod("month")}
-                  >
-                    Month
-                  </Button>
-                  <Button
-                    variant={period === "quarter" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPeriod("quarter")}
-                  >
-                    Quarter
-                  </Button>
-                  <Button
-                    variant={period === "year" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPeriod("year")}
-                  >
-                    Year
-                  </Button>
-                </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-500">Business Unit</span>
-                <Select value={selectedBusinessUnit} onValueChange={setSelectedBusinessUnit}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select Business Unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {businessUnits.map((unit) => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-500">Product</span>
-                <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select Product" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products.map((product) => (
-                      <SelectItem key={product} value={product}>
-                        {product}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </Card>
+        <GlobalFilters
+          period={period}
+          setPeriod={setPeriod}
+          selectedBusinessUnit={selectedBusinessUnit}
+          setSelectedBusinessUnit={setSelectedBusinessUnit}
+          selectedProduct={selectedProduct}
+          setSelectedProduct={setSelectedProduct}
+          businessUnits={businessUnits}
+          products={products}
+        />
 
-        {/* Quality Card - simplified */}
-        <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Release Scorecard</h2>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between mb-1 text-sm">
-                <span>{quality.label}</span>
-                <span className="font-medium">{quality.value}%</span>
-              </div>
-              <Progress value={quality.value} className="h-2" />
-            </div>
-            <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
-              <div className="chart-container h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={monthlyQualityTrend}>
-                    <XAxis 
-                      dataKey="month" 
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis 
-                      yAxisId="left"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      domain={[80, 100]}
-                      ticks={[80, 85, 90, 95, 100]}
-                    />
-                    <YAxis 
-                      yAxisId="right"
-                      orientation="right"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      domain={[0, 25]}
-                      ticks={[0, 5, 10, 15, 20, 25]}
-                    />
-                    <RechartsTooltip />
-                    <Line 
-                      yAxisId="left"
-                      type="monotone" 
-                      dataKey="quality" 
-                      stroke="#14b8a6" 
-                      strokeWidth={2}
-                      dot={{ fill: '#14b8a6', strokeWidth: 2 }}
-                      name="Quality Score"
-                    />
-                    <Line 
-                      yAxisId="right"
-                      type="monotone" 
-                      dataKey="releases" 
-                      stroke="#2563eb" 
-                      strokeWidth={2}
-                      dot={{ fill: '#2563eb', strokeWidth: 2 }}
-                      name="Number of Releases"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        </Card>
+        <ReleaseScorecard
+          quality={quality}
+          monthlyQualityTrend={monthlyQualityTrend}
+        />
 
-        {/* Stats Card */}
-        <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-8">
-              {stats.map((stat) => (
-                <div key={stat.name}>
-                  <p className="text-sm text-gray-500">{stat.name}</p>
-                  <div className="flex items-center mt-1">
-                    <span className="text-2xl font-semibold text-gray-900">{stat.value}</span>
-                    <span
-                      className={`ml-2 flex items-center text-sm ${
-                        stat.trend === "up"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {stat.change}
-                      {stat.trend === "up" ? (
-                        <ArrowUp className="ml-1 h-4 w-4" />
-                      ) : (
-                        <ArrowDown className="ml-1 h-4 w-4" />
-                      )}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
+        <StatsSummary stats={stats} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
@@ -848,4 +705,8 @@ const Index = () => {
           products={products.filter(p => p !== "All")}
         />
       </div>
-    
+    </DashboardLayout>
+  );
+};
+
+export default Index;
