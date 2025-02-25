@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
+import { DashboardLayout } from "../components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
@@ -326,7 +326,7 @@ const yearlyQualityTrend = [
 
 const COLORS = ['#10B981', '#FBBF24', '#EF4444'];
 
-const Index = () => {
+export function Index() {  // Changed to function declaration for consistency
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
@@ -856,4 +856,3 @@ const Index = () => {
                         size="sm"
                         onClick={() => handleDelete(incident)}
                       >
-                        <Trash2 className="h

@@ -1,4 +1,3 @@
-
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Gauge, LogOut } from "lucide-react";
@@ -11,7 +10,11 @@ const mainNavigation = [
   { name: "Release Quality", href: "/", icon: Gauge },
 ];
 
-export function DashboardLayout({ children }: { children: React.ReactNode }) {
+interface DashboardLayoutProps {
+  children: React.ReactNode;
+}
+
+export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
   const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
   const [isAddIncidentOpen, setIsAddIncidentOpen] = useState(false);
