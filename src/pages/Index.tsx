@@ -1,11 +1,24 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { useState } from "react";
+import { toast } from "sonner";
+import { ReleasePanel } from "@/components/ReleasePanel";
+import { ReleaseScorecard } from "@/components/dashboard/ReleaseScorecard";
+import { ReleasesTable } from "@/components/dashboard/ReleasesTable";
+import { IncidentsTable } from "@/components/dashboard/IncidentsTable";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowUp, ArrowDown, Check, FileText, ExternalLink, Trash2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -21,7 +34,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { ReleasePanel } from "@/components/ReleasePanel";
 import {
   Table,
   TableHeader,
@@ -31,16 +43,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 type Period = "month" | "quarter" | "year";
 
@@ -315,42 +317,23 @@ const mockIncidents: Incident[] = [
   },
 ];
 
+const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
+const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
+
 const Index = () => {
-  const [period, setPeriod] = useState<Period>("month");
+  const [period] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState("All");
   const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
-  const stats = getStatsForPeriod(period);
-  const qualityCardRef = useRef<HTMLDivElement>(null);
   const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
-
-  const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedActivity = activityFeed.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-  const productQualityRanking = getProductQualityForPeriod(period);
-  const activeProducts = getActiveProductsForPeriod(period);
-
-  const handleReleaseClick = (activity: typeof activityFeed[0]) => {
-    const release = releases.find(r => 
-      r.product === activity.product && 
-      r.releaseName === activity.releaseName
-    );
-    if (release) {
-      setSelectedRelease(release);
-    }
-  };
-
-  const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
-  const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
 
   const handleUpdateRelease = (incidentId: string, releaseId: string) => {
     const release = releases.find(r => String(r.id) === releaseId);
     if (release) {
-      mockIncidents.map(inc => 
+      setIncidents(incidents.map(inc => 
         inc.id === incidentId 
           ? { 
               ...inc, 
@@ -360,7 +343,7 @@ const Index = () => {
               }
             }
           : inc
-      );
+      ));
       toast("Incident linked to release successfully");
     }
   };
@@ -404,285 +387,28 @@ const Index = () => {
 
       <div className="animate-fadeIn space-y-8">
         <div className="grid grid-cols-1 gap-6 mb-8">
-          <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1" ref={qualityCardRef}>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Release Scorecard</h2>
-              <div className="flex items-center gap-6">
-                <div className="flex flex-col gap-1">
-                  <span className="text-sm text-gray-500">Business Unit</span>
-                  <Select value={selectedBusinessUnit} onValueChange={setSelectedBusinessUnit}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select Business Unit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {businessUnits.map((unit) => (
-                        <SelectItem key={unit} value={unit}>
-                          {unit}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-sm text-gray-500">Product</span>
-                  <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select Product" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {products.map((product) => (
-                        <SelectItem key={product} value={product}>
-                          {product}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-1 text-sm">
-                  <span>This Month</span>
-                  <span className="font-medium">88%</span>
-                </div>
-                <Progress value={88} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-1 text-sm">
-                  <span>This Quarter</span>
-                  <span className="font-medium">90%</span>
-                </div>
-                <Progress value={90} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-1 text-sm">
-                  <span>This Year</span>
-                  <span className="font-medium">92%</span>
-                </div>
-                <Progress value={92} className="h-2" />
-              </div>
-              <div className="mt-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
-                <div className="chart-container h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={monthlyQualityTrend}>
-                      <XAxis 
-                        dataKey="month" 
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis 
-                        yAxisId="left"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        domain={[80, 100]}
-                        ticks={[80, 85, 90, 95, 100]}
-                      />
-                      <YAxis 
-                        yAxisId="right"
-                        orientation="right"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        domain={[0, 25]}
-                        ticks={[0, 5, 10, 15, 20, 25]}
-                      />
-                      <RechartsTooltip />
-                      <Line 
-                        yAxisId="left"
-                        type="monotone" 
-                        dataKey="quality" 
-                        stroke="#14b8a6" 
-                        strokeWidth={2}
-                        dot={{ fill: '#14b8a6', strokeWidth: 2 }}
-                        name="Quality Score"
-                      />
-                      <Line 
-                        yAxisId="right"
-                        type="monotone" 
-                        dataKey="releases" 
-                        stroke="#2563eb" 
-                        strokeWidth={2}
-                        dot={{ fill: '#2563eb', strokeWidth: 2 }}
-                        name="Number of Releases"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* Releases table */}
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Recent Releases</h2>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Business Unit</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Release Name</TableHead>
-                  <TableHead>DRI</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Quality</TableHead>
-                  <TableHead>Release Notes</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {releases.map((release) => (
-                  <TableRow 
-                    key={release.id}
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => setSelectedRelease(release)}
-                  >
-                    <TableCell>{release.businessUnit}</TableCell>
-                    <TableCell>{release.product}</TableCell>
-                    <TableCell>{release.releaseName}</TableCell>
-                    <TableCell>{release.dri}</TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                        release.status === "Deployed" 
-                          ? "bg-green-100 text-green-800" 
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}>
-                        {release.status === "Deployed" && <Check className="h-3 w-3" />}
-                        {release.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                        release.quality === "Good" 
-                          ? "bg-green-100 text-green-800" 
-                          : "bg-red-100 text-red-800"
-                      }`}>
-                        {release.quality === "Good" && <Check className="h-3 w-3" />}
-                        {release.quality}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <a
-                        href={release.releaseNotes}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <FileText className="h-4 w-4" />
-                        View
-                      </a>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-
-          {/* Incidents table */}
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Recent Incidents</h2>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px] whitespace-nowrap">ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead className="w-[120px] whitespace-nowrap">Date Reported</TableHead>
-                  <TableHead className="w-[300px]">Description</TableHead>
-                  <TableHead className="w-[80px]">Document</TableHead>
-                  <TableHead className="w-[200px]">Linked Release</TableHead>
-                  <TableHead className="w-[80px]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {incidents.map((incident) => (
-                  <TableRow key={incident.id}>
-                    <TableCell className="font-medium whitespace-nowrap">{incident.id}</TableCell>
-                    <TableCell>{incident.name}</TableCell>
-                    <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
-                    <TableCell className="max-w-[300px]">
-                      <span className="truncate block">{incident.description}</span>
-                    </TableCell>
-                    <TableCell>
-                      <a
-                        href={incident.documentLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-brand-500 hover:text-brand-600 inline-flex items-center"
-                        title="View document"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </TableCell>
-                    <TableCell>
-                      <Select
-                        value={incident.linkedRelease.id}
-                        onValueChange={(value) => handleUpdateRelease(incident.id, value)}
-                      >
-                        <SelectTrigger className="w-[200px]">
-                          <SelectValue placeholder="Select Release" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {releases.map((release) => (
-                            <SelectItem key={release.id} value={String(release.id)}>
-                              {release.product} {release.releaseName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(incident)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
+          <ReleaseScorecard
+            selectedBusinessUnit={selectedBusinessUnit}
+            selectedProduct={selectedProduct}
+            setSelectedBusinessUnit={setSelectedBusinessUnit}
+            setSelectedProduct={setSelectedProduct}
+            businessUnits={businessUnits}
+            products={products}
+            monthlyQualityTrend={monthlyQualityTrend}
+          />
         </div>
 
-        <div className="mt-4">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }).map((_, i) => (
-                <PaginationItem key={i + 1}>
-                  <PaginationLink
-                    onClick={() => setCurrentPage(i + 1)}
-                    isActive={currentPage === i + 1}
-                    className="cursor-pointer"
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext 
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <ReleasesTable
+          releases={releases}
+          onReleaseClick={setSelectedRelease}
+        />
+
+        <IncidentsTable
+          incidents={incidents}
+          releases={releases}
+          onUpdateRelease={handleUpdateRelease}
+          onDelete={handleDelete}
+        />
 
         <ReleasePanel 
           release={selectedRelease}
