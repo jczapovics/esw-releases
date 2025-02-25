@@ -20,19 +20,19 @@ export const ReleaseScorecard = ({ stats }: ReleaseScorecardProps) => {
     { name: "Quality", value: qualityValue },
     { name: "Remaining", value: 100 - qualityValue }
   ];
-  const COLORS = ["#22c55e", "#f3f4f6"];
+  const COLORS = ["#22c55e", "#ea384c"]; // Changed second color to red
 
   return (
-    <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-900">Release Scorecard</h2>
+    <Card className="p-8 shadow-lg transition-all duration-300 hover:shadow-xl bg-white/50 backdrop-blur-sm border-2 border-gray-100">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-900">Release Scorecard</h2>
       </div>
       <div className="flex justify-between items-center">
-        <div className="flex gap-12 items-center">
+        <div className="flex gap-16 items-center">
           <div>
             <p className="text-sm text-gray-500">{stats[0].name}</p>
             <div className="flex items-center mt-1">
-              <span className="text-3xl font-semibold text-gray-900">{stats[0].value}</span>
+              <span className="text-4xl font-semibold text-gray-900">{stats[0].value}</span>
               <span
                 className={`ml-2 flex items-center text-sm ${
                   stats[0].trend === "up"
@@ -50,14 +50,14 @@ export const ReleaseScorecard = ({ stats }: ReleaseScorecardProps) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="h-[100px] w-[100px]">
+          <div className="flex items-center gap-8">
+            <div className="h-[120px] w-[120px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieData}
-                    innerRadius={35}
-                    outerRadius={45}
+                    innerRadius={42}
+                    outerRadius={54}
                     paddingAngle={0}
                     dataKey="value"
                     startAngle={90}
@@ -73,7 +73,7 @@ export const ReleaseScorecard = ({ stats }: ReleaseScorecardProps) => {
             <div>
               <p className="text-sm text-gray-500">{stats[1].name}</p>
               <div className="flex items-center mt-1">
-                <span className="text-3xl font-semibold text-gray-900">{stats[1].value}</span>
+                <span className="text-4xl font-semibold text-gray-900">{stats[1].value}</span>
                 <span
                   className={`ml-2 flex items-center text-sm ${
                     stats[1].trend === "up"
