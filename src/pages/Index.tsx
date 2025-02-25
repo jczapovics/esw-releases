@@ -1,3 +1,4 @@
+<lov-code>
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
@@ -274,7 +275,7 @@ type Incident = {
   linkedRelease: {
     id: string;
     name: string;
-  };
+  };\n
 };
 
 // Add mock incidents data
@@ -845,4 +846,4 @@ const Index = () => {
                         onClick={() => handleDelete(incident)}
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
+                      
