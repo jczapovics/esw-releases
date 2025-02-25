@@ -724,9 +724,11 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Add the releases table at the bottom */}
+        {/* Releases table */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Recent Releases</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold">Releases</h2>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -762,10 +764,10 @@ const Index = () => {
           </Table>
         </Card>
 
-        {/* Add Incidents table */}
+        {/* Incidents table */}
         <Card className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Recent Incidents</h2>
+            <h2 className="text-xl font-semibold">Incidents</h2>
           </div>
           <Table>
             <TableHeader>
