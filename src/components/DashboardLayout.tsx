@@ -7,11 +7,15 @@ import { useState } from "react";
 import { AddReleaseSheet } from "./AddReleaseSheet";
 import { AddIncidentSheet } from "./AddIncidentSheet";
 
+interface DashboardLayoutProps {
+  children: React.ReactNode;
+}
+
 const mainNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
 ];
 
-export function DashboardLayout({ children }: { children: React.ReactNode }) {
+export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
   const [isAddReleaseOpen, setIsAddReleaseOpen] = useState(false);
   const [isAddIncidentOpen, setIsAddIncidentOpen] = useState(false);
@@ -47,7 +51,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 ))}
               </nav>
               
-              {/* Sign Out at the bottom */}
               <div className="mt-auto relative z-10">
                 <button
                   onClick={handleSignOut}
