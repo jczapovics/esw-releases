@@ -1,7 +1,5 @@
-
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { ArrowUp, ArrowDown, Check, ExternalLink, Trash2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { useState, useRef } from "react";
@@ -316,6 +314,45 @@ const mockIncidents: Incident[] = [
   },
 ];
 
+const COLORS = ['#14b8a6', '#e2e8f0']; // teal for completed, gray for remaining
+
+const ReleaseQualityPieChart = ({ value, label }: { value: number; label: string }) => {
+  const data = [
+    { name: "Complete", value: value },
+    { name: "Remaining", value: 100 - value }
+  ];
+
+  return (
+    <div className="flex flex-col items-center">
+      <div style={{ width: '120px', height: '120px' }}>
+        <ResponsiveContainer>
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={35}
+              outerRadius={50}
+              fill="#14b8a6"
+              paddingAngle={2}
+              dataKey="value"
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index]} />
+              ))}
+            </Pie>
+            <RechartsTooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="text-center mt-2">
+        <div className="text-sm text-gray-500">{label}</div>
+        <div className="font-medium">{value}%</div>
+      </div>
+    </div>
+  );
+};
+
 const Index = () => {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
@@ -444,26 +481,10 @@ const Index = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-1 text-sm">
-                  <span>This Month</span>
-                  <span className="font-medium">88%</span>
-                </div>
-                <Progress value={88} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-1 text-sm">
-                  <span>This Quarter</span>
-                  <span className="font-medium">90%</span>
-                </div>
-                <Progress value={90} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-1 text-sm">
-                  <span>This Year</span>
-                  <span className="font-medium">92%</span>
-                </div>
-                <Progress value={92} className="h-2" />
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <ReleaseQualityPieChart value={88} label="This Month" />
+                <ReleaseQualityPieChart value={90} label="This Quarter" />
+                <ReleaseQualityPieChart value={92} label="This Year" />
               </div>
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">Monthly Trend</h3>
@@ -825,24 +846,4 @@ const Index = () => {
                         onClick={() => handleDelete(incident)}
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
-
-        <ReleasePanel 
-          release={selectedRelease}
-          onClose={() => setSelectedRelease(null)}
-          businessUnits={businessUnits.filter(bu => bu !== "All")}
-          products={products.filter(p => p !== "All")}
-        />
-      </div>
-    </DashboardLayout>
-  );
-};
-
-export default Index;
+                      </Button
