@@ -14,15 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { ReleasePanel } from "@/components/ReleasePanel";
-import {
   Table,
   TableHeader,
   TableBody,
@@ -30,7 +21,6 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { format } from "date-fns";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,6 +31,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { ReleasePanel } from "@/components/ReleasePanel";
+import { format } from "date-fns";
 
 type Period = "month" | "quarter" | "year";
 
@@ -391,7 +391,6 @@ const Index = () => {
 
   return (
     <DashboardLayout>
-      {/* Add AlertDialog for delete confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -724,7 +723,7 @@ const Index = () => {
                 ))}
                 <PaginationItem>
                   <PaginationNext 
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}\
                     className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
                 </PaginationItem>
@@ -847,4 +846,4 @@ const Index = () => {
                         size="sm"
                         onClick={() => handleDelete(incident)}
                       >
-                        <Trash2 className="h-4
+                        <Trash2 className="h-4 w-4 text-red-60
