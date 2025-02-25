@@ -1,4 +1,3 @@
-<lov-code>
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -840,4 +839,4 @@ const Index = () => {
                   <TableCell>{incident.name}</TableCell>
                   <TableCell className="whitespace-nowrap">{format(incident.dateReported, "MMM d, yyyy")}</TableCell>
                   <TableCell className="max-w-[300px]">
-                    <span className="
+                    <span className="truncate block">{
