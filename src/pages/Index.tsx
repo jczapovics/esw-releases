@@ -326,7 +326,7 @@ const yearlyQualityTrend = [
 
 const COLORS = ['#10B981', '#FBBF24', '#EF4444'];
 
-export function Index() {  // Changed to function declaration for consistency
+export default function Index() {
   const [period, setPeriod] = useState<Period>("month");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
@@ -334,6 +334,9 @@ export function Index() {  // Changed to function declaration for consistency
   const stats = getStatsForPeriod(period);
   const qualityCardRef = useRef<HTMLDivElement>(null);
   const [selectedRelease, setSelectedRelease] = useState<typeof releases[0] | null>(null);
+  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
 
   const totalPages = Math.ceil(activityFeed.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -354,10 +357,6 @@ export function Index() {  // Changed to function declaration for consistency
 
   const businessUnits = ["All", "Financial Services", "Security", "Data Intelligence", "Core Services"];
   const products = ["All", "Payment Gateway", "User Authentication", "Analytics Dashboard", "Search Engine"];
-
-  const [incidents, setIncidents] = useState<Incident[]>(mockIncidents);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [incidentToDelete, setIncidentToDelete] = useState<Incident | null>(null);
 
   // Add incident management functions
   const handleUpdateRelease = (incidentId: string, releaseId: string) => {
@@ -856,3 +855,4 @@ export function Index() {  // Changed to function declaration for consistency
                         size="sm"
                         onClick={() => handleDelete(incident)}
                       >
+                        <Trash2 className="h
