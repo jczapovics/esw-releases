@@ -115,24 +115,28 @@ const CommandItem = React.forwardRef<
     onSelect?: (currentValue: string) => void;
   }
 >(({ className, onSelect, ...props }, ref) => {
-  // Create a completely static handler to catch and prevent navigation
+  // Fix for the iterable issue - ensure we return false from onSelect
   const handleSelect = React.useCallback((value: string) => {
     if (onSelect) {
       // Call the provided onSelect handler
       onSelect(value);
     }
-    // Always explicitly prevent default navigation by returning false
+    // Prevent default navigation behavior
     return false;
   }, [onSelect]);
 
   return (
     <CommandPrimitive.Item
       ref={ref}
-      onSelect={handleSelect}
+      onSelect={handleSelect}  // Use our handler instead
       className={cn(
         "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50",
         className
       )}
+      onClick={(e) => {
+        // Prevent event bubbling which can lead to navigation
+        e.stopPropagation();
+      }}
       {...props}
     />
   );

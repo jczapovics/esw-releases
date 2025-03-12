@@ -5,8 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { ChevronsUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
-import { useState, MouseEvent, useCallback } from "react";
+import { useCallback, useState, MouseEvent } from "react";
 
 type Period = "month" | "quarter" | "year";
 
@@ -31,10 +30,14 @@ export const GlobalFilters = ({
   businessUnits,
   products,
 }: GlobalFiltersProps) => {
-  const [selectedBusinessUnits, setSelectedBusinessUnits] = useState<string[]>([selectedBusinessUnit].filter(Boolean));
-  const [selectedProducts, setSelectedProducts] = useState<string[]>([selectedProduct].filter(Boolean));
+  const [selectedBusinessUnits, setSelectedBusinessUnits] = useState<string[]>(
+    [selectedBusinessUnit].filter(Boolean)
+  );
+  const [selectedProducts, setSelectedProducts] = useState<string[]>(
+    [selectedProduct].filter(Boolean)
+  );
   
-  // Optimized handler with useCallback to prevent recreating function on each render
+  // Business unit selection handler
   const handleBusinessUnitChange = useCallback((unit: string) => {
     setSelectedBusinessUnits(prev => {
       const isSelected = prev.includes(unit);
@@ -53,7 +56,7 @@ export const GlobalFilters = ({
     });
   }, [setSelectedBusinessUnit]);
   
-  // Optimized handler with useCallback to prevent recreating function on each render
+  // Product selection handler
   const handleProductChange = useCallback((product: string) => {
     setSelectedProducts(prev => {
       const isSelected = prev.includes(product);
@@ -72,13 +75,13 @@ export const GlobalFilters = ({
     });
   }, [setSelectedProduct]);
   
-  // Handler to stop event propagation for checkbox clicks
+  // Prevent checkbox clicks from bubbling up
   const handleCheckboxClick = useCallback((e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   }, []);
 
-  // Handler for item click that prevents default behavior and stops propagation
+  // Handle item click
   const handleItemClick = useCallback((e: MouseEvent, handler: (value: string) => void, value: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -116,7 +119,7 @@ export const GlobalFilters = ({
             </div>
           </div>
           
-          {/* Multi-select Business Unit Filter */}
+          {/* Business Unit Filter */}
           <div className="flex flex-col gap-1">
             <span className="text-sm text-gray-500">Business Unit</span>
             <Popover>
@@ -166,7 +169,7 @@ export const GlobalFilters = ({
             </Popover>
           </div>
           
-          {/* Multi-select Product Filter */}
+          {/* Product Filter */}
           <div className="flex flex-col gap-1">
             <span className="text-sm text-gray-500">Product</span>
             <Popover>

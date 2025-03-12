@@ -18,11 +18,9 @@ const PopoverContent = React.forwardRef<
       align={align}
       sideOffset={sideOffset}
       onOpenAutoFocus={(e) => {
-        // Prevent autofocus which can cause navigation issues
         e.preventDefault();
       }}
       onClick={(e) => {
-        // Stop click events from bubbling up to prevent navigation
         e.stopPropagation();
       }}
       className={cn(
