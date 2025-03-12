@@ -129,18 +129,18 @@ export const GoalScorecard = ({ stats, weeklyGoalData }: GoalScorecardProps) => 
                 yAxisId="left"
                 type="monotone" 
                 dataKey="total" 
-                stroke="#2563eb" 
-                strokeWidth={2}
-                dot={{ fill: '#2563eb', strokeWidth: 2 }}
+                stroke="rgba(37, 99, 235, 0.5)" 
+                strokeWidth={1.5}
+                dot={{ fill: 'rgba(37, 99, 235, 0.7)', strokeWidth: 1, r: 3 }}
                 name="Total Goals"
               />
               <Line 
                 yAxisId="left"
                 type="monotone" 
                 dataKey="onTrack" 
-                stroke="#8B5CF6" 
-                strokeWidth={3}
-                dot={{ fill: '#8B5CF6', strokeWidth: 2 }}
+                stroke="rgba(139, 92, 246, 0.6)" 
+                strokeWidth={2}
+                dot={{ fill: 'rgba(139, 92, 246, 0.8)', strokeWidth: 1, r: 3 }}
                 name="On Track Goals"
               />
               <Line 
@@ -148,8 +148,8 @@ export const GoalScorecard = ({ stats, weeklyGoalData }: GoalScorecardProps) => 
                 type="monotone" 
                 dataKey="percentage" 
                 stroke="#14b8a6" 
-                strokeWidth={2}
-                dot={{ fill: '#14b8a6', strokeWidth: 2 }}
+                strokeWidth={2.5}
+                dot={{ fill: '#14b8a6', strokeWidth: 2, r: 4 }}
                 name="On Track Percentage"
               />
             </LineChart>
