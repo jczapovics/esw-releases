@@ -115,17 +115,15 @@ const CommandItem = React.forwardRef<
     onSelect?: (currentValue: string) => void;
   }
 >(({ className, onSelect, ...props }, ref) => {
-  // Create a handler that prevents default selection behavior
-  const handleSelect = React.useCallback(
-    (value: string) => {
-      if (onSelect) {
-        onSelect(value);
-        // Explicitly return false to prevent default behavior
-        return false;
-      }
-    },
-    [onSelect]
-  );
+  // Create a completely static handler to catch and prevent navigation
+  const handleSelect = React.useCallback((value: string) => {
+    if (onSelect) {
+      // Call the provided onSelect handler
+      onSelect(value);
+    }
+    // Always explicitly prevent default navigation by returning false
+    return false;
+  }, [onSelect]);
 
   return (
     <CommandPrimitive.Item
@@ -138,7 +136,7 @@ const CommandItem = React.forwardRef<
       {...props}
     />
   );
-})
+});
 
 CommandItem.displayName = CommandPrimitive.Item.displayName
 

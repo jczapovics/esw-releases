@@ -34,6 +34,7 @@ export const GlobalFilters = ({
   const [selectedBusinessUnits, setSelectedBusinessUnits] = useState<string[]>([selectedBusinessUnit].filter(Boolean));
   const [selectedProducts, setSelectedProducts] = useState<string[]>([selectedProduct].filter(Boolean));
   
+  // Optimized handler with useCallback to prevent recreating function on each render
   const handleBusinessUnitChange = useCallback((unit: string) => {
     setSelectedBusinessUnits(prev => {
       const isSelected = prev.includes(unit);
@@ -52,6 +53,7 @@ export const GlobalFilters = ({
     });
   }, [setSelectedBusinessUnit]);
   
+  // Optimized handler with useCallback to prevent recreating function on each render
   const handleProductChange = useCallback((product: string) => {
     setSelectedProducts(prev => {
       const isSelected = prev.includes(product);
@@ -70,10 +72,17 @@ export const GlobalFilters = ({
     });
   }, [setSelectedProduct]);
   
-  // Prevent propagation and default behavior for checkbox clicks
+  // Handler to stop event propagation for checkbox clicks
   const handleCheckboxClick = useCallback((e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+  }, []);
+
+  // Handler for item click that prevents default behavior and stops propagation
+  const handleItemClick = useCallback((e: MouseEvent, handler: (value: string) => void, value: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handler(value);
   }, []);
 
   return (
@@ -121,7 +130,7 @@ export const GlobalFilters = ({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0 bg-popover">
+              <PopoverContent className="w-[200px] p-0" onClick={(e) => e.stopPropagation()}>
                 <Command>
                   <CommandInput placeholder="Search business units..." />
                   <CommandEmpty>No business unit found.</CommandEmpty>
@@ -132,18 +141,12 @@ export const GlobalFilters = ({
                         <CommandItem
                           key={`bu-${unit}`}
                           value={unit}
-                          onSelect={() => {
-                            handleBusinessUnitChange(unit);
-                          }}
+                          onSelect={() => handleBusinessUnitChange(unit)}
                           className="flex items-center gap-2"
                         >
                           <div 
                             className="flex items-center gap-2 w-full" 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleBusinessUnitChange(unit);
-                            }}
+                            onClick={(e) => handleItemClick(e, handleBusinessUnitChange, unit)}
                           >
                             <Checkbox 
                               checked={isSelected} 
@@ -177,7 +180,7 @@ export const GlobalFilters = ({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0 bg-popover">
+              <PopoverContent className="w-[200px] p-0" onClick={(e) => e.stopPropagation()}>
                 <Command>
                   <CommandInput placeholder="Search products..." />
                   <CommandEmpty>No product found.</CommandEmpty>
@@ -188,18 +191,12 @@ export const GlobalFilters = ({
                         <CommandItem
                           key={`product-${product}`}
                           value={product}
-                          onSelect={() => {
-                            handleProductChange(product);
-                          }}
+                          onSelect={() => handleProductChange(product)}
                           className="flex items-center gap-2"
                         >
                           <div 
                             className="flex items-center gap-2 w-full" 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleProductChange(product);
-                            }}
+                            onClick={(e) => handleItemClick(e, handleProductChange, product)}
                           >
                             <Checkbox 
                               checked={isSelected} 

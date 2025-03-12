@@ -20,10 +20,6 @@ const NotFound = () => {
         <Link 
           to="/" 
           className="text-blue-500 hover:text-blue-700 underline"
-          onClick={(e) => {
-            // Make sure the Link component works properly
-            e.stopPropagation();
-          }}
         >
           Return to Home
         </Link>
