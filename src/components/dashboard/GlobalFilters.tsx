@@ -8,14 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 
 type Period = "month" | "quarter" | "year";
 
@@ -70,83 +62,35 @@ export const GlobalFilters = ({
               </Button>
             </div>
           </div>
-
           <div className="flex flex-col gap-1">
             <span className="text-sm text-gray-500">Business Unit</span>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className="w-[200px] justify-between"
-                >
-                  {selectedBusinessUnit}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput placeholder="Search business unit..." />
-                  <CommandEmpty>No business unit found.</CommandEmpty>
-                  <CommandGroup>
-                    {businessUnits.map((unit) => (
-                      <CommandItem
-                        key={unit}
-                        value={unit}
-                        onSelect={() => setSelectedBusinessUnit(unit)}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            selectedBusinessUnit === unit ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                        {unit}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <Select value={selectedBusinessUnit} onValueChange={setSelectedBusinessUnit}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select Business Unit" />
+              </SelectTrigger>
+              <SelectContent>
+                {businessUnits.map((unit) => (
+                  <SelectItem key={unit} value={unit}>
+                    {unit}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-
           <div className="flex flex-col gap-1">
             <span className="text-sm text-gray-500">Product</span>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className="w-[200px] justify-between"
-                >
-                  {selectedProduct}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput placeholder="Search product..." />
-                  <CommandEmpty>No product found.</CommandEmpty>
-                  <CommandGroup>
-                    {products.map((product) => (
-                      <CommandItem
-                        key={product}
-                        value={product}
-                        onSelect={() => setSelectedProduct(product)}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            selectedProduct === product ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                        {product}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select Product" />
+              </SelectTrigger>
+              <SelectContent>
+                {products.map((product) => (
+                  <SelectItem key={product} value={product}>
+                    {product}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

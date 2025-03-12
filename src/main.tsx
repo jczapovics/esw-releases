@@ -22,10 +22,6 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
   },
   {
-    path: "/business-goals",
-    element: <Index />, // Temporarily using Index component until we create a dedicated page
-  },
-  {
     path: "/incidents",
     element: <Incidents />,
   },
