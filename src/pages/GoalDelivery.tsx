@@ -5,7 +5,6 @@ import { GoalScorecard } from "@/components/dashboard/GoalScorecard";
 import { GoalsTable } from "@/components/dashboard/GoalsTable";
 
 const GoalDelivery = () => {
-  const [period, setPeriod] = useState<"month" | "quarter" | "year">("month");
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState("All");
 
@@ -54,8 +53,7 @@ const GoalDelivery = () => {
     <DashboardLayout>
       <div className="space-y-6">
         <GlobalFilters
-          period={period}
-          setPeriod={setPeriod}
+          hideTimePeriod
           selectedBusinessUnit={selectedBusinessUnit}
           setSelectedBusinessUnit={setSelectedBusinessUnit}
           selectedProduct={selectedProduct}
