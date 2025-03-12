@@ -1,7 +1,6 @@
-
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Shield, LogOut, Activity } from "lucide-react";
+import { Shield, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AddReleaseSheet } from "./AddReleaseSheet";
@@ -9,7 +8,6 @@ import { AddIncidentSheet } from "./AddIncidentSheet";
 
 const mainNavigation = [
   { name: "Release Quality", href: "/", icon: Shield },
-  { name: "System Health", href: "/system-health", icon: Activity },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
