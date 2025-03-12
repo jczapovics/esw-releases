@@ -129,13 +129,11 @@ export const GlobalFilters = ({
                       >
                         <Checkbox 
                           checked={selectedBusinessUnits.includes(unit)} 
+                          id={`business-unit-${unit}`}
                           onCheckedChange={() => handleBusinessUnitChange(unit)}
                           className="mr-2"
                         />
                         <span>{unit}</span>
-                        {selectedBusinessUnits.includes(unit) && (
-                          <Check className="ml-auto h-4 w-4 opacity-100" />
-                        )}
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -172,13 +170,11 @@ export const GlobalFilters = ({
                       >
                         <Checkbox 
                           checked={selectedProducts.includes(product)} 
+                          id={`product-${product}`}
                           onCheckedChange={() => handleProductChange(product)}
                           className="mr-2"
                         />
                         <span>{product}</span>
-                        {selectedProducts.includes(product) && (
-                          <Check className="ml-auto h-4 w-4 opacity-100" />
-                        )}
                       </CommandItem>
                     ))}
                   </CommandGroup>
