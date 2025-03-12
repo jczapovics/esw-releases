@@ -114,23 +114,31 @@ const CommandItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> & {
     onSelect?: (currentValue: string) => void;
   }
->(({ className, onSelect, ...props }, ref) => (
-  <CommandPrimitive.Item
-    ref={ref}
-    className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50",
-      className
-    )}
-    onSelect={(value) => {
+>(({ className, onSelect, ...props }, ref) => {
+  // Create a handler that prevents default selection behavior
+  const handleSelect = React.useCallback(
+    (value: string) => {
       if (onSelect) {
         onSelect(value);
-        // Prevent the default behavior that might cause navigation
+        // Explicitly return false to prevent default behavior
         return false;
       }
-    }}
-    {...props}
-  />
-))
+    },
+    [onSelect]
+  );
+
+  return (
+    <CommandPrimitive.Item
+      ref={ref}
+      onSelect={handleSelect}
+      className={cn(
+        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50",
+        className
+      )}
+      {...props}
+    />
+  );
+})
 
 CommandItem.displayName = CommandPrimitive.Item.displayName
 

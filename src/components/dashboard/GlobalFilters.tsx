@@ -6,7 +6,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { ChevronsUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useCallback } from "react";
 
 type Period = "month" | "quarter" | "year";
 
@@ -34,7 +34,7 @@ export const GlobalFilters = ({
   const [selectedBusinessUnits, setSelectedBusinessUnits] = useState<string[]>([selectedBusinessUnit].filter(Boolean));
   const [selectedProducts, setSelectedProducts] = useState<string[]>([selectedProduct].filter(Boolean));
   
-  const handleBusinessUnitChange = (unit: string) => {
+  const handleBusinessUnitChange = useCallback((unit: string) => {
     setSelectedBusinessUnits(prev => {
       const isSelected = prev.includes(unit);
       let newSelection: string[];
@@ -50,9 +50,9 @@ export const GlobalFilters = ({
       
       return newSelection;
     });
-  };
+  }, [setSelectedBusinessUnit]);
   
-  const handleProductChange = (product: string) => {
+  const handleProductChange = useCallback((product: string) => {
     setSelectedProducts(prev => {
       const isSelected = prev.includes(product);
       let newSelection: string[];
@@ -68,13 +68,13 @@ export const GlobalFilters = ({
       
       return newSelection;
     });
-  };
+  }, [setSelectedProduct]);
   
-  // Prevent default behavior on checkbox click to stop navigation
-  const handleCheckboxClick = (e: MouseEvent) => {
+  // Prevent propagation and default behavior for checkbox clicks
+  const handleCheckboxClick = useCallback((e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-  };
+  }, []);
 
   return (
     <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
@@ -121,7 +121,7 @@ export const GlobalFilters = ({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
+              <PopoverContent className="w-[200px] p-0 bg-popover">
                 <Command>
                   <CommandInput placeholder="Search business units..." />
                   <CommandEmpty>No business unit found.</CommandEmpty>
@@ -132,22 +132,24 @@ export const GlobalFilters = ({
                         <CommandItem
                           key={`bu-${unit}`}
                           value={unit}
-                          onSelect={(value) => {
-                            // This function is called when the item is selected
-                            // We handle the state changes but prevent navigation
-                            handleBusinessUnitChange(value);
-                            return false;
+                          onSelect={() => {
+                            handleBusinessUnitChange(unit);
                           }}
+                          className="flex items-center gap-2"
                         >
                           <div 
                             className="flex items-center gap-2 w-full" 
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleBusinessUnitChange(unit);
+                            }}
                           >
                             <Checkbox 
                               checked={isSelected} 
                               id={`business-unit-${unit}`}
-                              onCheckedChange={() => handleBusinessUnitChange(unit)}
                               onClick={handleCheckboxClick}
+                              onCheckedChange={() => handleBusinessUnitChange(unit)}
                               className="mr-2"
                             />
                             <span>{unit}</span>
@@ -175,7 +177,7 @@ export const GlobalFilters = ({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
+              <PopoverContent className="w-[200px] p-0 bg-popover">
                 <Command>
                   <CommandInput placeholder="Search products..." />
                   <CommandEmpty>No product found.</CommandEmpty>
@@ -186,22 +188,24 @@ export const GlobalFilters = ({
                         <CommandItem
                           key={`product-${product}`}
                           value={product}
-                          onSelect={(value) => {
-                            // This function is called when the item is selected
-                            // We handle the state changes but prevent navigation
-                            handleProductChange(value);
-                            return false;
+                          onSelect={() => {
+                            handleProductChange(product);
                           }}
+                          className="flex items-center gap-2"
                         >
                           <div 
                             className="flex items-center gap-2 w-full" 
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleProductChange(product);
+                            }}
                           >
                             <Checkbox 
                               checked={isSelected} 
                               id={`product-${product}`}
-                              onCheckedChange={() => handleProductChange(product)}
                               onClick={handleCheckboxClick}
+                              onCheckedChange={() => handleProductChange(product)}
                               className="mr-2"
                             />
                             <span>{product}</span>
