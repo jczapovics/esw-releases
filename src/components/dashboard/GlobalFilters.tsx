@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useState, MouseEvent } from "react";
@@ -126,27 +126,35 @@ export const GlobalFilters = ({
                   <CommandInput placeholder="Search business units..." />
                   <CommandEmpty>No business unit found.</CommandEmpty>
                   <CommandGroup className="max-h-[200px] overflow-auto">
-                    {businessUnits.map((unit) => (
-                      <CommandItem
-                        key={`bu-${unit}`}
-                        value={unit}
-                        onSelect={(value) => {
-                          // This overrides the default onSelect behavior to prevent navigation
-                          handleBusinessUnitChange(value);
-                        }}
-                      >
-                        <div className="flex items-center gap-2 w-full" onClick={(e) => e.stopPropagation()}>
-                          <Checkbox 
-                            checked={selectedBusinessUnits.includes(unit)} 
-                            id={`business-unit-${unit}`}
-                            onCheckedChange={() => handleBusinessUnitChange(unit)}
-                            onClick={handleCheckboxClick}
-                            className="mr-2"
-                          />
-                          <span>{unit}</span>
-                        </div>
-                      </CommandItem>
-                    ))}
+                    {businessUnits.map((unit) => {
+                      const isSelected = selectedBusinessUnits.includes(unit);
+                      return (
+                        <CommandItem
+                          key={`bu-${unit}`}
+                          value={unit}
+                          onSelect={(value) => {
+                            // This function is called when the item is selected
+                            // We handle the state changes but prevent navigation
+                            handleBusinessUnitChange(value);
+                            return false;
+                          }}
+                        >
+                          <div 
+                            className="flex items-center gap-2 w-full" 
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Checkbox 
+                              checked={isSelected} 
+                              id={`business-unit-${unit}`}
+                              onCheckedChange={() => handleBusinessUnitChange(unit)}
+                              onClick={handleCheckboxClick}
+                              className="mr-2"
+                            />
+                            <span>{unit}</span>
+                          </div>
+                        </CommandItem>
+                      );
+                    })}
                   </CommandGroup>
                 </Command>
               </PopoverContent>
@@ -172,27 +180,35 @@ export const GlobalFilters = ({
                   <CommandInput placeholder="Search products..." />
                   <CommandEmpty>No product found.</CommandEmpty>
                   <CommandGroup className="max-h-[200px] overflow-auto">
-                    {products.map((product) => (
-                      <CommandItem
-                        key={`product-${product}`}
-                        value={product}
-                        onSelect={(value) => {
-                          // This overrides the default onSelect behavior to prevent navigation
-                          handleProductChange(value);
-                        }}
-                      >
-                        <div className="flex items-center gap-2 w-full" onClick={(e) => e.stopPropagation()}>
-                          <Checkbox 
-                            checked={selectedProducts.includes(product)} 
-                            id={`product-${product}`}
-                            onCheckedChange={() => handleProductChange(product)}
-                            onClick={handleCheckboxClick}
-                            className="mr-2"
-                          />
-                          <span>{product}</span>
-                        </div>
-                      </CommandItem>
-                    ))}
+                    {products.map((product) => {
+                      const isSelected = selectedProducts.includes(product);
+                      return (
+                        <CommandItem
+                          key={`product-${product}`}
+                          value={product}
+                          onSelect={(value) => {
+                            // This function is called when the item is selected
+                            // We handle the state changes but prevent navigation
+                            handleProductChange(value);
+                            return false;
+                          }}
+                        >
+                          <div 
+                            className="flex items-center gap-2 w-full" 
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Checkbox 
+                              checked={isSelected} 
+                              id={`product-${product}`}
+                              onCheckedChange={() => handleProductChange(product)}
+                              onClick={handleCheckboxClick}
+                              className="mr-2"
+                            />
+                            <span>{product}</span>
+                          </div>
+                        </CommandItem>
+                      );
+                    })}
                   </CommandGroup>
                 </Command>
               </PopoverContent>
