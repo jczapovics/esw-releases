@@ -1,12 +1,14 @@
+
 import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Shield, LogOut } from "lucide-react";
+import { Shield, LogOut, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AddReleaseSheet } from "./AddReleaseSheet";
 import { AddIncidentSheet } from "./AddIncidentSheet";
 
 const mainNavigation = [
+  { name: "Business Goals", href: "/business-goals", icon: TrendingUp },
   { name: "Release Quality", href: "/", icon: Shield },
 ];
 
