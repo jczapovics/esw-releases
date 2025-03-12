@@ -122,18 +122,20 @@ export const GlobalFilters = ({
                   <CommandGroup className="max-h-[200px] overflow-auto">
                     {businessUnits.map((unit) => (
                       <CommandItem
-                        key={unit}
+                        key={`bu-${unit}`}
                         value={unit}
                         onSelect={() => handleBusinessUnitChange(unit)}
                         className="flex items-center gap-2"
                       >
-                        <Checkbox 
-                          checked={selectedBusinessUnits.includes(unit)} 
-                          id={`business-unit-${unit}`}
-                          onCheckedChange={() => handleBusinessUnitChange(unit)}
-                          className="mr-2"
-                        />
-                        <span>{unit}</span>
+                        <div className="flex items-center gap-2 w-full">
+                          <Checkbox 
+                            checked={selectedBusinessUnits.includes(unit)} 
+                            id={`business-unit-${unit}`}
+                            onCheckedChange={() => handleBusinessUnitChange(unit)}
+                            className="mr-2"
+                          />
+                          <span>{unit}</span>
+                        </div>
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -163,18 +165,20 @@ export const GlobalFilters = ({
                   <CommandGroup className="max-h-[200px] overflow-auto">
                     {products.map((product) => (
                       <CommandItem
-                        key={product}
+                        key={`product-${product}`}
                         value={product}
                         onSelect={() => handleProductChange(product)}
                         className="flex items-center gap-2"
                       >
-                        <Checkbox 
-                          checked={selectedProducts.includes(product)} 
-                          id={`product-${product}`}
-                          onCheckedChange={() => handleProductChange(product)}
-                          className="mr-2"
-                        />
-                        <span>{product}</span>
+                        <div className="flex items-center gap-2 w-full">
+                          <Checkbox 
+                            checked={selectedProducts.includes(product)} 
+                            id={`product-${product}`}
+                            onCheckedChange={() => handleProductChange(product)}
+                            className="mr-2"
+                          />
+                          <span>{product}</span>
+                        </div>
                       </CommandItem>
                     ))}
                   </CommandGroup>
