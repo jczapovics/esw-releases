@@ -77,9 +77,9 @@ export const GoalScorecard = ({ stats, weeklyGoalData }: GoalScorecardProps) => 
             </div>
           </div>
 
-          {/* Total Goals Counter */}
+          {/* Goals On Track Counter */}
           <div className="text-center p-4 bg-gray-50 rounded-lg w-full">
-            <p className="text-sm text-gray-500 mb-1">{stats[0].name}</p>
+            <p className="text-sm text-gray-500 mb-1">Goals On Track</p>
             <div className="flex items-center justify-center gap-2">
               <span className="text-3xl font-bold text-gray-900">{stats[0].value}</span>
               <span
@@ -138,9 +138,9 @@ export const GoalScorecard = ({ stats, weeklyGoalData }: GoalScorecardProps) => 
                 yAxisId="left"
                 type="monotone" 
                 dataKey="onTrack" 
-                stroke="#22c55e" 
-                strokeWidth={2}
-                dot={{ fill: '#22c55e', strokeWidth: 2 }}
+                stroke="#8B5CF6" 
+                strokeWidth={3}
+                dot={{ fill: '#8B5CF6', strokeWidth: 2 }}
                 name="On Track Goals"
               />
               <Line 
@@ -159,3 +159,4 @@ export const GoalScorecard = ({ stats, weeklyGoalData }: GoalScorecardProps) => 
     </Card>
   );
 };
+
