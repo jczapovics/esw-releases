@@ -1,8 +1,6 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, ComposedChart } from "recharts";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface GoalTrackingChartProps {
   weeklyGoalData: Array<{
@@ -21,9 +19,9 @@ export const GoalTrackingChart = ({ weeklyGoalData }: GoalTrackingChartProps) =>
         <CardTitle>Weekly Goal Tracking</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] mb-8">
+        <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart
+            <LineChart
               data={weeklyGoalData}
               margin={{
                 top: 20,
@@ -33,56 +31,63 @@ export const GoalTrackingChart = ({ weeklyGoalData }: GoalTrackingChartProps) =>
               }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="week" />
-              <YAxis yAxisId="left" orientation="left" />
+              <XAxis 
+                dataKey="week" 
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
               <YAxis 
-                yAxisId="right" 
-                orientation="right" 
+                yAxisId="left"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                domain={[0, 'dataMax + 5']}
+              />
+              <YAxis 
+                yAxisId="right"
+                orientation="right"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
                 domain={[0, 100]}
+                ticks={[0, 25, 50, 75, 100]}
                 tickFormatter={(value) => `${value}%`}
               />
               <Tooltip />
               <Legend />
-              <Bar yAxisId="left" dataKey="onTrack" name="On Track Goals" stackId="a" fill="#22c55e" radius={[4, 4, 0, 0]} />
-              <Bar yAxisId="left" dataKey="atRisk" name="At Risk Goals" stackId="a" fill="#f59e0b" radius={[4, 4, 0, 0]} />
               <Line 
-                yAxisId="right" 
+                yAxisId="left"
+                type="monotone" 
+                dataKey="total" 
+                name="Total Goals" 
+                stroke="#8B5CF6" 
+                strokeWidth={2}
+                dot={{ fill: '#8B5CF6', strokeWidth: 2 }}
+                activeDot={{ r: 6 }}
+              />
+              <Line 
+                yAxisId="left"
+                type="monotone" 
+                dataKey="onTrack" 
+                name="On Track Goals" 
+                stroke="#22c55e" 
+                strokeWidth={2}
+                dot={{ fill: '#22c55e', strokeWidth: 2 }}
+                activeDot={{ r: 6 }}
+              />
+              <Line 
+                yAxisId="right"
                 type="monotone" 
                 dataKey="percentage" 
                 name="% On Track" 
                 stroke="#14b8a6" 
-                strokeWidth={2} 
-                dot={{ fill: '#14b8a6', r: 4 }}
+                strokeWidth={2}
+                dot={{ fill: '#14b8a6', strokeWidth: 2 }}
+                activeDot={{ r: 6 }}
               />
-            </ComposedChart>
+            </LineChart>
           </ResponsiveContainer>
-        </div>
-        
-        <Separator className="my-6" />
-        
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Week</TableHead>
-                <TableHead>Total Goals</TableHead>
-                <TableHead>On Track</TableHead>
-                <TableHead>At Risk</TableHead>
-                <TableHead className="text-right">% On Track</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {weeklyGoalData.map((week) => (
-                <TableRow key={week.week}>
-                  <TableCell className="font-medium">{week.week}</TableCell>
-                  <TableCell>{week.total}</TableCell>
-                  <TableCell className="text-green-600">{week.onTrack}</TableCell>
-                  <TableCell className="text-amber-600">{week.atRisk}</TableCell>
-                  <TableCell className="text-right">{week.percentage}%</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
         </div>
       </CardContent>
     </Card>
