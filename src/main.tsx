@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Incidents from "./pages/Incidents";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import GoalDelivery from "./pages/GoalDelivery";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/incidents",
     element: <Incidents />,
+  },
+  {
+    path: "/goal-delivery",
+    element: <GoalDelivery />,
   },
 ]);
 
