@@ -6,7 +6,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 
 type Period = "month" | "quarter" | "year";
 
@@ -69,6 +69,12 @@ export const GlobalFilters = ({
       return newSelection;
     });
   };
+  
+  // Prevent default behavior on checkbox click to stop navigation
+  const handleCheckboxClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   return (
     <Card className="p-6 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
@@ -124,14 +130,17 @@ export const GlobalFilters = ({
                       <CommandItem
                         key={`bu-${unit}`}
                         value={unit}
-                        onSelect={() => handleBusinessUnitChange(unit)}
-                        className="flex items-center gap-2"
+                        onSelect={(value) => {
+                          // This overrides the default onSelect behavior to prevent navigation
+                          handleBusinessUnitChange(value);
+                        }}
                       >
-                        <div className="flex items-center gap-2 w-full">
+                        <div className="flex items-center gap-2 w-full" onClick={(e) => e.stopPropagation()}>
                           <Checkbox 
                             checked={selectedBusinessUnits.includes(unit)} 
                             id={`business-unit-${unit}`}
                             onCheckedChange={() => handleBusinessUnitChange(unit)}
+                            onClick={handleCheckboxClick}
                             className="mr-2"
                           />
                           <span>{unit}</span>
@@ -167,14 +176,17 @@ export const GlobalFilters = ({
                       <CommandItem
                         key={`product-${product}`}
                         value={product}
-                        onSelect={() => handleProductChange(product)}
-                        className="flex items-center gap-2"
+                        onSelect={(value) => {
+                          // This overrides the default onSelect behavior to prevent navigation
+                          handleProductChange(value);
+                        }}
                       >
-                        <div className="flex items-center gap-2 w-full">
+                        <div className="flex items-center gap-2 w-full" onClick={(e) => e.stopPropagation()}>
                           <Checkbox 
                             checked={selectedProducts.includes(product)} 
                             id={`product-${product}`}
                             onCheckedChange={() => handleProductChange(product)}
+                            onClick={handleCheckboxClick}
                             className="mr-2"
                           />
                           <span>{product}</span>
